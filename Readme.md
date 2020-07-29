@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Халимов](https://up.htmlacademy.ru/ecmascript/12/user/1343543).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Бахтин](https://htmlacademy.ru/profile/id1006021).
 
 ---
 
