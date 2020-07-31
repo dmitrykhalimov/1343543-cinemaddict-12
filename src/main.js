@@ -6,7 +6,7 @@ const EXTRA_COUNT = 2;
 const NUM_RATED = 0;
 const NUM_COMMENTED = 1;
 
-/* Разбиение на модули:
+/* Разбиение на компоненты:
   Хэдер
     Блок профиля пользователя
   Меню
