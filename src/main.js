@@ -152,9 +152,6 @@ const siteExtraCommentedContainer = siteExtraContainers[NUM_COMMENTED].querySele
 
 for (let i = 0; i < EXTRA_COUNT; i++) {
   render(siteExtraRatedContainer, createFilmCard(), `beforeend`);
-}
-
-for (let i = 0; i < EXTRA_COUNT; i++) {
   render(siteExtraCommentedContainer, createFilmCard(), `beforeend`);
 }
 
