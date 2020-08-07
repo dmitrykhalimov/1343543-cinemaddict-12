@@ -44,7 +44,7 @@ const siteFilmsContainer = document.querySelector(`.films-list__container`);
 
 // карточки
 for (let i = 0; i < CARDS_COUNT; i++) {
-  render(siteFilmsContainer, createFilmCard(), `beforeend`);
+  render(siteFilmsContainer, createFilmCard(films[i]), `beforeend`);
 }
 
 // кнопка
@@ -58,11 +58,11 @@ render(siteFilmsSection, createExtraContainerCommented(), `beforeend`);
 const siteExtraContainers = document.querySelectorAll(`.films-list--extra`);
 const siteExtraRatedContainer = siteExtraContainers[NUM_RATED].querySelector(`.films-list__container`);
 const siteExtraCommentedContainer = siteExtraContainers[NUM_COMMENTED].querySelector(`.films-list__container`);
-
+/*
 for (let i = 0; i < EXTRA_COUNT; i++) {
   render(siteExtraRatedContainer, createFilmCard(), `beforeend`);
   render(siteExtraCommentedContainer, createFilmCard(), `beforeend`);
-}
+}*/
 
 // статистика футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);

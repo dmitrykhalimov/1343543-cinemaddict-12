@@ -39,7 +39,6 @@ const NICKNAMES = [
   `John Doe`
 ];
 
-const POSTERS_PATH = `../../public/images/posters/`;
 const POSTERS_FILENAMES = [
   `made-for-each-other.png`,
   `popeye-meets-sinbad.png`,
@@ -60,7 +59,7 @@ const MAX_YEAR = 2020;
 
 const MIN_DURATION_HOURS = 0;
 const MIN_DURATION_MINUTES = 0;
-const MAX_DURATION_HOURS = 3;
+const MAX_DURATION_HOURS = 2;
 const MAX_DURATION_MINUTES = 59;
 
 const MIN_DESCRIPTION = 1;
@@ -125,7 +124,7 @@ export const generateFilm = () => {
 
   return {
     title: getRandomFromArray(TITLES),
-    poster: POSTERS_PATH + getRandomFromArray(POSTERS_FILENAMES),
+    poster: getRandomFromArray(POSTERS_FILENAMES),
     genre: getRandomFromArray(GENRES),
 
     description: generateDescription(),
