@@ -9,7 +9,11 @@ import {createButton} from "./view/button.js";
 import {createFooterStats} from "./view/footer-stats.js";
 
 import {generateFilm} from "./mock/film.js";
-console.log(generateFilm());
+
+const FILMS_COUNT = 20;
+
+const films = new Array(FILMS_COUNT).fill().map(generateFilm);
+console.log(films);
 
 const CARDS_COUNT = 5;
 const EXTRA_COUNT = 2;

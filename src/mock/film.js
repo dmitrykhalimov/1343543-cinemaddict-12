@@ -94,10 +94,8 @@ export const generateFilm = () => {
 
   const generateComments = () => {
     const commentsQuantity = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
-    let comments = [];
-    for (let i = 0; i < commentsQuantity; i++) {
-      comments.push(generateComment());
-    }
+
+    const comments = new Array(commentsQuantity).fill().map(generateComment);
     return comments;
   };
 
