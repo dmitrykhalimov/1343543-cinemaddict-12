@@ -8,6 +8,9 @@ import {createExtraContainerCommented} from "./view/container-connected.js";
 import {createButton} from "./view/button.js";
 import {createFooterStats} from "./view/footer-stats.js";
 
+import {generateFilm} from "./mock/film.js";
+console.log(generateFilm());
+
 const CARDS_COUNT = 5;
 const EXTRA_COUNT = 2;
 
