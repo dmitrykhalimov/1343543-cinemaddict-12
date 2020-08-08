@@ -82,9 +82,6 @@ const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 const MIN_RATING = 0;
 const MAX_RATING = 9;
 
-const MIN_YEAR = 1950;
-const MAX_YEAR = 2020;
-
 const MIN_DURATION_HOURS = 0;
 const MIN_DURATION_MINUTES = 0;
 const MAX_DURATION_HOURS = 2;
@@ -199,6 +196,5 @@ export const generateFilm = () => {
     isInWatchlist: getRandomInteger(0, 1),
     isWatched: getRandomInteger(0, 1),
     isFavorite: getRandomInteger(0, 1),
-    // year: getRandomInteger(MIN_YEAR, MAX_YEAR),
   };
 };

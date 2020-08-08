@@ -10,11 +10,16 @@ import {createFooterStats} from "./view/footer-stats.js";
 import {createFilmDetails} from "./view/film-details.js";
 
 import {generateFilm} from "./mock/film.js";
+import {generateFilter} from "./mock/filter.js";
+import {topRated} from "./mock/extras.js";
 
 const FILMS_COUNT = 20;
 
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
+const filters = generateFilter(films);
+
 console.log(films);
+console.log(filters);
 
 const CARDS_COUNT = 5;
 const EXTRA_COUNT = 2;
@@ -33,7 +38,7 @@ render(siteHeader, createUserProfile(), `beforeend`);
 
 // блок меню
 const siteMain = document.querySelector(`.main`);
-render(siteMain, createMainNav(), `beforeend`);
+render(siteMain, createMainNav(filters), `beforeend`);
 
 // блок сортировки
 render(siteMain, createSort(), `beforeend`);
@@ -59,15 +64,17 @@ render(siteFilmsSection, createExtraContainerCommented(), `beforeend`);
 const siteExtraContainers = document.querySelectorAll(`.films-list--extra`);
 const siteExtraRatedContainer = siteExtraContainers[NUM_RATED].querySelector(`.films-list__container`);
 const siteExtraCommentedContainer = siteExtraContainers[NUM_COMMENTED].querySelector(`.films-list__container`);
-/*
+
+console.log(topRated());
 for (let i = 0; i < EXTRA_COUNT; i++) {
-  render(siteExtraRatedContainer, createFilmCard(), `beforeend`);
-  render(siteExtraCommentedContainer, createFilmCard(), `beforeend`);
-}*/
+  console.log('Создаем экстра');
+  render(siteExtraRatedContainer, createFilmCard(films[i]), `beforeend`);
+  // render(siteExtraCommentedContainer, createFilmCard(films), `beforeend`);
+}
 
 // статистика футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
-render(siteFooterStats, createFooterStats(), `beforeend`);
+render(siteFooterStats, createFooterStats(films.length), `beforeend`);
 
 // детали фильма
 const siteFooter = document.querySelector(`.footer`);
