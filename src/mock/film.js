@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomFromArray} from "../utils.js";
+import {getRandomInteger, getRandomFromArray, getOnlyYearFromDate} from "../utils.js";
 
 const TITLES = [
   `The Dance of Life`,
@@ -34,6 +34,22 @@ const EMOJIS = [
   `smile`,
 ];
 
+const NAMES = [
+  `John`,
+  `Mark`,
+  `Paul`,
+  `Kirk`,
+  `Bob`,
+];
+
+const SURNAMES = [
+  `Douglas`,
+  `Smith`,
+  `Wigton`,
+  `Herald`,
+  `Potter`
+];
+
 const NICKNAMES = [
   `Tim Macoveev`,
   `John Doe`
@@ -48,6 +64,18 @@ const POSTERS_FILENAMES = [
   `the-great-flamarion.jpg`,
   `the-man-with-the-golden-arm.jpg`,
 ];
+
+const COUNTRIES = [
+  `USA`,
+  `France`,
+  `Germany`,
+  `England`,
+  `Italy`,
+  `India`
+]
+
+const MIN_GENRES_SIZE = 1;
+const MAX_GENRES_SIZE = 3;
 
 const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
@@ -70,6 +98,12 @@ const MAX_COMMENTS = 5;
 
 const MAX_DAY_GAP = 14;
 
+const WRITERS_COUNT = 3;
+const CAST_COUNT = 3;
+
+const FILM_DATE_START = new Date(1930, 0, 1);
+const FILM_DATE_END = new Date();
+
 export const generateFilm = () => {
   const generateRating = () => {
     const generatedRating = getRandomInteger(MIN_RATING, MAX_RATING) + `.` + getRandomInteger(0, 9);
@@ -81,8 +115,17 @@ export const generateFilm = () => {
     return generatedDuration;
   };
 
+  const generateGenres = () => {
+    let genres = new Set();
+    const genresQuantity = getRandomInteger(MIN_GENRES_SIZE, MAX_GENRES_SIZE);
+    for (let i = 0; i < genresQuantity; i++) {
+      genres.add(getRandomFromArray(GENRES));
+    }
+    return genres;
+  };
+
   const generateDescription = () => {
-    // Из чистого позерства не разбил текст на массив строк, а написал функцию случайно выбирающую предложения из текста'
+    // Из спортивного интереса не разбил текст на массив строк, а написал функцию случайно выбирающую предложения из текста'
     const sentences = DESCRIPTION.match(/[^\.]+[\. ]+/g);
     let generatedDescription = ``;
     for (let i = MIN_DESCRIPTION; i <= getRandomInteger(MIN_DESCRIPTION, MAX_DESCRIPTION); i++) {
@@ -100,13 +143,13 @@ export const generateFilm = () => {
 
   const generateCommentData = () => {
     const daysGap = getRandomInteger(0, MAX_DAY_GAP);
-
+    /*
     if (daysGap === 0) {
       return `Today`;
     } else if (daysGap <= 5) {
       return daysGap + ` days ago`;
     }
-
+    */
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - daysGap);
 
@@ -122,19 +165,40 @@ export const generateFilm = () => {
     };
   };
 
+  const generateNamesArray = (quantity) => {
+    return new Array(quantity)
+      .fill()
+      .map(function () {
+        return getRandomFromArray(NAMES) + ` ` + getRandomFromArray(SURNAMES);
+      })
+      .join(`, `);
+  };
+
+  const generateDate = (start, end) => {
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  };
+
   return {
     title: getRandomFromArray(TITLES),
+    titleOriginal: ``,
     poster: getRandomFromArray(POSTERS_FILENAMES),
-    genre: getRandomFromArray(GENRES),
+    country: getRandomFromArray(COUNTRIES),
+    director: getRandomFromArray(NAMES) + ` ` + getRandomFromArray(SURNAMES),
 
+    writers: generateNamesArray(WRITERS_COUNT),
+    cast: generateNamesArray(CAST_COUNT),
+
+    genres: generateGenres(),
     description: generateDescription(),
     rating: generateRating(),
     duration: generateDuration(),
     comments: generateComments(),
+    filmDate: generateDate(FILM_DATE_START, FILM_DATE_END),
 
+    age: getRandomInteger(12, 21) + `+`,
     isInWatchlist: getRandomInteger(0, 1),
     isWatched: getRandomInteger(0, 1),
     isFavorite: getRandomInteger(0, 1),
-    year: getRandomInteger(MIN_YEAR, MAX_YEAR),
+    // year: getRandomInteger(MIN_YEAR, MAX_YEAR),
   };
 };

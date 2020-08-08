@@ -7,6 +7,7 @@ import {createExtraContainerRated} from "./view/container-rated.js";
 import {createExtraContainerCommented} from "./view/container-connected.js";
 import {createButton} from "./view/button.js";
 import {createFooterStats} from "./view/footer-stats.js";
+import {createFilmDetails} from "./view/film-details.js";
 
 import {generateFilm} from "./mock/film.js";
 
@@ -67,3 +68,15 @@ for (let i = 0; i < EXTRA_COUNT; i++) {
 // статистика футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
 render(siteFooterStats, createFooterStats(), `beforeend`);
+
+// детали фильма
+const siteFooter = document.querySelector(`.footer`);
+render(siteFooter, createFilmDetails(films[0]), `afterend`);
+
+// временное решение, чтобы можно было закрыть попап - т.к. этого нет в задании, логика работы попапа не реализована
+const popup = document.querySelector(`.film-details`);
+const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
+
+popupCloseButton.addEventListener('click', function () {
+  popup.remove();
+});

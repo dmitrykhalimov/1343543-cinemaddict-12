@@ -1,5 +1,7 @@
+import {getOnlyYearFromDate} from "../utils.js";
+
 export const createFilmCard = (task) => {
-  const {title, rating, year, duration, genre, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;
+  const {title, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;
 
   const returnActive = (item) => {
     const resultClass = item
@@ -13,9 +15,9 @@ export const createFilmCard = (task) => {
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${year}</span>
+      <span class="film-card__year">${getOnlyYearFromDate(filmDate)}</span>
       <span class="film-card__duration">${duration}</span>
-      <span class="film-card__genre">${genre}</span>
+      <span class="film-card__genre">${genres[0]}</span>
     </p>
     <img src="./images/posters/${poster}" alt="" class="film-card__poster">
     <p class="film-card__description">${description}</p>
