@@ -15,16 +15,16 @@ import {generateTopRated, generateTopCommented} from "./mock/extras.js";
 
 const FILMS_COUNT = 20;
 const FILMS_COUNT_PER_STEP = 5;
-const CARDS_COUNT = 5;
 const EXTRAS_COUNT = 2;
 
 const NUM_RATED = 0;
 const NUM_COMMENTED = 1;
 
-
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
-const filters = generateFilter(films);
 
+const filters = generateFilter(films);
+const topRated = generateTopRated(films);
+const topCommented = generateTopCommented(films);
 
 // функция отрисовки
 const render = (container, template, place) => {
@@ -48,7 +48,7 @@ const siteFilmsSection = document.querySelector(`.films`);
 const siteFilmsContainer = document.querySelector(`.films-list__container`);
 
 // карточки
-for (let i = 0; i < CARDS_COUNT; i++) {
+for (let i = 0; i < FILMS_COUNT_PER_STEP; i++) {
   render(siteFilmsContainer, createFilmCard(films[i]), `beforeend`);
 }
 
@@ -76,8 +76,6 @@ render(siteFilmsSection, createExtraContainerRated(), `beforeend`);
 render(siteFilmsSection, createExtraContainerCommented(), `beforeend`);
 
 // карточки в секции экстра
-const topRated = generateTopRated(films);
-const topCommented = generateTopCommented(films);
 const siteExtraContainers = document.querySelectorAll(`.films-list--extra`);
 const siteExtraRatedContainer = siteExtraContainers[NUM_RATED].querySelector(`.films-list__container`);
 const siteExtraCommentedContainer = siteExtraContainers[NUM_COMMENTED].querySelector(`.films-list__container`);
@@ -93,7 +91,7 @@ render(siteFooterStats, createFooterStats(films.length), `beforeend`);
 
 // детали фильма
 const siteFooter = document.querySelector(`.footer`);
-render(siteFooter, createFilmDetails(films[0]), `afterend`);
+render(siteFooter, createFilmDetails(films[0]), `afterend`); // первый элемент в попап
 
 // временное решение, чтобы можно было закрыть попап - т.к. этого нет в задании, логика работы попапа не реализована
 const popup = document.querySelector(`.film-details`);
