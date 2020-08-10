@@ -11,21 +11,20 @@ import {createFilmDetails} from "./view/film-details.js";
 
 import {generateFilm} from "./mock/film.js";
 import {generateFilter} from "./mock/filter.js";
-import {topRated} from "./mock/extras.js";
+import {generateTopRated, generateTopCommented} from "./mock/extras.js";
 
 const FILMS_COUNT = 20;
+const FILMS_COUNT_PER_STEP = 5;
+const CARDS_COUNT = 5;
+const EXTRAS_COUNT = 2;
+
+const NUM_RATED = 0;
+const NUM_COMMENTED = 1;
+
 
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
 
-console.log(films);
-console.log(filters);
-
-const CARDS_COUNT = 5;
-const EXTRA_COUNT = 2;
-
-const NUM_RATED = 0;
-const NUM_COMMENTED = 1;
 
 // функция отрисовки
 const render = (container, template, place) => {
@@ -53,23 +52,39 @@ for (let i = 0; i < CARDS_COUNT; i++) {
   render(siteFilmsContainer, createFilmCard(films[i]), `beforeend`);
 }
 
-// кнопка
-render(siteFilmsContainer, createButton(), `afterend`);
+if (films.length > FILMS_COUNT_PER_STEP) {
+  let renderedTaskCount = FILMS_COUNT_PER_STEP;
+  render(siteFilmsContainer, createButton(), `afterend`);
+
+  const loadMoreButton = document.querySelector(`.films-list__show-more`);
+  loadMoreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    films
+    .slice(renderedTaskCount, renderedTaskCount + FILMS_COUNT_PER_STEP)
+    .forEach((film) => render(siteFilmsContainer, createFilmCard(film), `beforeend`));
+
+    renderedTaskCount += FILMS_COUNT_PER_STEP;
+
+    if (renderedTaskCount >= films.length) {
+      loadMoreButton.remove();
+    }
+  });
+}
 
 // секция экстра
 render(siteFilmsSection, createExtraContainerRated(), `beforeend`);
 render(siteFilmsSection, createExtraContainerCommented(), `beforeend`);
 
 // карточки в секции экстра
+const topRated = generateTopRated(films);
+const topCommented = generateTopCommented(films);
 const siteExtraContainers = document.querySelectorAll(`.films-list--extra`);
 const siteExtraRatedContainer = siteExtraContainers[NUM_RATED].querySelector(`.films-list__container`);
 const siteExtraCommentedContainer = siteExtraContainers[NUM_COMMENTED].querySelector(`.films-list__container`);
 
-console.log(topRated());
-for (let i = 0; i < EXTRA_COUNT; i++) {
-  console.log('Создаем экстра');
-  render(siteExtraRatedContainer, createFilmCard(films[i]), `beforeend`);
-  // render(siteExtraCommentedContainer, createFilmCard(films), `beforeend`);
+for (let i = 0; i < EXTRAS_COUNT; i++) {
+  render(siteExtraRatedContainer, createFilmCard(topRated[i]), `beforeend`);
+  render(siteExtraCommentedContainer, createFilmCard(topCommented[i]), `beforeend`);
 }
 
 // статистика футера
@@ -84,6 +99,6 @@ render(siteFooter, createFilmDetails(films[0]), `afterend`);
 const popup = document.querySelector(`.film-details`);
 const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
 
-popupCloseButton.addEventListener('click', function () {
+popupCloseButton.addEventListener(`click`, function () {
   popup.remove();
 });

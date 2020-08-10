@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomFromArray, getOnlyYearFromDate} from "../utils.js";
+import {getRandomInteger, getRandomFromArray} from "../utils.js";
 
 const TITLES = [
   `The Dance of Life`,
@@ -72,7 +72,7 @@ const COUNTRIES = [
   `England`,
   `Italy`,
   `India`
-]
+];
 
 const MIN_GENRES_SIZE = 1;
 const MAX_GENRES_SIZE = 3;
@@ -140,7 +140,7 @@ export const generateFilm = () => {
 
   const generateCommentData = () => {
     const daysGap = getRandomInteger(0, MAX_DAY_GAP);
-    /*
+    /* В ТЗ вроде не нужно трансформировать дату, а в макете так реализовано.
     if (daysGap === 0) {
       return `Today`;
     } else if (daysGap <= 5) {

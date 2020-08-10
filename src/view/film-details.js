@@ -2,7 +2,6 @@ import {getDateDetailed, getDateComment} from "../utils.js";
 
 export const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
-  console.log(film);
 
   const generateGenres = () => {
     let result = ``;
@@ -38,8 +37,6 @@ export const createFilmDetails = (film) => {
       : ``;
     return resultClass;
   };
-
-  console.log(generateGenres());
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
