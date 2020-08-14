@@ -7,12 +7,24 @@ import {createExtraContainerRated} from "./view/container-rated.js";
 import {createExtraContainerCommented} from "./view/container-connected.js";
 import {createButton} from "./view/button.js";
 import {createFooterStats} from "./view/footer-stats.js";
+import {createFilmDetails} from "./view/film-details.js";
 
-const CARDS_COUNT = 5;
-const EXTRA_COUNT = 2;
+import {generateFilm} from "./mock/film.js";
+import {generateFilter} from "./mock/filter.js";
+import {generateTopRated, generateTopCommented} from "./mock/extras.js";
+
+const FILMS_COUNT = 20;
+const FILMS_COUNT_PER_STEP = 5;
+const EXTRAS_COUNT = 2;
 
 const NUM_RATED = 0;
 const NUM_COMMENTED = 1;
+
+const films = new Array(FILMS_COUNT).fill().map(generateFilm);
+
+const filters = generateFilter(films);
+const topRated = generateTopRated(films);
+const topCommented = generateTopCommented(films);
 
 // функция отрисовки
 const render = (container, template, place) => {
@@ -25,7 +37,7 @@ render(siteHeader, createUserProfile(), `beforeend`);
 
 // блок меню
 const siteMain = document.querySelector(`.main`);
-render(siteMain, createMainNav(), `beforeend`);
+render(siteMain, createMainNav(filters), `beforeend`);
 
 // блок сортировки
 render(siteMain, createSort(), `beforeend`);
@@ -36,12 +48,28 @@ const siteFilmsSection = document.querySelector(`.films`);
 const siteFilmsContainer = document.querySelector(`.films-list__container`);
 
 // карточки
-for (let i = 0; i < CARDS_COUNT; i++) {
-  render(siteFilmsContainer, createFilmCard(), `beforeend`);
+for (let i = 0; i < FILMS_COUNT_PER_STEP; i++) {
+  render(siteFilmsContainer, createFilmCard(films[i]), `beforeend`);
 }
 
-// кнопка
-render(siteFilmsContainer, createButton(), `afterend`);
+if (films.length > FILMS_COUNT_PER_STEP) {
+  let renderedTaskCount = FILMS_COUNT_PER_STEP;
+  render(siteFilmsContainer, createButton(), `afterend`);
+
+  const loadMoreButton = document.querySelector(`.films-list__show-more`);
+  loadMoreButton.addEventListener(`click`, (evt) => {
+    evt.preventDefault();
+    films
+    .slice(renderedTaskCount, renderedTaskCount + FILMS_COUNT_PER_STEP)
+    .forEach((film) => render(siteFilmsContainer, createFilmCard(film), `beforeend`));
+
+    renderedTaskCount += FILMS_COUNT_PER_STEP;
+
+    if (renderedTaskCount >= films.length) {
+      loadMoreButton.remove();
+    }
+  });
+}
 
 // секция экстра
 render(siteFilmsSection, createExtraContainerRated(), `beforeend`);
@@ -52,11 +80,23 @@ const siteExtraContainers = document.querySelectorAll(`.films-list--extra`);
 const siteExtraRatedContainer = siteExtraContainers[NUM_RATED].querySelector(`.films-list__container`);
 const siteExtraCommentedContainer = siteExtraContainers[NUM_COMMENTED].querySelector(`.films-list__container`);
 
-for (let i = 0; i < EXTRA_COUNT; i++) {
-  render(siteExtraRatedContainer, createFilmCard(), `beforeend`);
-  render(siteExtraCommentedContainer, createFilmCard(), `beforeend`);
+for (let i = 0; i < EXTRAS_COUNT; i++) {
+  render(siteExtraRatedContainer, createFilmCard(topRated[i]), `beforeend`);
+  render(siteExtraCommentedContainer, createFilmCard(topCommented[i]), `beforeend`);
 }
 
 // статистика футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
-render(siteFooterStats, createFooterStats(), `beforeend`);
+render(siteFooterStats, createFooterStats(films.length), `beforeend`);
+
+// детали фильма
+const siteFooter = document.querySelector(`.footer`);
+render(siteFooter, createFilmDetails(films[0]), `afterend`); // первый элемент в попап
+
+// временное решение, чтобы можно было закрыть попап - т.к. этого нет в задании, логика работы попапа не реализована
+const popup = document.querySelector(`.film-details`);
+const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
+
+popupCloseButton.addEventListener(`click`, function () {
+  popup.remove();
+});
