@@ -20,3 +20,12 @@ export const getDateDetailed = (date) => {
 export const getDateComment = (date) => {
   return date.toLocaleString(`en-ZA`);
 };
+
+export const translateMinutesToText = (duration) => {
+  const MIN_IN_HOUR = 60;
+
+  const hours = Math.trunc(duration / MIN_IN_HOUR);
+  const minutes = duration - (hours * MIN_IN_HOUR);
+
+  return `${hours}h ${minutes}m`;
+};

@@ -1,4 +1,4 @@
-import {getOnlyYearFromDate} from "../utils.js";
+import {getOnlyYearFromDate, translateMinutesToText} from "../utils.js";
 
 export const createFilmCard = (task) => {
   const {title, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;
@@ -15,7 +15,7 @@ export const createFilmCard = (task) => {
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
       <span class="film-card__year">${getOnlyYearFromDate(filmDate)}</span>
-      <span class="film-card__duration">${duration}</span>
+      <span class="film-card__duration">${translateMinutesToText(duration)}</span>
       <span class="film-card__genre">${genres.values().next().value}</span>
     </p>
     <img src="./images/posters/${poster}" alt="" class="film-card__poster">

@@ -85,11 +85,22 @@ const RatingSize = {
 };
 
 const DurationLimits = {
-  MIN_HOURS: 0,
-  MIN_MINUTES: 0,
-  MAX_HOURS: 2,
-  MAX_MINUTES: 59,
+  MIN: 1,
+  MAX: 179,
 };
+
+/*
+const Limits = {
+  Genres: {
+    MIN: 1,
+    MAX: 3,
+  },
+  Rating: {
+    MIN: 0,
+    MAX: 9,
+  },
+};
+*/
 
 const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
@@ -120,12 +131,12 @@ export const generateFilm = () => {
   };
 
   const generateDuration = () => {
-    const generatedDuration = getRandomInteger(DurationLimits.MIN_HOURS, DurationLimits.MAX_HOURS) + `h ` + getRandomInteger(DurationLimits.MIN_MINUTES, DurationLimits.MAX_MINUTES) + `m`;
+    const generatedDuration = getRandomInteger(DurationLimits.MIN, DurationLimits.MAX);
     return generatedDuration;
   };
 
   const generateGenres = () => {
-    let genres = new Set();
+    const genres = new Set();
     const genresQuantity = getRandomInteger(GenresSize.MIN, GenresSize.MAX);
     for (let i = 0; i < genresQuantity; i++) {
       genres.add(getRandomFromArray(GENRES));

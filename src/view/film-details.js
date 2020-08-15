@@ -1,4 +1,4 @@
-import {getDateDetailed, getDateComment} from "../utils.js";
+import {getDateDetailed, getDateComment, translateMinutesToText} from "../utils.js";
 
 export const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
@@ -81,7 +81,7 @@ export const createFilmDetails = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${duration}</td>
+              <td class="film-details__cell">${translateMinutesToText(duration)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
