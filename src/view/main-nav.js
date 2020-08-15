@@ -12,7 +12,7 @@ const createMainNav = (filters) => {
     </nav>`;
 };
 
-export default class Filter {
+export default class MainNav {
   constructor(filters) {
     this._filters = filters;
     this._element = null;

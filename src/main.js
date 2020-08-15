@@ -25,7 +25,33 @@ const NUM_COMMENTED = 1;
 
 const renderFilm = (siteFilmsContainer, film) => {
   const filmComponent = new FilmCardView(film);
-  // const taskEditComponent = new TaskEditView(task);
+  const filmDetailsComponent = new FilmDetailsView(film);
+
+  const siteBody = document.querySelector(`body`);
+
+  const openFilmPopup = () => {
+    siteBody.appendChild(filmDetailsComponent.getElement());
+  };
+
+  const closeFilmPopup = () => {
+    siteBody.removeChild(filmDetailsComponent.getElement());
+  };
+
+  filmComponent.getElement().querySelector(`img`).addEventListener(`click`, () => {
+    openFilmPopup();
+  });
+
+  filmComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, () => {
+    openFilmPopup();
+  });
+
+  filmComponent.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, () => {
+    openFilmPopup();
+  });
+
+  filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, () => {
+    closeFilmPopup();
+  });
 
   render(siteFilmsContainer, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };
@@ -96,18 +122,3 @@ for (let i = 0; i < EXTRAS_COUNT; i++) {
 // статистика футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
 render(siteFooterStats, new FooterStatsView(films.length).getElement(), RenderPosition.BEFOREEND);
-
-// детали фильма
-
-const siteBody = document.querySelector(`body`);
-render(siteBody, new FilmDetailsView(films[0]).getElement(), RenderPosition.BEFOREEND); // первый элемент в попап
-
-// временное решение, чтобы можно было закрыть попап - т.к. этого нет в задании, логика работы попапа не реализована
-
-const popup = document.querySelector(`.film-details`);
-const popupCloseButton = popup.querySelector(`.film-details__close-btn`);
-
-popupCloseButton.addEventListener(`click`, function () {
-  popup.remove();
-});
-
