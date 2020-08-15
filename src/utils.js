@@ -46,6 +46,7 @@ export const renderTemplate = (container, template, place) => {
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
+  AFTEREND: `afterend`,
   BEFOREEND: `beforeend`,
 };
 

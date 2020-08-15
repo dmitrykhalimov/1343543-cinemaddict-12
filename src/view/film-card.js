@@ -1,4 +1,4 @@
-import {getOnlyYearFromDate, translateMinutesToText} from "../utils.js";
+import {getOnlyYearFromDate, translateMinutesToText, createElement} from "../utils.js";
 
 export const createFilmCard = (task) => {
   const {title, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;
@@ -9,8 +9,7 @@ export const createFilmCard = (task) => {
     return resultClass;
   };
 
-  return `
-    <article class="film-card">
+  return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
@@ -28,3 +27,26 @@ export const createFilmCard = (task) => {
     </form>
     </article>`;
 };
+
+export default class FilmCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCard(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
