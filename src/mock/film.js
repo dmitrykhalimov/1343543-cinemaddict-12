@@ -74,47 +74,59 @@ const COUNTRIES = [
   `India`
 ];
 
-const MIN_GENRES_SIZE = 1;
-const MAX_GENRES_SIZE = 3;
+const GenresSize = {
+  MIN: 1,
+  MAX: 3,
+};
+
+const RatingSize = {
+  MIN: 0,
+  MAX: 9,
+};
+
+const DurationLimits = {
+  MIN_HOURS: 0,
+  MIN_MINUTES: 0,
+  MAX_HOURS: 2,
+  MAX_MINUTES: 59,
+};
 
 const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
-const MIN_RATING = 0;
-const MAX_RATING = 9;
+const DescriptionLimits = {
+  MIN: 1,
+  MAX: 5,
+};
 
-const MIN_DURATION_HOURS = 0;
-const MIN_DURATION_MINUTES = 0;
-const MAX_DURATION_HOURS = 2;
-const MAX_DURATION_MINUTES = 59;
+const CommentLimits = {
+  MIN: 0,
+  MAX: 5,
+};
 
-const MIN_DESCRIPTION = 1;
-const MAX_DESCRIPTION = 5;
-
-const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 5;
+const DateLimits = {
+  MIN: new Date(1930, 0, 1),
+  MAX: new Date(),
+};
 
 const MAX_DAY_GAP = 14;
 
 const WRITERS_COUNT = 3;
 const CAST_COUNT = 3;
 
-const FILM_DATE_START = new Date(1930, 0, 1);
-const FILM_DATE_END = new Date();
-
 export const generateFilm = () => {
   const generateRating = () => {
-    const generatedRating = getRandomInteger(MIN_RATING, MAX_RATING) + `.` + getRandomInteger(0, 9);
+    const generatedRating = getRandomInteger(RatingSize.MIN, RatingSize.MAX) + `.` + getRandomInteger(0, 9);
     return generatedRating;
   };
 
   const generateDuration = () => {
-    const generatedDuration = getRandomInteger(MAX_DURATION_HOURS, MIN_DURATION_HOURS) + `h ` + getRandomInteger(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES) + `m`;
+    const generatedDuration = getRandomInteger(DurationLimits.MIN_HOURS, DurationLimits.MAX_HOURS) + `h ` + getRandomInteger(DurationLimits.MIN_MINUTES, DurationLimits.MAX_MINUTES) + `m`;
     return generatedDuration;
   };
 
   const generateGenres = () => {
     let genres = new Set();
-    const genresQuantity = getRandomInteger(MIN_GENRES_SIZE, MAX_GENRES_SIZE);
+    const genresQuantity = getRandomInteger(GenresSize.MIN, GenresSize.MAX);
     for (let i = 0; i < genresQuantity; i++) {
       genres.add(getRandomFromArray(GENRES));
     }
@@ -125,14 +137,14 @@ export const generateFilm = () => {
     // Из спортивного интереса не разбил текст на массив строк, а написал функцию случайно выбирающую предложения из текста'
     const sentences = DESCRIPTION.match(/[^\.]+[\. ]+/g);
     let generatedDescription = ``;
-    for (let i = MIN_DESCRIPTION; i <= getRandomInteger(MIN_DESCRIPTION, MAX_DESCRIPTION); i++) {
+    for (let i = DescriptionLimits.MIN; i <= getRandomInteger(DescriptionLimits.MIN, DescriptionLimits.MAX); i++) {
       generatedDescription += sentences[getRandomInteger(0, sentences.length - 1)];
     }
     return generatedDescription;
   };
 
   const generateComments = () => {
-    const commentsQuantity = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
+    const commentsQuantity = getRandomInteger(CommentLimits.MIN, CommentLimits.MAX);
 
     const comments = new Array(commentsQuantity).fill().map(generateComment);
     return comments;
@@ -190,7 +202,7 @@ export const generateFilm = () => {
     rating: generateRating(),
     duration: generateDuration(),
     comments: generateComments(),
-    filmDate: generateDate(FILM_DATE_START, FILM_DATE_END),
+    filmDate: generateDate(DateLimits.MIN, DateLimits.MAX),
 
     age: getRandomInteger(12, 21) + `+`,
     isInWatchlist: getRandomInteger(0, 1),
