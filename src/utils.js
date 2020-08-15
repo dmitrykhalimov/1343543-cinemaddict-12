@@ -50,7 +50,6 @@ export const RenderPosition = {
 };
 
 export const renderElement = (container, element, place) => {
-  console.log(element);
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);

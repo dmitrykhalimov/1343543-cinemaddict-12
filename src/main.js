@@ -1,6 +1,7 @@
 import UserProfileView from "./view/user-profile.js";
-import {createMainNav} from "./view/main-nav.js";
-import {createSort} from "./view/sort.js";
+import MainNavView from "./view/main-nav.js";
+import SortView from "./view/sort.js";
+// import {createSort} from "./view/sort.js";
 import {createFilmsContainer} from "./view/films-container.js";
 import {createFilmCard} from "./view/film-card.js";
 import {createExtraContainerRated} from "./view/container-rated.js";
@@ -21,25 +22,23 @@ const EXTRAS_COUNT = 2;
 const NUM_RATED = 0;
 const NUM_COMMENTED = 1;
 
+// генерация моков
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 
 const filters = generateFilter(films);
 const topRated = generateTopRated(films);
 const topCommented = generateTopCommented(films);
 
-// функция отрисовки
-
 // блок профиля пользователя
 const siteHeader = document.querySelector(`.header`);
-
 renderElement(siteHeader, new UserProfileView().getElement(), RenderPosition.BEFOREEND);
 
 // блок меню
 const siteMain = document.querySelector(`.main`);
-renderTemplate(siteMain, createMainNav(filters), `beforeend`);
+renderElement(siteMain, new MainNavView(filters).getElement(), RenderPosition.BEFOREEND);
 
 // блок сортировки
-renderTemplate(siteMain, createSort(), `beforeend`);
+renderElement(siteMain, new SortView().getElement(), RenderPosition.BEFOREEND);
 
 // контейнер для фильмов
 renderTemplate(siteMain, createFilmsContainer(), `beforeend`);
