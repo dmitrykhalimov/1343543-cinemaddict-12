@@ -145,7 +145,6 @@ export const generateFilm = () => {
   };
 
   const generateDescription = () => {
-    // Из спортивного интереса не разбил текст на массив строк, а написал функцию случайно выбирающую предложения из текста'
     const sentences = DESCRIPTION.match(/[^\.]+[\. ]+/g);
     let generatedDescription = ``;
     const descriptionLength = getRandomInteger(DescriptionLimits.MIN, DescriptionLimits.MAX);
@@ -164,13 +163,7 @@ export const generateFilm = () => {
 
   const generateCommentData = () => {
     const daysGap = getRandomInteger(0, MAX_DAY_GAP);
-    /* В ТЗ вроде не нужно трансформировать дату, а в макете так реализовано.
-    if (daysGap === 0) {
-      return `Today`;
-    } else if (daysGap <= 5) {
-      return daysGap + ` days ago`;
-    }
-    */
+
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - daysGap);
 
