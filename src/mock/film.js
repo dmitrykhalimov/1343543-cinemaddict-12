@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomFromArray} from "../utils.js";
+import {getRandomInteger, getRandomBoolean, getRandomFromElements} from "../utils.js";
 
 const TITLES = [
   `The Dance of Life`,
@@ -85,7 +85,7 @@ const RatingSize = {
 };
 
 const DurationLimits = {
-  MIN: 1,
+  MIN: 30,
   MAX: 179,
 };
 
@@ -139,7 +139,7 @@ export const generateFilm = () => {
     const genres = new Set();
     const genresQuantity = getRandomInteger(GenresSize.MIN, GenresSize.MAX);
     for (let i = 0; i < genresQuantity; i++) {
-      genres.add(getRandomFromArray(GENRES));
+      genres.add(getRandomFromElements(GENRES));
     }
     return genres;
   };
@@ -148,7 +148,8 @@ export const generateFilm = () => {
     // Из спортивного интереса не разбил текст на массив строк, а написал функцию случайно выбирающую предложения из текста'
     const sentences = DESCRIPTION.match(/[^\.]+[\. ]+/g);
     let generatedDescription = ``;
-    for (let i = DescriptionLimits.MIN; i <= getRandomInteger(DescriptionLimits.MIN, DescriptionLimits.MAX); i++) {
+    const descriptionLength = getRandomInteger(DescriptionLimits.MIN, DescriptionLimits.MAX);
+    for (let i = DescriptionLimits.MIN; i <= descriptionLength; i++) {
       generatedDescription += sentences[getRandomInteger(0, sentences.length - 1)];
     }
     return generatedDescription;
@@ -178,9 +179,9 @@ export const generateFilm = () => {
 
   const generateComment = () => {
     return {
-      emoji: getRandomFromArray(EMOJIS),
-      comment: getRandomFromArray(COMMENTS),
-      nickname: getRandomFromArray(NICKNAMES),
+      emoji: getRandomFromElements(EMOJIS),
+      comment: getRandomFromElements(COMMENTS),
+      nickname: getRandomFromElements(NICKNAMES),
       dateComment: generateCommentData(),
     };
   };
@@ -189,7 +190,7 @@ export const generateFilm = () => {
     return new Array(quantity)
       .fill()
       .map(function () {
-        return getRandomFromArray(NAMES) + ` ` + getRandomFromArray(SURNAMES);
+        return getRandomFromElements(NAMES) + ` ` + getRandomFromElements(SURNAMES);
       })
       .join(`, `);
   };
@@ -199,11 +200,11 @@ export const generateFilm = () => {
   };
 
   return {
-    title: getRandomFromArray(TITLES),
+    title: getRandomFromElements(TITLES),
     titleOriginal: ``,
-    poster: getRandomFromArray(POSTERS_FILENAMES),
-    country: getRandomFromArray(COUNTRIES),
-    director: getRandomFromArray(NAMES) + ` ` + getRandomFromArray(SURNAMES),
+    poster: getRandomFromElements(POSTERS_FILENAMES),
+    country: getRandomFromElements(COUNTRIES),
+    director: getRandomFromElements(NAMES) + ` ` + getRandomFromElements(SURNAMES),
 
     writers: generateNamesArray(WRITERS_COUNT),
     cast: generateNamesArray(CAST_COUNT),
@@ -216,8 +217,9 @@ export const generateFilm = () => {
     filmDate: generateDate(DateLimits.MIN, DateLimits.MAX),
 
     age: getRandomInteger(12, 21) + `+`,
-    isInWatchlist: getRandomInteger(0, 1),
-    isWatched: getRandomInteger(0, 1),
-    isFavorite: getRandomInteger(0, 1),
+
+    isInWatchlist: getRandomBoolean(),
+    isWatched: getRandomBoolean(),
+    isFavorite: getRandomBoolean(),
   };
 };

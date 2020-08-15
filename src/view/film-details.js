@@ -5,7 +5,7 @@ export const createFilmDetails = (film) => {
 
   const generateGenres = () => {
     let result = ``;
-    for (let genre of genres) {
+    for (const genre of genres) {
       result += `<span class="film-details__genre">${genre}</span>`;
     }
     return result;

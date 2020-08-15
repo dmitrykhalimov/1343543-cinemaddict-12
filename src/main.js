@@ -22,19 +22,19 @@ const NUM_COMMENTED = 1;
 
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 
-console.log(`Изначальный массив`);
-console.log(films);
-
 const filters = generateFilter(films);
+console.log(filters);
 const topRated = generateTopRated(films);
 const topCommented = generateTopCommented(films);
 
-console.log(`Измененный массив`);
-console.log(topRated);
-console.log(`Изначальный массив`);
-console.log(films);
+let reducedArray = function (filmsToReduce) {
+  let result = filmsToReduce.reduce((acc, obj) => {
+    return acc + obj.isWatched;
+  }, 0);
+  return result;
+};
 
-
+console.log(reducedArray(films));
 // функция отрисовки
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);

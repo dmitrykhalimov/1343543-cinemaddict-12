@@ -1,12 +1,16 @@
-export const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+export const getRandomInteger = (min = 0, max = 1) => {
+  const lower = Math.ceil(Math.min(min, max));
+  const upper = Math.floor(Math.max(min, max));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export const getRandomFromArray = (array) => {
-  return array[getRandomInteger(0, array.length - 1)];
+export const getRandomBoolean = () => {
+  return Math.random() >= 0.5;
+};
+
+export const getRandomFromElements = (elements) => {
+  return elements[getRandomInteger(0, elements.length - 1)];
 };
 
 export const getOnlyYearFromDate = (date) => {
