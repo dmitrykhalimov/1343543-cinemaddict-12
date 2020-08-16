@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomFromArray} from "../utils.js";
+import {getRandomInteger, getRandomBoolean, getRandomFromElements} from "../utils.js";
 
 const TITLES = [
   `The Dance of Life`,
@@ -74,65 +74,88 @@ const COUNTRIES = [
   `India`
 ];
 
-const MIN_GENRES_SIZE = 1;
-const MAX_GENRES_SIZE = 3;
+const GenresSize = {
+  MIN: 1,
+  MAX: 3,
+};
+
+const RatingSize = {
+  MIN: 0,
+  MAX: 9,
+};
+
+const DurationLimits = {
+  MIN: 30,
+  MAX: 179,
+};
+
+/*
+const Limits = {
+  Genres: {
+    MIN: 1,
+    MAX: 3,
+  },
+  Rating: {
+    MIN: 0,
+    MAX: 9,
+  },
+};
+*/
 
 const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
 
-const MIN_RATING = 0;
-const MAX_RATING = 9;
+const DescriptionLimits = {
+  MIN: 1,
+  MAX: 5,
+};
 
-const MIN_DURATION_HOURS = 0;
-const MIN_DURATION_MINUTES = 0;
-const MAX_DURATION_HOURS = 2;
-const MAX_DURATION_MINUTES = 59;
+const CommentLimits = {
+  MIN: 0,
+  MAX: 5,
+};
 
-const MIN_DESCRIPTION = 1;
-const MAX_DESCRIPTION = 5;
-
-const MIN_COMMENTS = 0;
-const MAX_COMMENTS = 5;
+const DateLimits = {
+  MIN: new Date(1930, 0, 1),
+  MAX: new Date(),
+};
 
 const MAX_DAY_GAP = 14;
 
 const WRITERS_COUNT = 3;
 const CAST_COUNT = 3;
 
-const FILM_DATE_START = new Date(1930, 0, 1);
-const FILM_DATE_END = new Date();
-
 export const generateFilm = () => {
   const generateRating = () => {
-    const generatedRating = getRandomInteger(MIN_RATING, MAX_RATING) + `.` + getRandomInteger(0, 9);
+    const generatedRating = getRandomInteger(RatingSize.MIN, RatingSize.MAX) + `.` + getRandomInteger(0, 9);
     return generatedRating;
   };
 
   const generateDuration = () => {
-    const generatedDuration = getRandomInteger(MAX_DURATION_HOURS, MIN_DURATION_HOURS) + `h ` + getRandomInteger(MIN_DURATION_MINUTES, MAX_DURATION_MINUTES) + `m`;
+    const generatedDuration = getRandomInteger(DurationLimits.MIN, DurationLimits.MAX);
     return generatedDuration;
   };
 
   const generateGenres = () => {
-    let genres = new Set();
-    const genresQuantity = getRandomInteger(MIN_GENRES_SIZE, MAX_GENRES_SIZE);
+    const genres = new Set();
+    const genresQuantity = getRandomInteger(GenresSize.MIN, GenresSize.MAX);
     for (let i = 0; i < genresQuantity; i++) {
-      genres.add(getRandomFromArray(GENRES));
+      genres.add(getRandomFromElements(GENRES));
     }
     return genres;
   };
 
   const generateDescription = () => {
-    // Из спортивного интереса не разбил текст на массив строк, а написал функцию случайно выбирающую предложения из текста'
     const sentences = DESCRIPTION.match(/[^\.]+[\. ]+/g);
     let generatedDescription = ``;
-    for (let i = MIN_DESCRIPTION; i <= getRandomInteger(MIN_DESCRIPTION, MAX_DESCRIPTION); i++) {
+    const descriptionLength = getRandomInteger(DescriptionLimits.MIN, DescriptionLimits.MAX);
+    for (let i = DescriptionLimits.MIN; i <= descriptionLength; i++) {
       generatedDescription += sentences[getRandomInteger(0, sentences.length - 1)];
     }
     return generatedDescription;
   };
 
   const generateComments = () => {
-    const commentsQuantity = getRandomInteger(MIN_COMMENTS, MAX_COMMENTS);
+    const commentsQuantity = getRandomInteger(CommentLimits.MIN, CommentLimits.MAX);
 
     const comments = new Array(commentsQuantity).fill().map(generateComment);
     return comments;
@@ -140,13 +163,7 @@ export const generateFilm = () => {
 
   const generateCommentData = () => {
     const daysGap = getRandomInteger(0, MAX_DAY_GAP);
-    /* В ТЗ вроде не нужно трансформировать дату, а в макете так реализовано.
-    if (daysGap === 0) {
-      return `Today`;
-    } else if (daysGap <= 5) {
-      return daysGap + ` days ago`;
-    }
-    */
+
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - daysGap);
 
@@ -155,9 +172,9 @@ export const generateFilm = () => {
 
   const generateComment = () => {
     return {
-      emoji: getRandomFromArray(EMOJIS),
-      comment: getRandomFromArray(COMMENTS),
-      nickname: getRandomFromArray(NICKNAMES),
+      emoji: getRandomFromElements(EMOJIS),
+      comment: getRandomFromElements(COMMENTS),
+      nickname: getRandomFromElements(NICKNAMES),
       dateComment: generateCommentData(),
     };
   };
@@ -166,7 +183,7 @@ export const generateFilm = () => {
     return new Array(quantity)
       .fill()
       .map(function () {
-        return getRandomFromArray(NAMES) + ` ` + getRandomFromArray(SURNAMES);
+        return getRandomFromElements(NAMES) + ` ` + getRandomFromElements(SURNAMES);
       })
       .join(`, `);
   };
@@ -176,11 +193,11 @@ export const generateFilm = () => {
   };
 
   return {
-    title: getRandomFromArray(TITLES),
+    title: getRandomFromElements(TITLES),
     titleOriginal: ``,
-    poster: getRandomFromArray(POSTERS_FILENAMES),
-    country: getRandomFromArray(COUNTRIES),
-    director: getRandomFromArray(NAMES) + ` ` + getRandomFromArray(SURNAMES),
+    poster: getRandomFromElements(POSTERS_FILENAMES),
+    country: getRandomFromElements(COUNTRIES),
+    director: getRandomFromElements(NAMES) + ` ` + getRandomFromElements(SURNAMES),
 
     writers: generateNamesArray(WRITERS_COUNT),
     cast: generateNamesArray(CAST_COUNT),
@@ -190,11 +207,12 @@ export const generateFilm = () => {
     rating: generateRating(),
     duration: generateDuration(),
     comments: generateComments(),
-    filmDate: generateDate(FILM_DATE_START, FILM_DATE_END),
+    filmDate: generateDate(DateLimits.MIN, DateLimits.MAX),
 
     age: getRandomInteger(12, 21) + `+`,
-    isInWatchlist: getRandomInteger(0, 1),
-    isWatched: getRandomInteger(0, 1),
-    isFavorite: getRandomInteger(0, 1),
+
+    isInWatchlist: getRandomBoolean(),
+    isWatched: getRandomBoolean(),
+    isFavorite: getRandomBoolean(),
   };
 };

@@ -1,11 +1,11 @@
-import {getDateDetailed, getDateComment} from "../utils.js";
+import {getDateDetailed, getDateComment, translateMinutesToText, createElement} from "../utils.js";
 
-export const createFilmDetails = (film) => {
+const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
 
   const generateGenres = () => {
     let result = ``;
-    for (let genre of genres) {
+    for (const genre of genres) {
       result += `<span class="film-details__genre">${genre}</span>`;
     }
     return result;
@@ -81,7 +81,7 @@ export const createFilmDetails = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${duration}</td>
+              <td class="film-details__cell">${translateMinutesToText(duration)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
@@ -154,3 +154,25 @@ export const createFilmDetails = (film) => {
 </section>`;
 };
 
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetails(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
