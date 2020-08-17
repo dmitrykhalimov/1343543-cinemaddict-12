@@ -132,6 +132,26 @@ const filters = generateFilter(films);
 const topRated = generateTopRated(films);
 const topCommented = generateTopCommented(films);
 
+const initialValue = {
+  all: 0,
+  watchlist: 0,
+  watched: 0,
+  favorites: 0,
+};
+
+const filtered = films.reduce((acc, film) => {
+  //console.log(acc);
+  return {
+    all: acc.all + 1,
+    watchlist: acc.watchlist + film.isInWatchlist,
+    watched: acc.watched + film.isWatched,
+    favorites: acc.favorites + film.isFavorite
+  };
+}, initialValue);
+
+console.log(filters);
+console.log(filtered);
+
 /* непосредственно отрисовка */
 // блок профиля пользователя
 const siteHeader = document.querySelector(`.header`);
