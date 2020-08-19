@@ -42,7 +42,6 @@ const renderFilm = (siteFilmsContainer, film) => {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
       closeFilmPopup();
-      document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
 
