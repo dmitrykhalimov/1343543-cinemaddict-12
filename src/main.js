@@ -122,8 +122,8 @@ const renderExtras = (extrasContainer) => {
 /* генерация моков */
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
-// const topRated = generateTopRated(films);
-// const topCommented = generateTopCommented(films);
+const topRated = generateTopRated(films);
+const topCommented = generateTopCommented(films);
 
 /* непосредственно отрисовка */
 // блок профиля пользователя
@@ -140,7 +140,7 @@ render(siteMain, new SortView(), RenderPosition.BEFOREEND);
 // блок фильмов
 // renderBoard(siteMain, films);
 const boardPresenter = new BoardPresenter(siteMain);
-boardPresenter.init(films);
+boardPresenter.init(films, topRated, topCommented);
 
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);

@@ -2,13 +2,14 @@ import BoardView from "../view/board.js";
 import NoFilmsView from "../view/no-films.js";
 import FilmDetailsView from "../view/film-details.js";
 import ButtonView from "../view/button.js";
-// import ExtraRatedContainerView from "./view/container-rated.js"; // +
-// import ExtraCommentedContainerView from "./view/container-connected.js"; // +
+import ExtraRatedContainerView from "../view/container-rated.js"; // +
+import ExtraCommentedContainerView from "../view/container-connected.js"; // +
 import FilmsContainerView from "../view/films-container.js"; // +
 import FilmCardView from "../view/film-card.js"; // +
 import {render, RenderPosition, remove} from "../utils/render.js";
 
 const FILMS_COUNT_PER_STEP = 5;
+const EXTRAS_COUNT = 2;
 
 export default class Board {
   constructor(boardContainer) {
@@ -22,8 +23,10 @@ export default class Board {
   }
 
   // инициализация
-  init(boardFilms) {
+  init(boardFilms, boardTopRated, boardTopCommented) {
     this._boardFilms = boardFilms.slice();
+    this._boardTopRated = boardTopRated.slice();
+    this._boardTopCommented = boardTopCommented.slice();
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
@@ -40,6 +43,20 @@ export default class Board {
     }
 
     this._renderFilmsList();
+    this._renderExtras();
+  }
+
+  _renderExtras() {
+    const extraRatedContainer = new ExtraRatedContainerView();
+    const extraCommentedContainer = new ExtraCommentedContainerView();
+
+    render(this._boardComponent, extraRatedContainer, RenderPosition.BEFOREEND);
+    render(this._boardComponent, extraCommentedContainer, RenderPosition.BEFOREEND);
+
+    for (let i = 0; i < EXTRAS_COUNT; i++) {
+      render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(this._boardTopRated[i]), RenderPosition.BEFOREEND);
+      render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(this._boardTopCommented[i]), RenderPosition.BEFOREEND);
+    }
   }
 
   // отрисовка списка фильмов
