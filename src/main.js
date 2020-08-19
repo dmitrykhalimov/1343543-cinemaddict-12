@@ -14,7 +14,7 @@ import BoardView from "./view/board.js";
 import {generateFilm} from "./mock/film.js";
 import {generateFilter} from "./mock/filter.js";
 import {generateTopRated, generateTopCommented} from "./mock/extras.js";
-import {render, RenderPosition} from "./utils/render.js";
+import {render, RenderPosition, remove} from "./utils/render.js";
 
 const FILMS_COUNT = 22;
 const FILMS_COUNT_PER_STEP = 5;
@@ -55,7 +55,7 @@ const renderFilm = (siteFilmsContainer, film) => {
 
   // TODO - не работают попапы на секции экстра, и понятно почему - они рендерется не через renderFilm, а через render
 
-  render(siteFilmsContainer, filmComponent.getElement(), RenderPosition.BEFOREEND);
+  render(siteFilmsContainer, filmComponent, RenderPosition.BEFOREEND);
 };
 
 // функция отрисовки дополнительных карточек
@@ -64,15 +64,15 @@ const renderBoard = (boardContainer, boardFilms) => {
   const boardComponent = new BoardView();
   const filmsContainerComponent = new FilmsContainerView();
 
-  render(boardContainer, boardComponent.getElement(), RenderPosition.BEFOREEND);
+  render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
 
   // если фильмов 0 - рисуем заглушку
   if (boardFilms.length === 0) {
-    render(boardComponent.getElement(), new NoFilmsView().getElement(), RenderPosition.BEFOREEND);
+    render(boardComponent, new NoFilmsView(), RenderPosition.BEFOREEND);
     return;
   }
 
-  render(boardComponent.getElement(), filmsContainerComponent.getElement(), RenderPosition.BEFOREEND);
+  render(boardComponent, filmsContainerComponent, RenderPosition.BEFOREEND);
 
   const siteFilmsContainer = boardComponent.getElement().querySelector(`.films-list__container`);
 
@@ -87,7 +87,7 @@ const renderBoard = (boardContainer, boardFilms) => {
 
     const loadMoreButton = new ButtonView();
 
-    render(filmsContainerComponent.getElement(), loadMoreButton.getElement(), RenderPosition.BEFOREEND);
+    render(filmsContainerComponent, loadMoreButton, RenderPosition.BEFOREEND);
 
     loadMoreButton.setClickHandler(() => {
       films
@@ -97,7 +97,7 @@ const renderBoard = (boardContainer, boardFilms) => {
       renderedTaskCount += FILMS_COUNT_PER_STEP;
 
       if (renderedTaskCount >= films.length) {
-        loadMoreButton.remove();
+        remove(loadMoreButton);
       }
     });
   }
@@ -109,12 +109,12 @@ const renderExtras = (extrasContainer) => {
   const extraRatedContainer = new ExtraRatedContainerView();
   const extraCommentedContainer = new ExtraCommentedContainerView();
 
-  render(extrasContainer, extraRatedContainer.getElement(), RenderPosition.BEFOREEND);
-  render(extrasContainer, extraCommentedContainer.getElement(), RenderPosition.BEFOREEND);
+  render(extrasContainer, extraRatedContainer, RenderPosition.BEFOREEND);
+  render(extrasContainer, extraCommentedContainer, RenderPosition.BEFOREEND);
 
   for (let i = 0; i < EXTRAS_COUNT; i++) {
-    render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRated[i]).getElement(), RenderPosition.BEFOREEND);
-    render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommented[i]).getElement(), RenderPosition.BEFOREEND);
+    render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRated[i]), RenderPosition.BEFOREEND);
+    render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommented[i]), RenderPosition.BEFOREEND);
   }
 };
 
@@ -127,14 +127,14 @@ const topCommented = generateTopCommented(films);
 /* непосредственно отрисовка */
 // блок профиля пользователя
 const siteHeader = document.querySelector(`.header`);
-render(siteHeader, new UserProfileView().getElement(), RenderPosition.BEFOREEND);
+render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 
 // блок меню
 const siteMain = document.querySelector(`.main`);
-render(siteMain, new MainNavView(filters).getElement(), RenderPosition.BEFOREEND);
+render(siteMain, new MainNavView(filters), RenderPosition.BEFOREEND);
 
 // блок сортировки
-render(siteMain, new SortView().getElement(), RenderPosition.BEFOREEND);
+render(siteMain, new SortView(), RenderPosition.BEFOREEND);
 
 // блок фильмов
 renderBoard(siteMain, films);
