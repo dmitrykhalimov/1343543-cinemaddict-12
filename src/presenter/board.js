@@ -14,6 +14,9 @@ const EXTRAS_COUNT = 2;
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
+    this._renderedTaskCount = FILMS_COUNT_PER_STEP;
+
+    this._loadMoreButtonComponent = new ButtonView();
 
     this._boardComponent = new BoardView(); // сама доска <section class =films>
     this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
@@ -113,21 +116,18 @@ export default class Board {
   }
 
   _renderLoadMoreButton() {
-    let renderedTaskCount = FILMS_COUNT_PER_STEP;
+    this._test();
+    render(this._filmsContainerComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    const loadMoreButton = new ButtonView();
-
-    render(this._filmsContainerComponent, loadMoreButton, RenderPosition.BEFOREEND);
-
-    loadMoreButton.setClickHandler(() => {
+    this._loadMoreButtonComponent.setClickHandler(() => {
       this._boardFilms
-      .slice(renderedTaskCount, renderedTaskCount + FILMS_COUNT_PER_STEP)
-      .forEach((film) => this._renderFilm(this._filmsContainerComponent, film));
+      .slice(this._renderedTaskCount, this._renderedTaskCount + FILMS_COUNT_PER_STEP)
+      .forEach((film) => this._renderFilm(film));
 
-      renderedTaskCount += FILMS_COUNT_PER_STEP;
+      this._renderedTaskCount += FILMS_COUNT_PER_STEP;
 
-      if (renderedTaskCount >= this._boardFilms.length) {
-        remove(loadMoreButton);
+      if (this._renderedTaskCount >= this._boardFilms.length) {
+        remove(this._loadMoreButtonComponent);
       }
     });
   }
