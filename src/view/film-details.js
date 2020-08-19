@@ -1,4 +1,5 @@
-import {getDateDetailed, getDateComment, translateMinutesToText, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {getDateDetailed, getDateComment, translateMinutesToText} from "../utils/transform.js";
 
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
@@ -154,25 +155,24 @@ const createFilmDetails = (film) => {
 </section>`;
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+    this._popupClickHandler = this._popupClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmDetails(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _popupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setPopupClickHandler(callback) {
+    this._callback.popupClick = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._popupClickHandler);
   }
 }

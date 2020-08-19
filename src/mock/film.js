@@ -1,4 +1,4 @@
-import {getRandomInteger, getRandomBoolean, getRandomFromElements} from "../utils.js";
+import {getRandomInteger, getRandomBoolean, getRandomFromElements} from "../utils/common.js";
 
 const TITLES = [
   `The Dance of Life`,

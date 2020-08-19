@@ -1,4 +1,5 @@
-import {getOnlyYearFromDate, translateMinutesToText, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {getOnlyYearFromDate, translateMinutesToText} from "../utils/transform.js";
 
 export const createFilmCard = (task) => {
   const {title, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;
@@ -28,25 +29,26 @@ export const createFilmCard = (task) => {
     </article>`;
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
+    this._cardClickHandler = this._cardClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCard(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _cardClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.cardClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setCardClickHandler(callback) {
+    this._callback.cardClick = callback;
+    this.getElement().querySelector(`img`).addEventListener(`click`, this._cardClickHandler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._cardClickHandler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._cardClickHandler);
   }
 }

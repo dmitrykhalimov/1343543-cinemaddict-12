@@ -8,7 +8,6 @@ export const generateFilter = (films) => {
 
   return films.reduce((acc, film) => {
     return {
-
       all: acc.all + 1,
       watchlist: acc.watchlist + film.isInWatchlist,
       watched: acc.watched + film.isWatched,
