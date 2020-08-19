@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {getOnlyYearFromDate, translateMinutesToText} from "../utils.js";
+import {getOnlyYearFromDate, translateMinutesToText} from "../utils/transform.js";
 
 export const createFilmCard = (task) => {
   const {title, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;

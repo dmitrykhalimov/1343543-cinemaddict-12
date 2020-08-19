@@ -14,7 +14,7 @@ import BoardView from "./view/board.js";
 import {generateFilm} from "./mock/film.js";
 import {generateFilter} from "./mock/filter.js";
 import {generateTopRated, generateTopCommented} from "./mock/extras.js";
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 const FILMS_COUNT = 22;
 const FILMS_COUNT_PER_STEP = 5;
@@ -52,6 +52,8 @@ const renderFilm = (siteFilmsContainer, film) => {
   filmDetailsComponent.setPopupClickHandler(() => {
     closeFilmPopup();
   });
+
+  // TODO - не работают попапы на секции экстра, и понятно почему - они рендерется не через renderFilm, а через render
 
   render(siteFilmsContainer, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };

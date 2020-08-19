@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {getDateDetailed, getDateComment, translateMinutesToText} from "../utils.js";
+import {getDateDetailed, getDateComment, translateMinutesToText} from "../utils/transform.js";
 
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
