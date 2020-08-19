@@ -115,21 +115,19 @@ export default class Board {
     render(this._filmsListContainer, filmComponent, RenderPosition.BEFOREEND);
   }
 
+  _handleLoadButton() {
+    this._renderFilms(this._renderedTaskCount, this._renderedTaskCount + FILMS_COUNT_PER_STEP);
+    this._renderedTaskCount += FILMS_COUNT_PER_STEP;
+
+    if (this._renderedTaskCount >= this._boardFilms.length) {
+      remove(this._loadMoreButtonComponent);
+    }
+  }
+
   _renderLoadMoreButton() {
-    this._test();
     render(this._filmsContainerComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    this._loadMoreButtonComponent.setClickHandler(() => {
-      this._boardFilms
-      .slice(this._renderedTaskCount, this._renderedTaskCount + FILMS_COUNT_PER_STEP)
-      .forEach((film) => this._renderFilm(film));
-
-      this._renderedTaskCount += FILMS_COUNT_PER_STEP;
-
-      if (this._renderedTaskCount >= this._boardFilms.length) {
-        remove(this._loadMoreButtonComponent);
-      }
-    });
+    this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton.bind(this));
   }
 
   _renderNoFilms() {
