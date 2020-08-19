@@ -1,4 +1,5 @@
-import {getDateDetailed, getDateComment, translateMinutesToText, createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
+import {getDateDetailed, getDateComment, translateMinutesToText} from "../utils.js";
 
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
@@ -154,25 +155,13 @@ const createFilmDetails = (film) => {
 </section>`;
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractView {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetails(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

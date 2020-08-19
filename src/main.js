@@ -67,8 +67,8 @@ const renderFilm = (siteFilmsContainer, film) => {
 // функция отрисовки дополнительных карточек
 
 const renderBoard = (boardContainer, boardFilms) => {
-  const filmsContainerComponent = new FilmsContainerView();
   const boardComponent = new BoardView();
+  const filmsContainerComponent = new FilmsContainerView();
 
   render(boardContainer, boardComponent.getElement(), RenderPosition.BEFOREEND);
 
