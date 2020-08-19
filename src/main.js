@@ -1,27 +1,28 @@
 import UserProfileView from "./view/user-profile.js";
 import MainNavView from "./view/main-nav.js";
 import SortView from "./view/sort.js";
-import FilmsContainerView from "./view/films-container.js";
-import FilmCardView from "./view/film-card.js";
-import ExtraRatedContainerView from "./view/container-rated.js";
-import ExtraCommentedContainerView from "./view/container-connected.js";
-import ButtonView from "./view/button.js";
+// import FilmsContainerView from "./view/films-container.js"; // +
+// import FilmCardView from "./view/film-card.js"; // +
+// import ExtraRatedContainerView from "./view/container-rated.js"; // +
+// import ExtraCommentedContainerView from "./view/container-connected.js"; // +
+// import ButtonView from "./view/button.js"; // +
 import FooterStatsView from "./view/footer-stats.js";
-import FilmDetailsView from "./view/film-details.js";
-import NoFilmsView from "./view/no-films.js";
-import BoardView from "./view/board.js";
+// import FilmDetailsView from "./view/film-details.js"; // +
+// import NoFilmsView from "./view/no-films.js"; // +
+// import BoardView from "./view/board.js"; // +
 
 import {generateFilm} from "./mock/film.js";
 import {generateFilter} from "./mock/filter.js";
 import {generateTopRated, generateTopCommented} from "./mock/extras.js";
 import {render, RenderPosition, remove} from "./utils/render.js";
+import BoardPresenter from "./presenter/board.js";
 
 const FILMS_COUNT = 22;
-const FILMS_COUNT_PER_STEP = 5;
+// const FILMS_COUNT_PER_STEP = 5; // +
 const EXTRAS_COUNT = 2;
 
 // функция отрисовки списка фильмов
-
+/*
 const renderFilm = (siteFilmsContainer, film) => {
   const filmComponent = new FilmCardView(film);
   const filmDetailsComponent = new FilmDetailsView(film);
@@ -61,23 +62,23 @@ const renderFilm = (siteFilmsContainer, film) => {
 // функция отрисовки дополнительных карточек
 
 const renderBoard = (boardContainer, boardFilms) => {
-  const boardComponent = new BoardView();
-  const filmsContainerComponent = new FilmsContainerView();
+  const boardComponent = new BoardView(); // +
+  const filmsContainerComponent = new FilmsContainerView(); // +
 
-  render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
+  render(boardContainer, boardComponent, RenderPosition.BEFOREEND); // +
 
   // если фильмов 0 - рисуем заглушку
-  if (boardFilms.length === 0) {
-    render(boardComponent, new NoFilmsView(), RenderPosition.BEFOREEND);
-    return;
-  }
+  if (boardFilms.length === 0) { // +
+    render(boardComponent, new NoFilmsView(), RenderPosition.BEFOREEND); // +
+    return; // +
+  } // +
 
-  render(boardComponent, filmsContainerComponent, RenderPosition.BEFOREEND);
+  render(boardComponent, filmsContainerComponent, RenderPosition.BEFOREEND); // +
 
   const siteFilmsContainer = boardComponent.getElement().querySelector(`.films-list__container`);
 
   // первые пять или менее фильмов
-  boardFilms
+  boardFilms // +
   .slice(0, Math.min(boardFilms.length, FILMS_COUNT_PER_STEP))
   .forEach((boardFilm) => renderFilm(siteFilmsContainer, boardFilm));
 
@@ -121,8 +122,8 @@ const renderExtras = (extrasContainer) => {
 /* генерация моков */
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
-const topRated = generateTopRated(films);
-const topCommented = generateTopCommented(films);
+// const topRated = generateTopRated(films);
+// const topCommented = generateTopCommented(films);
 
 /* непосредственно отрисовка */
 // блок профиля пользователя
@@ -137,7 +138,9 @@ render(siteMain, new MainNavView(filters), RenderPosition.BEFOREEND);
 render(siteMain, new SortView(), RenderPosition.BEFOREEND);
 
 // блок фильмов
-renderBoard(siteMain, films);
+// renderBoard(siteMain, films);
+const boardPresenter = new BoardPresenter(siteMain);
+boardPresenter.init(films);
 
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
