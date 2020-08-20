@@ -28,3 +28,4 @@ export const sortDate = (filmA, filmB) => {
 export const sortRating = (filmA, filmB) => {
   return filmB.rating - filmA.rating;
 };
+

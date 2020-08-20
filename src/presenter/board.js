@@ -7,7 +7,7 @@ import ExtraRatedContainerView from "../view/container-rated.js";
 import ExtraCommentedContainerView from "../view/container-connected.js";
 import FilmsContainerView from "../view/films-container.js";
 import FilmCardView from "../view/film-card.js";
-import {render, RenderPosition, remove} from "../utils/render.js";
+import {render, RenderPosition, remove, clearElement} from "../utils/render.js";
 import {sortDate, sortRating} from "../utils/transform.js";
 import {SortType} from "../const.js";
 
@@ -83,7 +83,7 @@ export default class Board {
   }
 
   _clearFilmsList() {
-    this._filmsListContainer.innerHTML = ``;
+    clearElement(this._filmsListContainer);
     this._renderedTaskCount = FILMS_COUNT_PER_STEP;
   }
 
