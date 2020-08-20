@@ -1,6 +1,5 @@
 import UserProfileView from "./view/user-profile.js";
 import MainNavView from "./view/main-nav.js";
-import SortView from "./view/sort.js";
 import FooterStatsView from "./view/footer-stats.js";
 
 import {generateFilm} from "./mock/film.js";
@@ -22,17 +21,15 @@ const topCommented = generateTopCommented(films);
 const siteHeader = document.querySelector(`.header`);
 render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 
-// блок меню
 const siteMain = document.querySelector(`.main`);
-render(siteMain, new MainNavView(filters), RenderPosition.BEFOREEND);
 
-// блок сортировки
-render(siteMain, new SortView(), RenderPosition.BEFOREEND);
-
-// блок фильмов
+// блок фильмов и сортировка
 // renderBoard(siteMain, films);
 const boardPresenter = new BoardPresenter(siteMain);
 boardPresenter.init(films, topRated, topCommented);
+
+// блок меню
+render(siteMain, new MainNavView(filters), RenderPosition.AFTERBEGIN);
 
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);

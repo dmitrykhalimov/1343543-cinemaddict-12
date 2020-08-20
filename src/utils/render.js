@@ -47,3 +47,7 @@ export const remove = (component) => {
   component.getElement().remove();
   component.removeElement();
 };
+
+export const clearElement = (element) => {
+  element.innerHTML = ``;
+};

@@ -20,3 +20,12 @@ export const translateMinutesToText = (duration) => {
 
   return `${hours}h ${minutes}m`;
 };
+
+export const sortDate = (filmA, filmB) => {
+  return filmB.filmDate.getTime() - filmA.filmDate.getTime();
+};
+
+export const sortRating = (filmA, filmB) => {
+  return filmB.rating - filmA.rating;
+};
+
