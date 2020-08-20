@@ -3,11 +3,13 @@ import NoFilmsView from "../view/no-films.js";
 import FilmDetailsView from "../view/film-details.js";
 import ButtonView from "../view/button.js";
 import SortView from "../view/sort.js";
-import ExtraRatedContainerView from "../view/container-rated.js"; // +
-import ExtraCommentedContainerView from "../view/container-connected.js"; // +
-import FilmsContainerView from "../view/films-container.js"; // +
-import FilmCardView from "../view/film-card.js"; // +
+import ExtraRatedContainerView from "../view/container-rated.js";
+import ExtraCommentedContainerView from "../view/container-connected.js";
+import FilmsContainerView from "../view/films-container.js";
+import FilmCardView from "../view/film-card.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
+import {sortDate, sortRating} from "../utils/transform.js";
+import {SortType} from "../const.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -19,6 +21,9 @@ export default class Board {
 
     this._loadMoreButtonComponent = new ButtonView();
 
+    this._sortComponent = new SortView();
+    this._currentSortType = SortType.DEFAULT;
+
     this._boardComponent = new BoardView(); // сама доска <section class =films>
     this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
     this._filmsListContainer = this._filmsContainerComponent.getElement().querySelector(`.films-list__container`); // контейнер section class = filmlist__container
@@ -26,24 +31,67 @@ export default class Board {
     this._noFilmsComponent = new NoFilmsView();
 
     this._handleLoadButton = this._handleLoadButton.bind(this);
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   // инициализация
   init(boardFilms, boardTopRated, boardTopCommented) {
     this._boardFilms = boardFilms.slice();
+    this._sourcedBoardFilms = boardFilms.slice();
+
     this._boardTopRated = boardTopRated.slice();
     this._boardTopCommented = boardTopCommented.slice();
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
+    console.log(this._boardFilms);
+
     this._renderSort();
     this._renderBoard();
   }
 
-  // отрисовка сортировки
+  // *сортировка*
+
+  _sortTasks(sortType) {
+    switch (sortType) {
+      case SortType.DATE:
+        console.log(this._boardFilms);
+        this._boardFilms.sort(sortDate);
+        console.log(this._boardFilms);
+        break;
+      case SortType.RATING:
+        console.log(this._boardFilms);
+        this._boardFilms.sort(sortRating);
+        console.log(this._boardFilms);
+        break;
+      default:
+        this._boardFilms = this._sourcedBoardFilms.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+  // обработчик
+  _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+
+    this._sortTasks(sortType);
+    this._clearFilmsList();
+    this._renderFilmsList();
+  }
+
+  _clearFilmsList() {
+    this._filmsListContainer.innerHTML = ``;
+    this._renderedTaskCount = FILMS_COUNT_PER_STEP;
+  }
+
+
+  // отрисовка
   _renderSort() {
-    this._sortComponent = new SortView();
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   // отрисовка поля
@@ -73,7 +121,7 @@ export default class Board {
 
   // отрисовка списка фильмов
   _renderFilmsList() {
-    render(this._boardComponent, this._filmsContainerComponent, RenderPosition.BEFOREEND);
+    render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
 
     this._renderFilms(0, Math.min(this._boardFilms.length, FILMS_COUNT_PER_STEP));
 
