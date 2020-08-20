@@ -2,6 +2,7 @@ import BoardView from "../view/board.js";
 import NoFilmsView from "../view/no-films.js";
 import FilmDetailsView from "../view/film-details.js";
 import ButtonView from "../view/button.js";
+import SortView from "../view/sort.js";
 import ExtraRatedContainerView from "../view/container-rated.js"; // +
 import ExtraCommentedContainerView from "../view/container-connected.js"; // +
 import FilmsContainerView from "../view/films-container.js"; // +
@@ -35,7 +36,14 @@ export default class Board {
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
+    this._renderSort();
     this._renderBoard();
+  }
+
+  // отрисовка сортировки
+  _renderSort() {
+    this._sortComponent = new SortView();
+    render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
   }
 
   // отрисовка поля
@@ -46,7 +54,6 @@ export default class Board {
       this._renderNoFilms();
       return;
     }
-
     this._renderFilmsList();
     this._renderExtras();
   }
