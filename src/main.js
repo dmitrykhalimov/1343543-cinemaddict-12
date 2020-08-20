@@ -1,6 +1,5 @@
 import UserProfileView from "./view/user-profile.js";
 import MainNavView from "./view/main-nav.js";
-import SortView from "./view/sort.js"; // +
 import FooterStatsView from "./view/footer-stats.js";
 
 import {generateFilm} from "./mock/film.js";
@@ -24,7 +23,7 @@ render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 
 const siteMain = document.querySelector(`.main`);
 
-// блок фильмов
+// блок фильмов и сортировка
 // renderBoard(siteMain, films);
 const boardPresenter = new BoardPresenter(siteMain);
 boardPresenter.init(films, topRated, topCommented);

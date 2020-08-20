@@ -50,4 +50,4 @@ export const remove = (component) => {
 
 export const clearElement = (element) => {
   element.innerHTML = ``;
-}
+};

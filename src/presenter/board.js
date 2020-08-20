@@ -17,7 +17,7 @@ const EXTRAS_COUNT = 2;
 export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
-    this._renderedTaskCount = FILMS_COUNT_PER_STEP;
+    this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
     this._loadMoreButtonComponent = new ButtonView();
 
@@ -44,8 +44,6 @@ export default class Board {
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
-    console.log(this._boardFilms);
-
     this._renderSort();
     this._renderBoard();
   }
@@ -55,14 +53,10 @@ export default class Board {
   _sortTasks(sortType) {
     switch (sortType) {
       case SortType.DATE:
-        console.log(this._boardFilms);
         this._boardFilms.sort(sortDate);
-        console.log(this._boardFilms);
         break;
       case SortType.RATING:
-        console.log(this._boardFilms);
         this._boardFilms.sort(sortRating);
-        console.log(this._boardFilms);
         break;
       default:
         this._boardFilms = this._sourcedBoardFilms.slice();
@@ -84,11 +78,11 @@ export default class Board {
 
   _clearFilmsList() {
     clearElement(this._filmsListContainer);
-    this._renderedTaskCount = FILMS_COUNT_PER_STEP;
+    this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
   }
 
 
-  // отрисовка
+  // сортировка
   _renderSort() {
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
@@ -173,10 +167,10 @@ export default class Board {
   }
 
   _handleLoadButton() {
-    this._renderFilms(this._renderedTaskCount, this._renderedTaskCount + FILMS_COUNT_PER_STEP);
-    this._renderedTaskCount += FILMS_COUNT_PER_STEP;
+    this._renderFilms(this._renderedFilmsCount, this._renderedFilmsCount + FILMS_COUNT_PER_STEP);
+    this._renderedFilmsCount += FILMS_COUNT_PER_STEP;
 
-    if (this._renderedTaskCount >= this._boardFilms.length) {
+    if (this._renderedFilmsCount >= this._boardFilms.length) {
       remove(this._loadMoreButtonComponent);
     }
   }
