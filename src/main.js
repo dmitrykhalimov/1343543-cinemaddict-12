@@ -1,6 +1,6 @@
 import UserProfileView from "./view/user-profile.js";
 import MainNavView from "./view/main-nav.js";
-import SortView from "./view/sort.js";
+import SortView from "./view/sort.js"; //+
 import FooterStatsView from "./view/footer-stats.js";
 
 import {generateFilm} from "./mock/film.js";
