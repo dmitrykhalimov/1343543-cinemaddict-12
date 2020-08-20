@@ -23,6 +23,8 @@ export default class Board {
     this._filmsListContainer = this._filmsContainerComponent.getElement().querySelector(`.films-list__container`); // контейнер section class = filmlist__container
 
     this._noFilmsComponent = new NoFilmsView();
+
+    this._handleLoadButton = this._handleLoadButton.bind(this);
   }
 
   // инициализация
@@ -127,7 +129,7 @@ export default class Board {
   _renderLoadMoreButton() {
     render(this._filmsContainerComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton.bind(this));
+    this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton);
   }
 
   _renderNoFilms() {
