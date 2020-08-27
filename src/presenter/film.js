@@ -41,8 +41,8 @@ export default class Film {
   }
 
   destroy() {
-    remove(this._taskComponent);
-    remove(this._taskEditComponent);
+    remove(this._filmComponent);
+    remove(this._filmDetailsComponent);
   }
 
   _openFilmPopup() {

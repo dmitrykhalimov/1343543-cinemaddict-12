@@ -6,7 +6,7 @@ import ExtraRatedContainerView from "../view/container-rated.js";
 import ExtraCommentedContainerView from "../view/container-connected.js";
 import FilmsContainerView from "../view/films-container.js";
 import FilmCardView from "../view/film-card.js";
-import {render, RenderPosition, remove, clearElement} from "../utils/render.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortDate, sortRating} from "../utils/transform.js";
 import {SortType} from "../const.js";
 import FilmPresenter from "./film.js";
@@ -23,6 +23,7 @@ export default class Board {
 
     this._sortComponent = new SortView();
     this._currentSortType = SortType.DEFAULT;
+    this._filmPresenter = {};
 
     this._boardComponent = new BoardView(); // сама доска <section class =films>
     this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
@@ -83,7 +84,8 @@ export default class Board {
   }
 
   _clearFilmsList() {
-    clearElement(this._filmsListContainer);
+    Object.values(this._filmPresenter).forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
   }
 
@@ -141,6 +143,7 @@ export default class Board {
   _renderFilm(film) {
     const filmPresenter = new FilmPresenter(this._filmsListContainer);
     filmPresenter.init(film);
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
   _handleLoadButton() {
