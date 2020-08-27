@@ -1,6 +1,5 @@
 import BoardView from "../view/board.js";
 import NoFilmsView from "../view/no-films.js";
-import FilmDetailsView from "../view/film-details.js";
 import ButtonView from "../view/button.js";
 import SortView from "../view/sort.js";
 import ExtraRatedContainerView from "../view/container-rated.js";
