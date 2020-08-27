@@ -51,4 +51,9 @@ export default class FilmCard extends AbstractView {
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._cardClickHandler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._cardClickHandler);
   }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
 }

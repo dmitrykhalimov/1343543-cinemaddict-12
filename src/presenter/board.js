@@ -144,7 +144,7 @@ export default class Board {
 
   // отрисовка отдельного фильма
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsListContainer);
+    const filmPresenter = new FilmPresenter(this._filmsListContainer, this._handleFilmChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
