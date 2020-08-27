@@ -10,6 +10,7 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortDate, sortRating} from "../utils/transform.js";
 import {SortType} from "../const.js";
 import FilmPresenter from "./film.js";
+import {updateItem} from "../utils/common.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -33,6 +34,7 @@ export default class Board {
 
     this._handleLoadButton = this._handleLoadButton.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleFilmChange = this._handleFilmChange.bind(this);
   }
 
   // инициализация
@@ -65,7 +67,7 @@ export default class Board {
 
     this._currentSortType = sortType;
   }
-  // обработчик
+  // обработчик сортировки
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -78,19 +80,20 @@ export default class Board {
     this._renderFilmsList();
   }
 
+  // метод замены активного класса
   _switchSortClass(sortType) {
     this._sortComponent.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
     this._sortComponent.getElement().querySelector(`[data-sort-type=${sortType}]`).classList.add(`sort__button--active`);
   }
 
+  // обновленный метод очистки списка фильмов
   _clearFilmsList() {
     Object.values(this._filmPresenter).forEach((presenter) => presenter.destroy());
     this._filmPresenter = {};
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
   }
 
-
-  // сортировка
+  // метод сортировки
   _renderSort() {
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
@@ -146,6 +149,7 @@ export default class Board {
     this._filmPresenter[film.id] = filmPresenter;
   }
 
+  // хэндлер загрузки кнопки
   _handleLoadButton() {
     this._renderFilms(this._renderedFilmsCount, this._renderedFilmsCount + FILMS_COUNT_PER_STEP);
     this._renderedFilmsCount += FILMS_COUNT_PER_STEP;
@@ -153,6 +157,14 @@ export default class Board {
     if (this._renderedFilmsCount >= this._boardFilms.length) {
       remove(this._loadMoreButtonComponent);
     }
+  }
+
+  // хэндлер изменения фильма
+
+  _handleFilmChange(updatedFilm) {
+    this._boardFilms = updateItem(this._boardFilms, updatedFilm);
+    this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
+    this._taskPresenter[updatedFilm.id].init(updatedFilm);
   }
 
   _renderLoadMoreButton() {
