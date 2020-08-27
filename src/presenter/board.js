@@ -10,6 +10,7 @@ import FilmCardView from "../view/film-card.js";
 import {render, RenderPosition, remove, clearElement} from "../utils/render.js";
 import {sortDate, sortRating} from "../utils/transform.js";
 import {SortType} from "../const.js";
+import FilmPresenter from "./film.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -70,10 +71,16 @@ export default class Board {
       return;
     }
 
-
     this._sortTasks(sortType);
+    this._switchSortClass(sortType);
+
     this._clearFilmsList();
     this._renderFilmsList();
+  }
+
+  _switchSortClass(sortType) {
+    this._sortComponent.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
+    this._sortComponent.getElement().querySelector(`[data-sort-type=${sortType}]`).classList.add(`sort__button--active`);
   }
 
   _clearFilmsList() {
@@ -133,37 +140,8 @@ export default class Board {
 
   // отрисовка отдельного фильма
   _renderFilm(film) {
-    const filmComponent = new FilmCardView(film);
-    const filmDetailsComponent = new FilmDetailsView(film);
-
-    const siteBody = document.querySelector(`body`);
-
-    const openFilmPopup = () => {
-      siteBody.appendChild(filmDetailsComponent.getElement());
-      document.addEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const closeFilmPopup = () => {
-      siteBody.removeChild(filmDetailsComponent.getElement());
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        closeFilmPopup();
-      }
-    };
-
-    filmComponent.setCardClickHandler(() => {
-      openFilmPopup();
-    });
-
-    filmDetailsComponent.setPopupClickHandler(() => {
-      closeFilmPopup();
-    });
-
-    render(this._filmsListContainer, filmComponent, RenderPosition.BEFOREEND);
+    const filmPresenter = new FilmPresenter(this._filmsListContainer);
+    filmPresenter.init(film);
   }
 
   _handleLoadButton() {
