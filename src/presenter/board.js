@@ -162,9 +162,11 @@ export default class Board {
   // хэндлер изменения фильма
 
   _handleFilmChange(updatedFilm) {
+
     this._boardFilms = updateItem(this._boardFilms, updatedFilm);
     this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
-    this._taskPresenter[updatedFilm.id].init(updatedFilm);
+
+    this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
 
   _renderLoadMoreButton() {

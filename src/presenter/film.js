@@ -24,6 +24,7 @@ export default class Film {
   init(film) {
     this._film = film;
 
+    console.log(this._changeData);
     const prevFilmComponent = this._filmComponent;
     const prevFilmDetailsComponent = this._filmDetailsComponent;
 
@@ -42,7 +43,11 @@ export default class Film {
       return;
     }
 
-    replace(this._taskComponent, prevFilmComponent);
+    console.log('перезапуск');
+    console.log(this._filmComponent)
+    console.log(prevFilmComponent);
+
+    replace(this._filmComponent, prevFilmComponent);
     replace(this._filmDetailsComponent, prevFilmDetailsComponent);
 
     remove(prevFilmComponent);
@@ -72,12 +77,13 @@ export default class Film {
   }
 
   _handleFavoriteClick() {
+    alert('Запущен хэндлер изменения');
     this._changeData(
         Object.assign(
             {},
             this._film,
             {
-              isFavorite: !this._task.isFavorite
+              isFavorite: !this._film.isFavorite
             }
         )
     );
@@ -89,7 +95,7 @@ export default class Film {
             {},
             this._film,
             {
-              isInWatchlist: !this._task.isInWatchlist
+              isInWatchlist: !this._film.isInWatchlist
             }
         )
     );
@@ -101,7 +107,7 @@ export default class Film {
             {},
             this._film,
             {
-              isWatched: !this._task.isWatched
+              isWatched: !this._film.isWatched
             }
         )
     );
