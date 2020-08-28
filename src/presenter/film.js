@@ -19,8 +19,6 @@ export default class Film {
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-
-    this._test = this._filmComponent.getTemplate();
   }
 
   init(film) {
@@ -34,6 +32,10 @@ export default class Film {
 
     this._filmDetailsComponent.setPopupClickHandler(this._closeFilmPopup);
     this._filmComponent.setCardClickHandler(this._openFilmPopup);
+
+    this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filmComponent.setIWatchlistClickHandler(this._handleWatchlistClick);
+    this._filmComponent.setWatchedClickHandler(this._handleWatchedClick);
 
     if (prevFilmComponent === null || prevFilmDetailsComponent === null) {
       render(this._filmsListContainer, this._filmComponent, RenderPosition.BEFOREEND);
