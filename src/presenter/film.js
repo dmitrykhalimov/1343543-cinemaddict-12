@@ -35,15 +35,19 @@ export default class Film {
     this._filmComponent.setCardClickHandler(this._openFilmPopup);
 
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._filmComponent.setIWatchlistClickHandler(this._handleWatchlistClick);
+    this._filmComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmComponent.setWatchedClickHandler(this._handleWatchedClick);
+
+    this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
+    this._filmDetailsComponent.setWatchlistClickHandler(this._handleWatchlistClick);
+    this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
+
 
     if (prevFilmComponent === null || prevFilmDetailsComponent === null) {
       render(this._filmsListContainer, this._filmComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    console.log('перезапуск');
     console.log(this._filmComponent)
     console.log(prevFilmComponent);
 
@@ -77,7 +81,6 @@ export default class Film {
   }
 
   _handleFavoriteClick() {
-    alert('Запущен хэндлер изменения');
     this._changeData(
         Object.assign(
             {},
