@@ -2,13 +2,20 @@ import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
 
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  POPUP: `POPUP`
+};
+
 export default class Film {
-  constructor(filmsListContainer, changeData) {
+  constructor(filmsListContainer, changeData, changeMode) {
     this._filmsListContainer = filmsListContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._filmComponent = null;
     this._filmDetailsComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._siteBody = document.querySelector(`body`);
 
@@ -24,7 +31,6 @@ export default class Film {
   init(film) {
     this._film = film;
 
-    console.log(this._changeData);
     const prevFilmComponent = this._filmComponent;
     const prevFilmDetailsComponent = this._filmDetailsComponent;
 
@@ -49,9 +55,6 @@ export default class Film {
       return;
     }
 
-    console.log(this._filmComponent)
-    console.log(prevFilmComponent);
-
     replace(this._filmComponent, prevFilmComponent);
     replace(this._filmDetailsComponent, prevFilmDetailsComponent);
 
@@ -64,14 +67,23 @@ export default class Film {
     remove(this._filmDetailsComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closeFilmPopup();
+    }
+  }
+
   _openFilmPopup() {
     this._siteBody.appendChild(this._filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._changeMode();
+    this._mode = Mode.POPUP;
   }
 
   _closeFilmPopup() {
     this._siteBody.removeChild(this._filmDetailsComponent.getElement());
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.DEFAULT;
   }
 
   _onEscKeyDown(evt) {

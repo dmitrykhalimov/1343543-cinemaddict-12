@@ -35,6 +35,7 @@ export default class Board {
     this._handleLoadButton = this._handleLoadButton.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleFilmChange = this._handleFilmChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   // инициализация
@@ -93,6 +94,13 @@ export default class Board {
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
   }
 
+  // метод закрытия всех попапов (хотя технически невозможно открыть больше одного!)
+  _handleModeChange() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   // метод сортировки
   _renderSort() {
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
@@ -144,7 +152,7 @@ export default class Board {
 
   // отрисовка отдельного фильма
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsListContainer, this._handleFilmChange);
+    const filmPresenter = new FilmPresenter(this._filmsListContainer, this._handleFilmChange, this._handleModeChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
@@ -162,7 +170,6 @@ export default class Board {
   // хэндлер изменения фильма
 
   _handleFilmChange(updatedFilm) {
-
     this._boardFilms = updateItem(this._boardFilms, updatedFilm);
     this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
 
