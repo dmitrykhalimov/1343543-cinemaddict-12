@@ -1,5 +1,6 @@
 import AbstractView from "./abstract.js";
 import {getDateDetailed, getDateComment, translateMinutesToText} from "../utils/transform.js";
+import {createElement, replace} from "../utils/render.js";
 
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
@@ -159,7 +160,15 @@ export default class FilmDetails extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
+
     this._popupClickHandler = this._popupClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
+    this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
+    this._watchedClickHandler = this._watchedClickHandler.bind(this);
+    this._emojiClickHandler = this._emojiClickHandler.bind(this);
+
+    this._currentEmoji = null;
+    this._prevEmoji = null;
   }
 
   getTemplate() {
@@ -174,5 +183,54 @@ export default class FilmDetails extends AbstractView {
   setPopupClickHandler(callback) {
     this._callback.popupClick = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._popupClickHandler);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  _watchlistClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchlistClick();
+  }
+
+  _watchedClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.watchedClick();
+  }
+
+  _emojiClickHandler(evt) {
+    evt.preventDefault();
+    this._prevEmoji = this._currentEmoji;
+    this._currentEmoji = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-smile"></img>`);
+
+    if (!this._prevEmoji) {
+      this.getElement().querySelector(`.film-details__add-emoji-label`).appendChild(this._currentEmoji);
+      return;
+    }
+    replace(this._currentEmoji, this._prevEmoji);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, this._watchlistClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedClickHandler);
+  }
+
+  setEmojiClickHandler() {
+    const emojiButtons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+    emojiButtons.forEach((emojiButton) => {
+      emojiButton.addEventListener(`change`, this._emojiClickHandler);
+    });
   }
 }

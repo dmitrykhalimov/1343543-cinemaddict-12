@@ -1,15 +1,16 @@
 import BoardView from "../view/board.js";
 import NoFilmsView from "../view/no-films.js";
-import FilmDetailsView from "../view/film-details.js";
 import ButtonView from "../view/button.js";
 import SortView from "../view/sort.js";
 import ExtraRatedContainerView from "../view/container-rated.js";
 import ExtraCommentedContainerView from "../view/container-connected.js";
 import FilmsContainerView from "../view/films-container.js";
 import FilmCardView from "../view/film-card.js";
-import {render, RenderPosition, remove, clearElement} from "../utils/render.js";
+import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortDate, sortRating} from "../utils/transform.js";
 import {SortType} from "../const.js";
+import FilmPresenter from "./film.js";
+import {updateItem} from "../utils/common.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -23,6 +24,7 @@ export default class Board {
 
     this._sortComponent = new SortView();
     this._currentSortType = SortType.DEFAULT;
+    this._filmPresenter = {};
 
     this._boardComponent = new BoardView(); // сама доска <section class =films>
     this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
@@ -32,6 +34,8 @@ export default class Board {
 
     this._handleLoadButton = this._handleLoadButton.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handleFilmChange = this._handleFilmChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   // инициализация
@@ -64,25 +68,40 @@ export default class Board {
 
     this._currentSortType = sortType;
   }
-  // обработчик
+  // обработчик сортировки
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
-
     this._sortTasks(sortType);
+    this._switchSortClass(sortType);
+
     this._clearFilmsList();
     this._renderFilmsList();
   }
 
+  // метод замены активного класса
+  _switchSortClass(sortType) {
+    this._sortComponent.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
+    this._sortComponent.getElement().querySelector(`[data-sort-type=${sortType}]`).classList.add(`sort__button--active`);
+  }
+
+  // обновленный метод очистки списка фильмов
   _clearFilmsList() {
-    clearElement(this._filmsListContainer);
+    Object.values(this._filmPresenter).forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
   }
 
+  // метод закрытия всех попапов (хотя технически невозможно открыть больше одного!)
+  _handleModeChange() {
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
 
-  // сортировка
+  // метод сортировки
   _renderSort() {
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
@@ -133,39 +152,12 @@ export default class Board {
 
   // отрисовка отдельного фильма
   _renderFilm(film) {
-    const filmComponent = new FilmCardView(film);
-    const filmDetailsComponent = new FilmDetailsView(film);
-
-    const siteBody = document.querySelector(`body`);
-
-    const openFilmPopup = () => {
-      siteBody.appendChild(filmDetailsComponent.getElement());
-      document.addEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const closeFilmPopup = () => {
-      siteBody.removeChild(filmDetailsComponent.getElement());
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        closeFilmPopup();
-      }
-    };
-
-    filmComponent.setCardClickHandler(() => {
-      openFilmPopup();
-    });
-
-    filmDetailsComponent.setPopupClickHandler(() => {
-      closeFilmPopup();
-    });
-
-    render(this._filmsListContainer, filmComponent, RenderPosition.BEFOREEND);
+    const filmPresenter = new FilmPresenter(this._filmsListContainer, this._handleFilmChange, this._handleModeChange);
+    filmPresenter.init(film);
+    this._filmPresenter[film.id] = filmPresenter;
   }
 
+  // хэндлер загрузки кнопки
   _handleLoadButton() {
     this._renderFilms(this._renderedFilmsCount, this._renderedFilmsCount + FILMS_COUNT_PER_STEP);
     this._renderedFilmsCount += FILMS_COUNT_PER_STEP;
@@ -173,6 +165,15 @@ export default class Board {
     if (this._renderedFilmsCount >= this._boardFilms.length) {
       remove(this._loadMoreButtonComponent);
     }
+  }
+
+  // хэндлер изменения фильма
+
+  _handleFilmChange(updatedFilm) {
+    this._boardFilms = updateItem(this._boardFilms, updatedFilm);
+    this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
+
+    this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
 
   _renderLoadMoreButton() {

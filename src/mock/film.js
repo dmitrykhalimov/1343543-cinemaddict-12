@@ -119,6 +119,8 @@ const DateLimits = {
   MAX: new Date(),
 };
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const MAX_DAY_GAP = 14;
 
 const WRITERS_COUNT = 3;
@@ -194,6 +196,7 @@ export const generateFilm = () => {
 
   return {
     title: getRandomFromElements(TITLES),
+    id: generateId(),
     titleOriginal: ``,
     poster: getRandomFromElements(POSTERS_FILENAMES),
     country: getRandomFromElements(COUNTRIES),
