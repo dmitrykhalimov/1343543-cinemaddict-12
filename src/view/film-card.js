@@ -1,5 +1,6 @@
 import AbstractView from "./abstract.js";
-import {getOnlyYearFromDate, translateMinutesToText} from "../utils/transform.js";
+import {translateMinutesToText, transformDateTime} from "../utils/transform.js";
+import {DateFormats} from "../const.js";
 
 export const createFilmCard = (task) => {
   const {title, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;
@@ -14,7 +15,7 @@ export const createFilmCard = (task) => {
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${getOnlyYearFromDate(filmDate)}</span>
+      <span class="film-card__year">${transformDateTime(filmDate, DateFormats.OnlyYear)}</span>
       <span class="film-card__duration">${translateMinutesToText(duration)}</span>
       <span class="film-card__genre">${genres.values().next().value}</span>
     </p>

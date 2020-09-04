@@ -1,25 +1,37 @@
 // Функции обработки представления данных
+import moment from "moment";
 
-export const getOnlyYearFromDate = (date) => {
-  return date.toLocaleString(`en-US`, {year: `numeric`});
+/* функции работы с датой и временем */
+
+// трансформация даты комментария
+export const getDateComment = (date, transformType) => {
+  const MIN_DAYS_TO_DATE = 10;
+
+  if (moment(Date.now()).diff(moment(date), `days`) >= MIN_DAYS_TO_DATE) {
+    return transformDateTime(date, transformType);
+  }
+
+  return moment(date).fromNow();
 };
 
-export const getDateDetailed = (date) => {
-  return date.toLocaleString(`en-GB`, {year: `numeric`, day: `2-digit`, month: `long`});
+// общая трансформации даты
+export const transformDateTime = (dateTime, transformType) => {
+  return moment(dateTime).format(transformType);
 };
 
-export const getDateComment = (date) => {
-  return date.toLocaleString(`en-ZA`);
-};
+// трансформации длительности фильма
 
 export const translateMinutesToText = (duration) => {
+  const MS_IN_MIN = 1000;
   const MIN_IN_HOUR = 60;
 
-  const hours = Math.trunc(duration / MIN_IN_HOUR);
-  const minutes = duration - (hours * MIN_IN_HOUR);
+  const durationInMoment = moment.duration(duration * MS_IN_MIN * MIN_IN_HOUR);
+  const formatted = moment.utc(durationInMoment.asMilliseconds()).format(`H[h ]m[m]`);
 
-  return `${hours}h ${minutes}m`;
+  return formatted;
 };
+
+/* функции сортировки */
 
 export const sortDate = (filmA, filmB) => {
   return filmB.filmDate.getTime() - filmA.filmDate.getTime();
