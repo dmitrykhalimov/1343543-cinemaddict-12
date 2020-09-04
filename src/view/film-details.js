@@ -202,15 +202,33 @@ export default class FilmDetails extends AbstractView {
 
   _emojiClickHandler(evt) {
     evt.preventDefault();
+    if (evt.target.tagName !== `IMG`) {
+      return;
+    }
+
     this._prevEmoji = this._currentEmoji;
-    this._currentEmoji = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-smile"></img>`);
+    this._currentEmoji = createElement(`<img src="${evt.target.src}" width="55" height="55" alt="${evt.target.alt}"></img>`);
+
+    if (!this._prevEmoji) {
+      this.getElement().querySelector(`.film-details__add-emoji-label`).appendChild(this._currentEmoji);
+      return;
+    }
+
+    replace(this._currentEmoji, this._prevEmoji);
+  }
+
+  /* old _emojiClickHandler(evt) {
+    evt.preventDefault();
+    console.log(evt.target);
+    this._prevEmoji = this._currentEmoji;
+    this._currentEmoji = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`);
 
     if (!this._prevEmoji) {
       this.getElement().querySelector(`.film-details__add-emoji-label`).appendChild(this._currentEmoji);
       return;
     }
     replace(this._currentEmoji, this._prevEmoji);
-  }
+  } */
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
@@ -228,9 +246,14 @@ export default class FilmDetails extends AbstractView {
   }
 
   setEmojiClickHandler() {
+    const emojiButtons = this.getElement().querySelector(`.film-details__emoji-list`);
+    emojiButtons.addEventListener(`click`, this._emojiClickHandler);
+  }
+
+  /* old setEmojiClickHandler() {
     const emojiButtons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
     emojiButtons.forEach((emojiButton) => {
       emojiButton.addEventListener(`change`, this._emojiClickHandler);
     });
-  }
+  } */
 }

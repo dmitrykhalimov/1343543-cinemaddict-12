@@ -94,7 +94,6 @@ export default class Board {
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
   }
 
-  // метод закрытия всех попапов (хотя технически невозможно открыть больше одного!)
   _handleModeChange() {
     Object
       .values(this._filmPresenter)
