@@ -1,6 +1,7 @@
 import AbstractView from "./abstract.js";
-import {getDateDetailed, getDateComment, translateMinutesToText} from "../utils/transform.js";
+import {transformDateTime, getDateComment, translateMinutesToText} from "../utils/transform.js";
 import {createElement, replace} from "../utils/render.js";
+import {DateFormats} from "../const.js";
 
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
@@ -24,7 +25,7 @@ const createFilmDetails = (film) => {
         <p class="film-details__comment-text">${comment.comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.nickname}</span>
-          <span class="film-details__comment-day">${getDateComment(comment.dateComment)}</span>
+          <span class="film-details__comment-day">${getDateComment(comment.dateComment, DateFormats.CommentStyle)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -79,7 +80,7 @@ const createFilmDetails = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${getDateDetailed(filmDate)}</td>
+              <td class="film-details__cell">${transformDateTime(filmDate, DateFormats.DayMonthYear)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
@@ -202,15 +203,34 @@ export default class FilmDetails extends AbstractView {
 
   _emojiClickHandler(evt) {
     evt.preventDefault();
+    // если навесить обработчик на весь список, то клик происходит либо по нему, либо по картинкам, но не по item. Поэтому переписал логику, чтобы данные брались из картинки
+    if (evt.target.tagName !== `IMG`) {
+      return;
+    }
+
     this._prevEmoji = this._currentEmoji;
-    this._currentEmoji = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-smile"></img>`);
+    this._currentEmoji = createElement(`<img src="${evt.target.src}" width="55" height="55" alt="${evt.target.alt}"></img>`);
+
+    if (!this._prevEmoji) {
+      this.getElement().querySelector(`.film-details__add-emoji-label`).appendChild(this._currentEmoji);
+      return;
+    }
+
+    replace(this._currentEmoji, this._prevEmoji);
+  }
+
+  /* old _emojiClickHandler(evt) {
+    evt.preventDefault();
+    console.log(evt.target);
+    this._prevEmoji = this._currentEmoji;
+    this._currentEmoji = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`);
 
     if (!this._prevEmoji) {
       this.getElement().querySelector(`.film-details__add-emoji-label`).appendChild(this._currentEmoji);
       return;
     }
     replace(this._currentEmoji, this._prevEmoji);
-  }
+  } */
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
@@ -228,9 +248,14 @@ export default class FilmDetails extends AbstractView {
   }
 
   setEmojiClickHandler() {
+    const emojiButtons = this.getElement().querySelector(`.film-details__emoji-list`);
+    emojiButtons.addEventListener(`click`, this._emojiClickHandler);
+  }
+
+  /* old setEmojiClickHandler() {
     const emojiButtons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
     emojiButtons.forEach((emojiButton) => {
       emojiButton.addEventListener(`change`, this._emojiClickHandler);
     });
-  }
+  } */
 }
