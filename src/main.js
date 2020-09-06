@@ -7,6 +7,7 @@ import {generateFilter} from "./mock/filter.js";
 import {generateTopRated, generateTopCommented} from "./mock/extras.js";
 import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
+import FilmsModel from "./model/films.js";
 
 const FILMS_COUNT = 22;
 
@@ -15,6 +16,9 @@ const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
 const topRated = generateTopRated(films);
 const topCommented = generateTopCommented(films);
+
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
 
 /* непосредственно отрисовка */
 // блок профиля пользователя
@@ -25,7 +29,7 @@ const siteMain = document.querySelector(`.main`);
 
 // блок фильмов и сортировка
 // renderBoard(siteMain, films);
-const boardPresenter = new BoardPresenter(siteMain);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel);
 boardPresenter.init(films, topRated, topCommented);
 
 // блок меню

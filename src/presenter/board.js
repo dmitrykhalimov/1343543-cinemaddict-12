@@ -16,7 +16,8 @@ const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
 
 export default class Board {
-  constructor(boardContainer) {
+  constructor(boardContainer, filmsModel) {
+    this._filmsModel = filmsModel;
     this._boardContainer = boardContainer;
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
@@ -50,6 +51,10 @@ export default class Board {
 
     this._renderSort();
     this._renderBoard();
+  }
+
+  _getFilms() {
+    return this._filmsModel.getFilm();
   }
 
   // *сортировка*
