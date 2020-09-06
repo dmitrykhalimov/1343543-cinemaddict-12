@@ -42,9 +42,6 @@ export default class Board {
 
   // инициализация
   init() {
-    // this._boardTopRated = generateTopRated(boardFilms);
-    // this._boardTopCommented = generateTopCommented(boardFilms);
-
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderSort();
@@ -120,9 +117,14 @@ export default class Board {
     render(this._boardComponent, extraRatedContainer, RenderPosition.BEFOREEND);
     render(this._boardComponent, extraCommentedContainer, RenderPosition.BEFOREEND);
 
+    const topRatedFilms = generateTopRated(this._getFilms().slice());
+    const topCommentedFilms = generateTopCommented(this._getFilms().slice());
+
     for (let i = 0; i < EXTRAS_COUNT; i++) {
-      render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(this._boardTopRated[i]), RenderPosition.BEFOREEND);
-      render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(this._boardTopCommented[i]), RenderPosition.BEFOREEND);
+      render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
+
+      // TODO надо как-то научить перерисовываться блок TopCommented при добавлении комментария, не переписывая половину проекта.
+      render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommentedFilms[i]), RenderPosition.BEFOREEND);
     }
   }
 
@@ -131,7 +133,7 @@ export default class Board {
     render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
 
     const filmCount = this._getFilms().length;
-    const films = this._getFilms().slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP))
+    const films = this._getFilms().slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP));
 
     this._renderFilms(films);
 
