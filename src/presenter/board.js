@@ -54,6 +54,7 @@ export default class Board {
 
   // *сортировка*
 
+  // колбэк сортировки
   _sortTasks(sortType) {
     switch (sortType) {
       case SortType.DATE:
@@ -68,6 +69,7 @@ export default class Board {
 
     this._currentSortType = sortType;
   }
+
   // обработчик сортировки
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
@@ -118,6 +120,7 @@ export default class Board {
     this._renderExtras();
   }
 
+  // отрисовка блока экстра
   _renderExtras() {
     const extraRatedContainer = new ExtraRatedContainerView();
     const extraCommentedContainer = new ExtraCommentedContainerView();
@@ -156,7 +159,7 @@ export default class Board {
     this._filmPresenter[film.id] = filmPresenter;
   }
 
-  // хэндлер загрузки кнопки
+  // обработчик нажатия кнопки Show More
   _handleLoadButton() {
     this._renderFilms(this._renderedFilmsCount, this._renderedFilmsCount + FILMS_COUNT_PER_STEP);
     this._renderedFilmsCount += FILMS_COUNT_PER_STEP;
@@ -166,8 +169,7 @@ export default class Board {
     }
   }
 
-  // хэндлер изменения фильма
-
+  // обработчик изменения фильма
   _handleFilmChange(updatedFilm) {
     this._boardFilms = updateItem(this._boardFilms, updatedFilm);
     this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
@@ -175,12 +177,14 @@ export default class Board {
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }
 
+  // отрисовка кнопки Show More
   _renderLoadMoreButton() {
     render(this._filmsContainerComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton);
   }
 
+  // отрисовка плашки No Films
   _renderNoFilms() {
     render(this._boardComponent, this._noFilmsComponent, RenderPosition.BEFOREEND);
   }

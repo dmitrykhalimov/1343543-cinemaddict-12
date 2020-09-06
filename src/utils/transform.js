@@ -1,11 +1,12 @@
 // Функции обработки представления данных
 import moment from "moment";
 
+const MIN_DAYS_TO_DATE = 10;
+
 /* функции работы с датой и временем */
 
 // трансформация даты комментария
 export const getDateComment = (date, transformType) => {
-  const MIN_DAYS_TO_DATE = 10;
 
   if (moment(Date.now()).diff(moment(date), `days`) >= MIN_DAYS_TO_DATE) {
     return transformDateTime(date, transformType);

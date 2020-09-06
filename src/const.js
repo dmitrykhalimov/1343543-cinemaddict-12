@@ -5,7 +5,7 @@ export const SortType = {
 };
 
 export const DateFormats = {
-  OnlyYear: `YYYY`,
-  DayMonthYear: `DD MMMM YYYY`,
-  CommentStyle: `YYYY/MM/DD HH:mm`,
+  ONLY_YEAR: `YYYY`,
+  DAY_MONTH_YEAR: `DD MMMM YYYY`,
+  COMMENT_STYLE: `YYYY/MM/DD HH:mm`,
 };

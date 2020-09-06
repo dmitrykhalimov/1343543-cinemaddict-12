@@ -25,7 +25,7 @@ const createFilmDetails = (film) => {
         <p class="film-details__comment-text">${comment.comment}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.nickname}</span>
-          <span class="film-details__comment-day">${getDateComment(comment.dateComment, DateFormats.CommentStyle)}</span>
+          <span class="film-details__comment-day">${getDateComment(comment.dateComment, DateFormats.COMMENT_STYLE)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
@@ -80,7 +80,7 @@ const createFilmDetails = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${transformDateTime(filmDate, DateFormats.DayMonthYear)}</td>
+              <td class="film-details__cell">${transformDateTime(filmDate, DateFormats.DAY_MONTH_YEAR)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
