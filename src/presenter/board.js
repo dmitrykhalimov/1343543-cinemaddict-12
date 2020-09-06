@@ -7,7 +7,7 @@ import ExtraCommentedContainerView from "../view/container-connected.js";
 import FilmsContainerView from "../view/films-container.js";
 import FilmCardView from "../view/film-card.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
-import {sortDate, sortRating} from "../utils/transform.js";
+import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../utils/transform.js";
 import {SortType} from "../const.js";
 import FilmPresenter from "./film.js";
 import {updateItem} from "../utils/common.js";
@@ -40,12 +40,12 @@ export default class Board {
   }
 
   // инициализация
-  init(boardFilms, boardTopRated, boardTopCommented) {
+  init(boardFilms) {
     this._boardFilms = boardFilms.slice();
     this._sourcedBoardFilms = boardFilms.slice();
 
-    this._boardTopRated = boardTopRated.slice();
-    this._boardTopCommented = boardTopCommented.slice();
+    this._boardTopRated = generateTopRated(boardFilms);
+    this._boardTopCommented = generateTopCommented(boardFilms);
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
