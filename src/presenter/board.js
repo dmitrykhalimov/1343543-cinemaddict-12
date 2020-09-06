@@ -11,6 +11,7 @@ import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../u
 import {SortType} from "../const.js";
 import FilmPresenter from "./film.js";
 import {updateItem} from "../utils/common.js";
+import FilmDetails from "../view/film-details.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -40,12 +41,9 @@ export default class Board {
   }
 
   // инициализация
-  init(boardFilms) {
-    this._boardFilms = boardFilms.slice();
-    this._sourcedBoardFilms = boardFilms.slice();
-
-    this._boardTopRated = generateTopRated(boardFilms);
-    this._boardTopCommented = generateTopCommented(boardFilms);
+  init() {
+    // this._boardTopRated = generateTopRated(boardFilms);
+    // this._boardTopCommented = generateTopCommented(boardFilms);
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
@@ -54,26 +52,16 @@ export default class Board {
   }
 
   _getFilms() {
-    return this._filmsModel.getFilm();
+    switch (this._currentSortType) {
+      case SortType.DATE:
+        return this._filmsModel.getFilms().slice().sort(sortDate);
+      case SortType.RATING:
+        return this._filmsModel.getFilms().slice().sort(sortRating);
+    }
+    return this._filmsModel.getFilms();
   }
 
   // *сортировка*
-
-  // колбэк сортировки
-  _sortTasks(sortType) {
-    switch (sortType) {
-      case SortType.DATE:
-        this._boardFilms.sort(sortDate);
-        break;
-      case SortType.RATING:
-        this._boardFilms.sort(sortRating);
-        break;
-      default:
-        this._boardFilms = this._sourcedBoardFilms.slice();
-    }
-
-    this._currentSortType = sortType;
-  }
 
   // обработчик сортировки
   _handleSortTypeChange(sortType) {
@@ -81,8 +69,7 @@ export default class Board {
       return;
     }
 
-    this._sortTasks(sortType);
-    this._switchSortClass(sortType);
+    this._currentSortType = sortType;
 
     this._clearFilmsList();
     this._renderFilmsList();
@@ -117,7 +104,7 @@ export default class Board {
   _renderBoard() {
 
     // если фильмов нет - отрисовать плашку NoFilms
-    if (this._boardFilms.length === 0) {
+    if (this._getFilms().length === 0) {
       this._renderNoFilms();
       return;
     }
@@ -143,18 +130,19 @@ export default class Board {
   _renderFilmsList() {
     render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
 
-    this._renderFilms(0, Math.min(this._boardFilms.length, FILMS_COUNT_PER_STEP));
+    const filmCount = this._getFilms().length;
+    const films = this._getFilms().slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP))
 
-    if (this._boardFilms.length > FILMS_COUNT_PER_STEP) {
+    this._renderFilms(films);
+
+    if (filmCount > FILMS_COUNT_PER_STEP) {
       this._renderLoadMoreButton();
     }
   }
 
   // отрисовка фильмов
-  _renderFilms(from, to) {
-    this._boardFilms
-      .slice(from, to)
-      .forEach((boardFilm) => this._renderFilm(boardFilm));
+  _renderFilms(films) {
+    films.forEach((film) => this._renderFilm(film));
   }
 
   // отрисовка отдельного фильма
@@ -166,18 +154,21 @@ export default class Board {
 
   // обработчик нажатия кнопки Show More
   _handleLoadButton() {
-    this._renderFilms(this._renderedFilmsCount, this._renderedFilmsCount + FILMS_COUNT_PER_STEP);
-    this._renderedFilmsCount += FILMS_COUNT_PER_STEP;
+    const filmCount = this._getFilms().length;
+    const newRenderedFilmCount = Math.min(filmCount, this._renderedFilmsCount + FILMS_COUNT_PER_STEP);
+    const films = this._getFilms().slice(this._renderedFilmsCount, newRenderedFilmCount);
 
-    if (this._renderedFilmsCount >= this._boardFilms.length) {
+    this._renderFilms(films);
+    this._renderedFilmsCount = newRenderedFilmCount;
+
+    if (this._renderedFilmsCount >= filmCount) {
       remove(this._loadMoreButtonComponent);
     }
   }
 
   // обработчик изменения фильма
   _handleFilmChange(updatedFilm) {
-    this._boardFilms = updateItem(this._boardFilms, updatedFilm);
-    this._sourcedBoardFilms = updateItem(this._sourcedBoardFilms, updatedFilm);
+    // WUT?
 
     this._filmPresenter[updatedFilm.id].init(updatedFilm);
   }

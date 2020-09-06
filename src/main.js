@@ -28,7 +28,7 @@ const siteMain = document.querySelector(`.main`);
 // блок фильмов и сортировка
 // renderBoard(siteMain, films);
 const boardPresenter = new BoardPresenter(siteMain, filmsModel);
-boardPresenter.init(films);
+boardPresenter.init();
 
 // блок меню
 render(siteMain, new MainNavView(filters), RenderPosition.AFTERBEGIN);
