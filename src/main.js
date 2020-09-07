@@ -8,6 +8,7 @@ import {generateFilter} from "./mock/filter.js";
 import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
 import FilmsModel from "./model/films.js";
+import FilterModel from "./model/filter.js";
 
 const FILMS_COUNT = 22;
 
@@ -15,8 +16,12 @@ const FILMS_COUNT = 22;
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 const filters = generateFilter(films);
 
+// модель фильма
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
+
+// модель фильтра
+const filterModel = new FilterModel();
 
 /* непосредственно отрисовка */
 // блок профиля пользователя
