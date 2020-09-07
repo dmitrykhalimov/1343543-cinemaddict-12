@@ -129,14 +129,21 @@ export default class Board {
 
   // отрисовка поля
   _renderBoard() {
+    const films = this._getFilms();
+    const filmCount = films.length;
 
     // если фильмов нет - отрисовать плашку NoFilms
-    if (this._getFilms().length === 0) {
+    if (filmCount === 0) {
       this._renderNoFilms();
       return;
     }
-    this._renderFilmsList();
+
+    this._renderFilms(films.slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP)));
     this._renderExtras();
+
+    if (filmCount > this._renderedFilmsCount) {
+      this._renderLoadMoreButton();
+    }
   }
 
   // отрисовка блока экстра
@@ -161,8 +168,6 @@ export default class Board {
 
   // отрисовка списка фильмов
   _renderFilmsList() {
-    render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
-
     const filmCount = this._getFilms().length;
     const films = this._getFilms().slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP));
 
@@ -175,6 +180,8 @@ export default class Board {
 
   // отрисовка фильмов
   _renderFilms(films) {
+    render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
+
     films.forEach((film) => this._renderFilm(film));
   }
 
