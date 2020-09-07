@@ -77,7 +77,7 @@ export default class Film {
   _openFilmPopup() {
     this._siteBody.appendChild(this._filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, this._onEscKeyDown);
-    this._changeMode(UserAction.UPDATE_FILM, UpdateType.MINOR);
+    this._changeMode();
     this._mode = Mode.POPUP;
   }
 

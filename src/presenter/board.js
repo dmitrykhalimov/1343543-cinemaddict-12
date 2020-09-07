@@ -21,9 +21,9 @@ export default class Board {
     this._boardContainer = boardContainer;
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
-    this._loadMoreButtonComponent = new ButtonView();
+    this._loadMoreButtonComponent = null;
+    this._sortComponent = null;
 
-    this._sortComponent = new SortView();
     this._currentSortType = SortType.DEFAULT;
     this._filmPresenter = {};
 
@@ -70,8 +70,8 @@ export default class Board {
 
     this._currentSortType = sortType;
 
-    this._clearFilmsList();
-    this._renderFilmsList();
+    this._clearBoard({resetRenderedTaskCount: true});
+    this._renderBoard();
   }
 
   // метод замены активного класса
@@ -109,12 +109,20 @@ export default class Board {
         this._filmPresenter[data.id].init(data);
         break;
       case UpdateType.MAJOR:
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
+        this._renderBoard();
         break;
     }
   }
 
   // метод сортировки
   _renderSort() {
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+
+    this._sortComponent = new SortView(this._currentSortType);
+
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
@@ -194,6 +202,13 @@ export default class Board {
 
   // отрисовка кнопки Show More
   _renderLoadMoreButton() {
+
+    if (this._loadMoreButtonComponent !== null) {
+      this._loadMoreButtonComponent = null;
+    }
+
+    this._loadMoreButtonComponent = new ButtonView();
+
     render(this._filmsContainerComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton);
@@ -202,5 +217,33 @@ export default class Board {
   // отрисовка плашки No Films
   _renderNoFilms() {
     render(this._boardComponent, this._noFilmsComponent, RenderPosition.BEFOREEND);
+  }
+
+  // метод очистки доски
+
+  _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
+    const filmCount = this._getFilms().length;
+
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._filmPresenter = {};
+
+    remove(this._sortComponent);
+    remove(this._noFilmComponent);
+    remove(this._loadMoreButtonComponent);
+
+    if (resetRenderedFilmCount) {
+      this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
+    } else {
+      // На случай, если перерисовка доски вызвана
+      // уменьшением количества задач (например, удаление или перенос в архив)
+      // нужно скорректировать число показанных задач
+      this._renderedFilmsCount = Math.min(filmCount, this._renderedFilmsCount);
+    }
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
   }
 }
