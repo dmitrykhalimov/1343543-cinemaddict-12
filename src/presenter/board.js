@@ -10,14 +10,16 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../utils/transform.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
+import {countFilters, makeFilters} from "../utils/filter.js";
 // import FilmDetailsView from "../view/film-details.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
 
 export default class Board {
-  constructor(boardContainer, filmsModel) {
+  constructor(boardContainer, filmsModel, filterModel) {
     this._filmsModel = filmsModel;
+    this._filterModel = filterModel;
     this._boardContainer = boardContainer;
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
 
@@ -40,6 +42,7 @@ export default class Board {
     this._handleModeChange = this._handleModeChange.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   // инициализация
@@ -50,13 +53,18 @@ export default class Board {
   }
 
   _getFilms() {
+    const filterType = this._filterModel.getFilter();
+    const films = this._filmsModel.getFilms();
+    const filteredFilms = makeFilters[filterType](films);
+
     switch (this._currentSortType) {
       case SortType.DATE:
-        return this._filmsModel.getFilms().slice().sort(sortDate);
+        return filteredFilms.sort(sortDate);
       case SortType.RATING:
-        return this._filmsModel.getFilms().slice().sort(sortRating);
+        return filteredFilms.sort(sortRating);
     }
-    return this._filmsModel.getFilms();
+
+    return filteredFilms;
   }
 
   // *сортировка*

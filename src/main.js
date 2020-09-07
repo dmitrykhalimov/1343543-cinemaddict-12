@@ -31,7 +31,8 @@ render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 const siteMain = document.querySelector(`.main`);
 
 // блок фильмов и сортировка
-const boardPresenter = new BoardPresenter(siteMain, filmsModel);
+console.log(filterModel);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
 boardPresenter.init();
 
 // блок фильтров
