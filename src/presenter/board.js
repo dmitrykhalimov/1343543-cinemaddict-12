@@ -71,14 +71,6 @@ export default class Board {
 
     this._clearBoard({resetRenderedTaskCount: true});
     this._renderBoard();
-
-    this._switchSortClass(sortType);
-  }
-
-  // метод замены активного класса
-  _switchSortClass(sortType) {
-    this._sortComponent.getElement().querySelector(`.sort__button--active`).classList.remove(`sort__button--active`);
-    this._sortComponent.getElement().querySelector(`[data-sort-type=${sortType}]`).classList.add(`sort__button--active`);
   }
 
   // обновленный метод очистки списка фильмов
@@ -122,6 +114,7 @@ export default class Board {
       this._sortComponent = null;
     }
 
+    console.log(this._currentSortType);
     this._sortComponent = new SortView(this._currentSortType);
 
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
