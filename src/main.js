@@ -3,7 +3,6 @@ import FilterPresenter from "./presenter/filter.js";
 import FooterStatsView from "./view/footer-stats.js";
 
 import {generateFilm} from "./mock/film.js";
-import {generateFilter} from "./mock/filter.js";
 
 import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
@@ -14,7 +13,6 @@ const FILMS_COUNT = 22;
 
 /* генерация моков */
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
-const filters = generateFilter(films);
 
 // модель фильма
 const filmsModel = new FilmsModel();
@@ -31,7 +29,6 @@ render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 const siteMain = document.querySelector(`.main`);
 
 // блок фильмов и сортировка
-console.log(filterModel);
 const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
 boardPresenter.init();
 

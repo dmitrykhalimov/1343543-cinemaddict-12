@@ -10,7 +10,7 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../utils/transform.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
-import {countFilters, makeFilters} from "../utils/filter.js";
+import {makeFilters} from "../utils/filter.js";
 // import FilmDetailsView from "../view/film-details.js";
 
 const FILMS_COUNT_PER_STEP = 5;
@@ -166,12 +166,12 @@ export default class Board {
   _renderFilms(films) {
     render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
 
-    films.forEach((film) => this._renderFilm(film));
+    films.forEach((film) => this._renderFilm(this._filmsListContainer, film));
   }
 
   // отрисовка отдельного фильма
-  _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsListContainer, this._handleViewAction, this._handleModeChange);
+  _renderFilm(container, film) {
+    const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleModeChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }

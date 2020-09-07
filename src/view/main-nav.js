@@ -39,8 +39,6 @@ export default class MainNav extends AbstractView {
 
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
-    //const filterLinks = this.getElement().querySelectorAll(`.main-navigation__item`);
-    //console.log(filterLinks);
     this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
   }
 }
