@@ -46,7 +46,6 @@ export default class Board {
   init() {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
-    this._renderSort();
     this._renderBoard();
   }
 
@@ -72,6 +71,8 @@ export default class Board {
 
     this._clearBoard({resetRenderedTaskCount: true});
     this._renderBoard();
+
+    this._switchSortClass(sortType);
   }
 
   // метод замены активного класса
@@ -140,6 +141,8 @@ export default class Board {
 
     this._renderFilms(films.slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP)));
     this._renderExtras();
+
+    this._renderSort();
 
     if (filmCount > this._renderedFilmsCount) {
       this._renderLoadMoreButton();
@@ -237,7 +240,7 @@ export default class Board {
     this._filmPresenter = {};
 
     remove(this._sortComponent);
-    remove(this._noFilmComponent);
+    remove(this._noFilmsComponent);
     remove(this._loadMoreButtonComponent);
 
     if (resetRenderedFilmCount) {
