@@ -8,10 +8,9 @@ import FilmsContainerView from "../view/films-container.js";
 import FilmCardView from "../view/film-card.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../utils/transform.js";
-import {SortType} from "../const.js";
+import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
-import {updateItem} from "../utils/common.js";
-import FilmDetails from "../view/film-details.js";
+// import FilmDetailsView from "../view/film-details.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -34,10 +33,13 @@ export default class Board {
 
     this._noFilmsComponent = new NoFilmsView();
 
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleLoadButton = this._handleLoadButton.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-    this._handleFilmChange = this._handleFilmChange.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
+
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   // инициализация
@@ -91,6 +93,26 @@ export default class Board {
       .forEach((presenter) => presenter.resetView());
   }
 
+  // обработчик изменения фильма
+
+  _handleViewAction(actionType, updateType, update) {
+    switch (actionType) {
+      case UserAction.UPDATE_FILM:
+        this._filmsModel.updateFilm(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    switch (updateType) {
+      case UpdateType.MINOR:
+        this._filmPresenter[data.id].init(data);
+        break;
+      case UpdateType.MAJOR:
+        break;
+    }
+  }
+
   // метод сортировки
   _renderSort() {
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
@@ -124,6 +146,7 @@ export default class Board {
       render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
 
       // TODO надо как-то научить перерисовываться блок TopCommented при добавлении комментария, не переписывая половину проекта.
+      // TODO не открываются попапы при клике на элементы блока Extra
       render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommentedFilms[i]), RenderPosition.BEFOREEND);
     }
   }
@@ -149,7 +172,7 @@ export default class Board {
 
   // отрисовка отдельного фильма
   _renderFilm(film) {
-    const filmPresenter = new FilmPresenter(this._filmsListContainer, this._handleFilmChange, this._handleModeChange);
+    const filmPresenter = new FilmPresenter(this._filmsListContainer, this._handleViewAction, this._handleModeChange);
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
@@ -168,12 +191,6 @@ export default class Board {
     }
   }
 
-  // обработчик изменения фильма
-  _handleFilmChange(updatedFilm) {
-    // WUT?
-
-    this._filmPresenter[updatedFilm.id].init(updatedFilm);
-  }
 
   // отрисовка кнопки Show More
   _renderLoadMoreButton() {
