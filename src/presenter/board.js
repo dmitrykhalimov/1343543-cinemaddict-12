@@ -73,13 +73,6 @@ export default class Board {
     this._renderBoard();
   }
 
-  // обновленный метод очистки списка фильмов
-  _clearFilmsList() {
-    Object.values(this._filmPresenter).forEach((presenter) => presenter.destroy());
-    this._filmPresenter = {};
-    this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
-  }
-
   _handleModeChange() {
     Object
       .values(this._filmPresenter)
@@ -114,7 +107,6 @@ export default class Board {
       this._sortComponent = null;
     }
 
-    console.log(this._currentSortType);
     this._sortComponent = new SortView(this._currentSortType);
 
     render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
@@ -159,18 +151,6 @@ export default class Board {
       // TODO надо как-то научить перерисовываться блок TopCommented при добавлении комментария, не переписывая половину проекта.
       // TODO не открываются попапы при клике на элементы блока Extra
       render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommentedFilms[i]), RenderPosition.BEFOREEND);
-    }
-  }
-
-  // отрисовка списка фильмов
-  _renderFilmsList() {
-    const filmCount = this._getFilms().length;
-    const films = this._getFilms().slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP));
-
-    this._renderFilms(films);
-
-    if (filmCount > FILMS_COUNT_PER_STEP) {
-      this._renderLoadMoreButton();
     }
   }
 

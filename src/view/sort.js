@@ -2,7 +2,6 @@ import AbstractView from "./abstract.js";
 import {SortType} from "../const.js";
 
 const createSort = (currentSortType) => {
-  console.log(currentSortType);
   return `<ul class="sort">
       <li><a href="#" data-sort-type="${SortType.DEFAULT}" class="sort__button ${currentSortType === SortType.DEFAULT ? `sort__button--active` : ``}">Sort by default</a></li>
       <li><a href="#" data-sort-type="${SortType.DATE}" class="sort__button ${currentSortType === SortType.DATE ? `sort__button--active` : ``}">Sort by date</a></li>
