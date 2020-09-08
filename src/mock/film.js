@@ -161,6 +161,7 @@ export const generateFilm = () => {
 
   const generateComment = () => {
     return {
+      id: generateId(),
       emoji: getRandomFromElements(EMOJIS),
       comment: getRandomFromElements(COMMENTS),
       nickname: getRandomFromElements(NICKNAMES),

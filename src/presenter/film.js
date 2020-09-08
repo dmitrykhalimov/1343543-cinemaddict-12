@@ -27,10 +27,13 @@ export default class Film {
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(film) {
     this._film = film;
+    console.log(film);
 
     const prevFilmComponent = this._filmComponent;
     const prevFilmDetailsComponent = this._filmDetailsComponent;
@@ -49,6 +52,7 @@ export default class Film {
     this._filmDetailsComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetailsComponent.setEmojiClickHandler();
+    this._filmDetailsComponent.setDeleteClickHandler(this._handleDeleteClick);
 
 
     if (prevFilmComponent === null || prevFilmDetailsComponent === null) {
@@ -133,6 +137,28 @@ export default class Film {
               isWatched: !this._film.isWatched
             }
         )
+    );
+  }
+
+  _handleDeleteClick(commentId) {
+    console.log(`Обновление комментария`);
+    console.log(this._film);
+    const index = this._film.comments.findIndex((comment) => comment.id === Number(commentId));
+    const newComments = [
+      ...this._film.comments.slice(0, index),
+      ...this._film.comments.slice(index + 1)
+    ];
+    const newFilm = Object.assign(
+        {},
+        this._film,
+        {
+          comments: newComments
+        }
+    );
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.POPUP,
+        newFilm
     );
   }
 }

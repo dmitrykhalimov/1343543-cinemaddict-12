@@ -17,7 +17,7 @@ const createFilmDetails = (film) => {
   const generateComments = () => {
     let result = ``;
     for (let comment of comments) {
-      result += `<li class="film-details__comment">
+      result += `<li class="film-details__comment" data-comment-id="${comment.id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
       </span>
@@ -167,6 +167,7 @@ export default class FilmDetails extends AbstractView {
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
+    this._buttonDeleteClickHandler = this._buttonDeleteClickHandler.bind(this);
 
     this._currentEmoji = null;
     this._prevEmoji = null;
@@ -219,18 +220,16 @@ export default class FilmDetails extends AbstractView {
     replace(this._currentEmoji, this._prevEmoji);
   }
 
-  /* old _emojiClickHandler(evt) {
+  _buttonDeleteClickHandler(evt) {
     evt.preventDefault();
-    console.log(evt.target);
-    this._prevEmoji = this._currentEmoji;
-    this._currentEmoji = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`);
 
-    if (!this._prevEmoji) {
-      this.getElement().querySelector(`.film-details__add-emoji-label`).appendChild(this._currentEmoji);
+    if (evt.target.tagName !== `BUTTON`) {
       return;
     }
-    replace(this._currentEmoji, this._prevEmoji);
-  } */
+
+    const commentId = evt.target.parentNode.parentNode.parentNode.getAttribute(`data-comment-id`);
+    this._callback.deleteComment(commentId);
+  }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
@@ -250,6 +249,13 @@ export default class FilmDetails extends AbstractView {
   setEmojiClickHandler() {
     const emojiButtons = this.getElement().querySelector(`.film-details__emoji-list`);
     emojiButtons.addEventListener(`click`, this._emojiClickHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteComment = callback;
+
+    const commentsList = this.getElement().querySelector(`.film-details__comments-list`);
+    commentsList.addEventListener(`click`, this._buttonDeleteClickHandler);
   }
 
   /* old setEmojiClickHandler() {
