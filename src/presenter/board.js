@@ -28,6 +28,8 @@ export default class Board {
 
     this._currentSortType = SortType.DEFAULT;
     this._filmPresenter = {};
+    this._filmRatedPresenter = {};
+    this._filmCommentedPresenter = {};
 
     this._boardComponent = new BoardView(); // сама доска <section class =films>
     this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
@@ -157,12 +159,13 @@ export default class Board {
 
     for (let i = 0; i < EXTRAS_COUNT; i++) {
       // render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
-      // this._renderFilm(extraRatedContainer.getElement().querySelector(`.films-list__container`), topRatedFilms[i]);
+
       // TODO надо как-то научить перерисовываться блок TopCommented при добавлении комментария, не переписывая половину проекта.
       // TODO не открываются попапы при клике на элементы блока Extra
 
       // render(this._extraRated.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
-      render(this._extraCommented.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommentedFilms[i]), RenderPosition.BEFOREEND);
+      this._renderFilm(this._extraRated.getElement().querySelector(`.films-list__container`), topRatedFilms[i], this._filmRatedPresenter);
+      this._renderFilm(this._extraCommented.getElement().querySelector(`.films-list__container`), topCommentedFilms[i], this._filmCommentedPresenter);
     }
   }
 
@@ -170,14 +173,14 @@ export default class Board {
   _renderFilms(films) {
     render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
 
-    films.forEach((film) => this._renderFilm(this._filmsListContainer, film));
+    films.forEach((film) => this._renderFilm(this._filmsListContainer, film, this._filmPresenter));
   }
 
   // отрисовка отдельного фильма
-  _renderFilm(container, film) {
+  _renderFilm(container, film, presenterList) {
     const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleModeChange);
     filmPresenter.init(film);
-    this._filmPresenter[film.id] = filmPresenter;
+    presenterList[film.id] = filmPresenter;
   }
 
 
