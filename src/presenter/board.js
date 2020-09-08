@@ -52,6 +52,7 @@ export default class Board {
     this._renderBoard();
   }
 
+  // метод получения фильмов из модели
   _getFilms() {
     const filterType = this._filterModel.getFilter();
     const films = this._filmsModel.getFilms();
@@ -81,13 +82,14 @@ export default class Board {
     this._renderBoard();
   }
 
+  // обработчик смены режима попап/доска
   _handleModeChange() {
     Object
       .values(this._filmPresenter)
       .forEach((presenter) => presenter.resetView());
   }
 
-  // обработчик изменения фильма
+  // обработчик изменения фильма (можно обойтись без switch и все упростить - но мало ли понадобится DELETE, если нет - удалю
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
@@ -99,7 +101,7 @@ export default class Board {
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
     switch (updateType) {
-      case UpdateType.MINOR:
+      case UpdateType.MINOR: // не используется нигде, т.к. любое обновление фильма требует перерисовки доски
         this._filmPresenter[data.id].init(data);
         break;
       case UpdateType.MAJOR:
@@ -109,7 +111,7 @@ export default class Board {
       case UpdateType.POPUP:
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
-        this._filmPresenter[data.id].openFilmPopup();
+        this._filmPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
         break;
     }
   }
@@ -151,6 +153,7 @@ export default class Board {
 
   // отрисовка блока экстра
   _renderExtras() {
+    // TODO: не работают интерактивные элементы попапа (!)
     this._extraRated = new ExtraRatedContainerView();
     this._extraCommented = new ExtraCommentedContainerView();
 
@@ -161,12 +164,6 @@ export default class Board {
     const topCommentedFilms = generateTopCommented(this._filmsModel.getFilms().slice());
 
     for (let i = 0; i < EXTRAS_COUNT; i++) {
-      // render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
-
-      // TODO надо как-то научить перерисовываться блок TopCommented при добавлении комментария, не переписывая половину проекта.
-      // TODO не открываются попапы при клике на элементы блока Extra
-
-      // render(this._extraRated.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
       this._renderFilm(this._extraRated.getElement().querySelector(`.films-list__container`), topRatedFilms[i], this._filmRatedPresenter);
       this._renderFilm(this._extraCommented.getElement().querySelector(`.films-list__container`), topCommentedFilms[i], this._filmCommentedPresenter);
     }
@@ -239,9 +236,6 @@ export default class Board {
     if (resetRenderedFilmCount) {
       this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this._renderedFilmsCount = Math.min(filmCount, this._renderedFilmsCount);
     }
 
