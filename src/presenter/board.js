@@ -154,8 +154,8 @@ export default class Board {
     render(this._boardComponent, this._extraRated, RenderPosition.BEFOREEND);
     render(this._boardComponent, this._extraCommented, RenderPosition.BEFOREEND);
 
-    const topRatedFilms = generateTopRated(this._getFilms().slice());
-    const topCommentedFilms = generateTopCommented(this._getFilms().slice());
+    const topRatedFilms = generateTopRated(this._filmsModel.getFilms().slice());
+    const topCommentedFilms = generateTopCommented(this._filmsModel.getFilms().slice());
 
     for (let i = 0; i < EXTRAS_COUNT; i++) {
       // render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
