@@ -35,7 +35,6 @@ export default class Film {
 
   init(film) {
     this._film = film;
-    console.log(film);
 
     const prevFilmComponent = this._filmComponent;
     const prevFilmDetailsComponent = this._filmDetailsComponent;
@@ -169,16 +168,18 @@ export default class Film {
       id: generateId(),
       emoji: newEmoji,
       comment: newComment,
-      nickname: `Fancy troll`,
+      nickname: `Fancy troll`, // тут должно генерироваться имя, сделаю в 8 модуле, когда откажусь от моков, и часть функций перенсу в utils
       dateComment: new Date(),
     });
-    const updatedFilm = Object.assign(
+
+    const updatedFilm = Object.assign( // повторяющаяся часть, но мне кажется вынесение в отдельный метод усложнит структуру
         {},
         this._film,
         {
           comments: updatedComments
         }
     );
+
     this._changeData(
         UserAction.UPDATE_FILM,
         UpdateType.POPUP,

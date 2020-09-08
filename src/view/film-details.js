@@ -205,7 +205,6 @@ export default class FilmDetails extends AbstractView {
 
   _emojiClickHandler(evt) {
     evt.preventDefault();
-    // если навесить обработчик на весь список, то клик происходит либо по нему, либо по картинкам, но не по item. Поэтому переписал логику, чтобы данные брались из картинки
     if (evt.target.tagName !== `IMG`) {
       return;
     }
@@ -235,11 +234,6 @@ export default class FilmDetails extends AbstractView {
   _addCommentClickHandler(evt) {
     if (evt.key === `Enter`) {
       evt.preventDefault();
-      console.log('Бантичек');
-      //console.log(this._currentEmoji.alt);
-      //console.log(this.getElement().querySelector(`.film-details__comment-input`).value);
-      console.log('Колбэк');
-
       this._callback.addComment(this.getElement().querySelector(`.film-details__comment-input`).value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
     }
   }
@@ -273,14 +267,6 @@ export default class FilmDetails extends AbstractView {
 
   setAddCommentHandler(callback) {
     this._callback.addComment = callback;
-    console.log(this._callback.addComment);
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
-
-  /* old setEmojiClickHandler() {
-    const emojiButtons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
-    emojiButtons.forEach((emojiButton) => {
-      emojiButton.addEventListener(`change`, this._emojiClickHandler);
-    });
-  } */
 }

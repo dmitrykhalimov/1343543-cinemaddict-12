@@ -33,7 +33,7 @@ export default class MainNav extends AbstractView {
       return;
     }
 
-    const filterName = evt.target.getAttribute(`data-type`)
+    const filterName = evt.target.getAttribute(`data-type`);
     this._callback.filterTypeChange(filterName);
   }
 

@@ -1,7 +1,7 @@
 import FilterView from "../view/main-nav.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import {countFilters} from "../utils/filter.js";
-import {FilterType, UpdateType} from "../const.js";
+import {UpdateType} from "../const.js";
 
 export default class Filter {
   constructor(filterContainer, filterModel, filmsModel) {
