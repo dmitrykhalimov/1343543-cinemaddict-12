@@ -106,7 +106,7 @@ const DateLimits = {
   MAX: new Date(),
 };
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const MAX_DAY_GAP = 14;
 

@@ -166,7 +166,7 @@ export default class Film {
   _handleAddComment(newComment, newEmoji) {
     const updatedComments = this._film.comments.slice();
     updatedComments.push({
-      id: 50083552,
+      id: generateId(),
       emoji: newEmoji,
       comment: newComment,
       nickname: `Fancy troll`,
