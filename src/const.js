@@ -16,7 +16,8 @@ export const UserAction = {
 
 export const UpdateType = {
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  POPUP: `POPUP`,
 };
 
 export const FilterType = {

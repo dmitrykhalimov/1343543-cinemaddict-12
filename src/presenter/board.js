@@ -5,13 +5,11 @@ import SortView from "../view/sort.js";
 import ExtraRatedContainerView from "../view/container-rated.js";
 import ExtraCommentedContainerView from "../view/container-connected.js";
 import FilmsContainerView from "../view/films-container.js";
-import FilmCardView from "../view/film-card.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
 import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../utils/transform.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
 import {makeFilters} from "../utils/filter.js";
-// import FilmDetailsView from "../view/film-details.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -90,7 +88,6 @@ export default class Board {
   }
 
   // обработчик изменения фильма
-
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
@@ -99,6 +96,7 @@ export default class Board {
     }
   }
 
+  // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.MINOR:
@@ -107,6 +105,11 @@ export default class Board {
       case UpdateType.MAJOR:
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
+        break;
+      case UpdateType.POPUP:
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
+        this._renderBoard();
+        this._filmPresenter[data.id].openFilmPopup();
         break;
     }
   }

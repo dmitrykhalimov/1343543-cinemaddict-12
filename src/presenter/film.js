@@ -20,7 +20,7 @@ export default class Film {
 
     this._siteBody = document.querySelector(`body`);
 
-    this._openFilmPopup = this._openFilmPopup.bind(this);
+    this.openFilmPopup = this.openFilmPopup.bind(this);
     this._closeFilmPopup = this._closeFilmPopup.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
 
@@ -39,7 +39,7 @@ export default class Film {
     this._filmDetailsComponent = new FilmDetailsView(film);
 
     this._filmDetailsComponent.setPopupClickHandler(this._closeFilmPopup);
-    this._filmComponent.setCardClickHandler(this._openFilmPopup);
+    this._filmComponent.setCardClickHandler(this.openFilmPopup);
 
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchlistClickHandler(this._handleWatchlistClick);
@@ -74,7 +74,7 @@ export default class Film {
     }
   }
 
-  _openFilmPopup() {
+  openFilmPopup() {
     this._siteBody.appendChild(this._filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._changeMode();
@@ -97,7 +97,7 @@ export default class Film {
   _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.MAJOR,
+        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
@@ -111,7 +111,7 @@ export default class Film {
   _handleWatchlistClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.MAJOR,
+        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
@@ -125,7 +125,7 @@ export default class Film {
   _handleWatchedClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        UpdateType.MAJOR,
+        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
