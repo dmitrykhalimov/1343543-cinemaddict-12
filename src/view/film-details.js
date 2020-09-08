@@ -1,4 +1,5 @@
 import AbstractView from "./abstract.js";
+import he from "he";
 import {transformDateTime, getDateComment, translateMinutesToText} from "../utils/transform.js";
 import {createElement, replace} from "../utils/render.js";
 import {DateFormats} from "../const.js";
@@ -22,7 +23,7 @@ const createFilmDetails = (film) => {
         <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
       </span>
       <div>
-        <p class="film-details__comment-text">${comment.comment}</p>
+        <p class="film-details__comment-text">${he.encode(comment.comment)}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.nickname}</span>
           <span class="film-details__comment-day">${getDateComment(comment.dateComment, DateFormats.COMMENT_STYLE)}</span>
