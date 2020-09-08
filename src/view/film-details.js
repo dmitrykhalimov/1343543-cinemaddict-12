@@ -132,22 +132,22 @@ const createFilmDetails = (film) => {
           <div class="film-details__emoji-list">
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
             <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/smile.png" width="30" height="30" alt="smile">
             </label>
 
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
             <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="sleeping">
             </label>
 
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
             <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/puke.png" width="30" height="30" alt="puke">
             </label>
 
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
             <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/angry.png" width="30" height="30" alt="angry">
             </label>
           </div>
         </div>
@@ -168,6 +168,7 @@ export default class FilmDetails extends AbstractView {
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
     this._buttonDeleteClickHandler = this._buttonDeleteClickHandler.bind(this);
+    this._addCommentClickHandler = this._addCommentClickHandler.bind(this);
 
     this._currentEmoji = null;
     this._prevEmoji = null;
@@ -231,6 +232,18 @@ export default class FilmDetails extends AbstractView {
     this._callback.deleteComment(commentId);
   }
 
+  _addCommentClickHandler(evt) {
+    if (evt.key === `Enter`) {
+      evt.preventDefault();
+      console.log('Бантичек');
+      //console.log(this._currentEmoji.alt);
+      //console.log(this.getElement().querySelector(`.film-details__comment-input`).value);
+      console.log('Колбэк');
+
+      this._callback.addComment(this.getElement().querySelector(`.film-details__comment-input`).value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
+    }
+  }
+
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteClickHandler);
@@ -256,6 +269,12 @@ export default class FilmDetails extends AbstractView {
 
     const commentsList = this.getElement().querySelector(`.film-details__comments-list`);
     commentsList.addEventListener(`click`, this._buttonDeleteClickHandler);
+  }
+
+  setAddCommentHandler(callback) {
+    this._callback.addComment = callback;
+    console.log(this._callback.addComment);
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
 
   /* old setEmojiClickHandler() {

@@ -2,6 +2,7 @@ import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
+import {generateId} from "../mock/film.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -29,6 +30,7 @@ export default class Film {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
 
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleAddComment = this._handleAddComment.bind(this);
   }
 
   init(film) {
@@ -53,6 +55,7 @@ export default class Film {
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetailsComponent.setEmojiClickHandler();
     this._filmDetailsComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._filmDetailsComponent.setAddCommentHandler(this._handleAddComment);
 
 
     if (prevFilmComponent === null || prevFilmDetailsComponent === null) {
@@ -146,6 +149,29 @@ export default class Film {
       ...this._film.comments.slice(0, index),
       ...this._film.comments.slice(index + 1)
     ];
+    const updatedFilm = Object.assign(
+        {},
+        this._film,
+        {
+          comments: updatedComments
+        }
+    );
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.POPUP,
+        updatedFilm
+    );
+  }
+
+  _handleAddComment(newComment, newEmoji) {
+    const updatedComments = this._film.comments.slice();
+    updatedComments.push({
+      id: 50083552,
+      emoji: newEmoji,
+      comment: newComment,
+      nickname: `Fancy troll`,
+      dateComment: new Date(),
+    });
     const updatedFilm = Object.assign(
         {},
         this._film,
