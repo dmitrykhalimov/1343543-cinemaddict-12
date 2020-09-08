@@ -233,7 +233,7 @@ export default class FilmDetails extends AbstractView {
   }
 
   _addCommentClickHandler(evt) {
-    if (evt.key === `Enter`) {
+    if (evt.key === `Enter` && evt.ctrlKey) {
       evt.preventDefault();
       this._callback.addComment(this.getElement().querySelector(`.film-details__comment-input`).value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
     }
