@@ -141,24 +141,22 @@ export default class Film {
   }
 
   _handleDeleteClick(commentId) {
-    console.log(`Обновление комментария`);
-    console.log(this._film);
     const index = this._film.comments.findIndex((comment) => comment.id === Number(commentId));
-    const newComments = [
+    const updatedComments = [
       ...this._film.comments.slice(0, index),
       ...this._film.comments.slice(index + 1)
     ];
-    const newFilm = Object.assign(
+    const updatedFilm = Object.assign(
         {},
         this._film,
         {
-          comments: newComments
+          comments: updatedComments
         }
     );
     this._changeData(
         UserAction.UPDATE_FILM,
         UpdateType.POPUP,
-        newFilm
+        updatedFilm
     );
   }
 }
