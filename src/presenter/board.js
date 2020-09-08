@@ -6,7 +6,7 @@ import ExtraRatedContainerView from "../view/container-rated.js";
 import ExtraCommentedContainerView from "../view/container-connected.js";
 import FilmsContainerView from "../view/films-container.js";
 import FilmCardView from "../view/film-card.js";
-import {render, RenderPosition, remove} from "../utils/render.js";
+import {render, RenderPosition, remove, replace} from "../utils/render.js";
 import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../utils/transform.js";
 import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
@@ -111,14 +111,16 @@ export default class Board {
 
   // метод сортировки
   _renderSort() {
-    if (this._sortComponent !== null) {
-      this._sortComponent = null;
+    const prevSortComponent = this._sortComponent;
+    this._sortComponent = new SortView(this._currentSortType);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    if (prevSortComponent === null) {
+      render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+      return;
     }
 
-    this._sortComponent = new SortView(this._currentSortType);
-
-    render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    replace(this._sortComponent, prevSortComponent);
   }
 
   // отрисовка поля
@@ -144,21 +146,23 @@ export default class Board {
 
   // отрисовка блока экстра
   _renderExtras() {
-    const extraRatedContainer = new ExtraRatedContainerView();
-    const extraCommentedContainer = new ExtraCommentedContainerView();
+    this._extraRated = new ExtraRatedContainerView();
+    this._extraCommented = new ExtraCommentedContainerView();
 
-    render(this._boardComponent, extraRatedContainer, RenderPosition.BEFOREEND);
-    render(this._boardComponent, extraCommentedContainer, RenderPosition.BEFOREEND);
+    render(this._boardComponent, this._extraRated, RenderPosition.BEFOREEND);
+    render(this._boardComponent, this._extraCommented, RenderPosition.BEFOREEND);
 
     const topRatedFilms = generateTopRated(this._getFilms().slice());
     const topCommentedFilms = generateTopCommented(this._getFilms().slice());
 
     for (let i = 0; i < EXTRAS_COUNT; i++) {
-      render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
-
+      // render(extraRatedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
+      // this._renderFilm(extraRatedContainer.getElement().querySelector(`.films-list__container`), topRatedFilms[i]);
       // TODO надо как-то научить перерисовываться блок TopCommented при добавлении комментария, не переписывая половину проекта.
       // TODO не открываются попапы при клике на элементы блока Extra
-      render(extraCommentedContainer.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommentedFilms[i]), RenderPosition.BEFOREEND);
+
+      // render(this._extraRated.getElement().querySelector(`.films-list__container`), new FilmCardView(topRatedFilms[i]), RenderPosition.BEFOREEND);
+      render(this._extraCommented.getElement().querySelector(`.films-list__container`), new FilmCardView(topCommentedFilms[i]), RenderPosition.BEFOREEND);
     }
   }
 
@@ -175,6 +179,7 @@ export default class Board {
     filmPresenter.init(film);
     this._filmPresenter[film.id] = filmPresenter;
   }
+
 
   // обработчик нажатия кнопки Show More
   _handleLoadButton() {
@@ -220,9 +225,10 @@ export default class Board {
       .forEach((presenter) => presenter.destroy());
     this._filmPresenter = {};
 
-    remove(this._sortComponent);
     remove(this._noFilmsComponent);
     remove(this._loadMoreButtonComponent);
+    remove(this._extraCommented);
+    remove(this._extraRated);
 
     if (resetRenderedFilmCount) {
       this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
