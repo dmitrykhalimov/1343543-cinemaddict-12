@@ -38,7 +38,7 @@ filterPresenter.init();
 const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
 boardPresenter.init();
 
-const statsPresenter = new StatisticsPresenter(siteMain);
+const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
 statsPresenter.init();
 
 // блок футера

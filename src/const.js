@@ -37,3 +37,11 @@ export const FilterType = {
 export const FilterMode = {
   COUNT: `count`,
 };
+
+export const StatsMode = {
+  ALL: `ALL`,
+  TODAY: `TODAY`,
+  WEEK: `WEEK`,
+  MONTH: `MONTH`,
+  YEAR: `YEAR`
+};
