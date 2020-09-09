@@ -9,13 +9,23 @@ export default class Statistics {
   constructor(statsContainer, filmsModel) {
     this._statsContainer = statsContainer;
     this._filmsModel = filmsModel;
-    this._statsComponent = new StatsView();
+
+    this._handleStatsPeriodChange = this._handleStatsPeriodChange.bind(this);
   }
 
   init() {
-    render(this._statsContainer, this._statsComponent.getElement(), RenderPosition.BEFOREEND);
     const films = this._filmsModel.getFilms();
     const filmsStats = generateStats(films, StatsMode.ALL);
+
     console.log(filmsStats);
+
+    this._statsComponent = new StatsView(filmsStats);
+    render(this._statsContainer, this._statsComponent.getElement(), RenderPosition.BEFOREEND);
+
+    this._statsComponent.setStatsPeriodClickHandler(this._handleStatsPeriodChange);
+  }
+
+  _handleStatsPeriodChange() {
+    alert('Бантик');
   }
 }

@@ -1,5 +1,5 @@
-import {diffWithCurrentDate} from "../utils/transform.js";
-import {StatsMode} from "../const.js";
+import {diffWithCurrentDate, translateMinutesToText} from "../utils/transform.js";
+
 
 const DatePatterns = {
   ALL: {
@@ -27,12 +27,14 @@ const DatePatterns = {
 export const generateStats = (films, mode) => {
   let filmsStats = films.slice();
   let genres = [];
+  let totalDuration = 0;
 
   /* Не самый изящный метод сортировки, но ничего лаконичнее придумать не смог */
   // 1. Отфильтровать фильмы по дате и собрать все жанры подходящих фильмов
   filmsStats = filmsStats.filter((film) => {
     if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) {
       genres = genres.concat(Array.from(film.genres));
+      totalDuration += film.duration;
       return true;
     }
     return false;
@@ -40,6 +42,7 @@ export const generateStats = (films, mode) => {
 
   // 2. Узнать какие жанры есть и создать объект
   let genresQuantity = {};
+
 
   for (let genre of genres) {
     if (!genresQuantity[genre]) {
@@ -56,5 +59,7 @@ export const generateStats = (films, mode) => {
     watched: filmsStats.length,
     topGenre: Array.from(genresQuantity)[0][0],
     stats: Array.from(genresQuantity),
+    durationHours: Math.trunc(totalDuration / 60),
+    durationMinutes: totalDuration - Math.trunc(totalDuration / 60) * 60,
   };
 };

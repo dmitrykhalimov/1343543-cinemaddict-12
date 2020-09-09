@@ -1,9 +1,14 @@
 import SmartView from "./smart.js";
+
+import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
 // import {getCurrentDate} from "../utils/task.js";
 
-const createStatisticsTemplate = () => {
+const createStatisticsTemplate = (filmsStats) => {
   // const completedTaskCount = 0; // Нужно посчитать количество завершенных задач за период
 
+  console.log(filmsStats);
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank
@@ -33,15 +38,15 @@ const createStatisticsTemplate = () => {
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
+      <p class="statistic__item-text">${filmsStats.watched} <span class="statistic__item-description">movies</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">130 <span class="statistic__item-description">h</span> 22 <span class="statistic__item-description">m</span></p>
+      <p class="statistic__item-text">${filmsStats.durationHours} <span class="statistic__item-description">h</span> ${filmsStats.durationMinutes} <span class="statistic__item-description">m</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">Sci-Fi</p>
+      <p class="statistic__item-text">${filmsStats.topGenre}</p>
     </li>
   </ul>
 
@@ -53,16 +58,18 @@ const createStatisticsTemplate = () => {
 };
 
 export default class Statistics extends SmartView {
-  constructor(films) {
+  constructor(filmsStats) {
     super();
 
-    this._films = films;
+    this._filmsStats = filmsStats;
+
+    this._statsPeriodClickHandler = this._statsPeriodClickHandler.bind(this);
 
     this._setCharts();
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._data);
+    return createStatisticsTemplate(this._filmsStats);
   }
 
   restoreHandlers() {
@@ -80,6 +87,18 @@ export default class Statistics extends SmartView {
     });
   }
 
+  _statsPeriodClickHandler(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName !== `LABEL`) {
+      return;
+    }
+    this._callback.statsPeriod();
+  }
+
+  setStatsPeriodClickHandler(callback) {
+    this._callback.statsPeriod = callback;
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`click`, this._statsPeriodClickHandler);
+  }
 
   _setCharts() {
     // Нужно отрисовать два графика
