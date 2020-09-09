@@ -87,6 +87,12 @@ export default class Board {
     Object
       .values(this._filmPresenter)
       .forEach((presenter) => presenter.resetView());
+    Object
+      .values(this._filmRatedPresenter)
+      .forEach((presenter) => presenter.resetView());
+    Object
+      .values(this._filmCommentedPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   // обработчик изменения фильма (можно обойтись без switch и все упростить - но мало ли понадобится DELETE, если нет - удалю
@@ -101,9 +107,6 @@ export default class Board {
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
     switch (updateType) {
-      case UpdateType.MINOR: // не используется нигде, т.к. любое обновление фильма требует перерисовки доски
-        this._filmPresenter[data.id].init(data);
-        break;
       case UpdateType.MAJOR:
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
@@ -114,6 +117,14 @@ export default class Board {
 
         if (this._filmPresenter[data.id]) {
           this._filmPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
+        }
+
+        if (this._filmRatedPresenter[data.id]) {
+          this._filmRatedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
+        }
+
+        if (this._filmCommentedPresenter[data.id]) {
+          this._filmCommentedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
         }
 
         break;
@@ -230,7 +241,18 @@ export default class Board {
     Object
       .values(this._filmPresenter)
       .forEach((presenter) => presenter.destroy());
+
+    Object
+      .values(this._filmRatedPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    Object
+      .values(this._filmCommentedPresenter)
+      .forEach((presenter) => presenter.destroy());
+
     this._filmPresenter = {};
+    this._filmRatedPresenter = {};
+    this._filmCommentedPresenter = {};
 
     remove(this._noFilmsComponent);
     remove(this._loadMoreButtonComponent);
