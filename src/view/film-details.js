@@ -2,7 +2,7 @@ import AbstractView from "./abstract.js";
 import he from "he";
 import {transformDateTime, getDateComment, translateMinutesToText} from "../utils/transform.js";
 import {createElement, replace} from "../utils/render.js";
-import {DateFormats} from "../const.js";
+import {DateFormats, EMOJIS} from "../const.js";
 
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
@@ -31,6 +31,18 @@ const createFilmDetails = (film) => {
         </p>
       </div>
     </li>`;
+    }
+    return result;
+  };
+
+  const generateEmojisList = () => {
+    let result = ``;
+    for (let emoji of EMOJIS) {
+      result += `
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+      <label class="film-details__emoji-label" for="emoji-${emoji}">
+        <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="${emoji}">
+      </label>`;
     }
     return result;
   };
@@ -131,25 +143,7 @@ const createFilmDetails = (film) => {
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-            <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="smile">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-            <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="sleeping">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-            <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="puke">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-            <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="angry">
-            </label>
+            ${generateEmojisList()}
           </div>
         </div>
       </section>
@@ -228,7 +222,7 @@ export default class FilmDetails extends AbstractView {
       return;
     }
 
-    const commentId = evt.target.parentNode.parentNode.parentNode.getAttribute(`data-comment-id`);
+    const commentId = evt.target.closest(`.film-details__comment`).getAttribute(`data-comment-id`);
     this._callback.deleteComment(commentId);
   }
 

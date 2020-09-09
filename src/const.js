@@ -4,6 +4,13 @@ export const SortType = {
   RATING: `rating`
 };
 
+export const EMOJIS = [
+  `smile`,
+  `sleeping`,
+  `puke`,
+  `angry`,
+];
+
 export const DateFormats = {
   ONLY_YEAR: `YYYY`,
   DAY_MONTH_YEAR: `DD MMMM YYYY`,
