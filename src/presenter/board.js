@@ -111,7 +111,11 @@ export default class Board {
       case UpdateType.POPUP:
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
-        this._filmPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
+
+        if (this._filmPresenter[data.id]) {
+          this._filmPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
+        }
+
         break;
     }
   }
@@ -164,8 +168,8 @@ export default class Board {
     const topCommentedFilms = generateTopCommented(this._filmsModel.getFilms().slice());
 
     for (let i = 0; i < EXTRAS_COUNT; i++) {
-      this._renderFilm(this._extraRated.getElement().querySelector(`.films-list__container`), topRatedFilms[i], this._filmRatedPresenter);
-      this._renderFilm(this._extraCommented.getElement().querySelector(`.films-list__container`), topCommentedFilms[i], this._filmCommentedPresenter);
+      this._renderFilm(this._extraRated.getContainer(), topRatedFilms[i], this._filmRatedPresenter);
+      this._renderFilm(this._extraCommented.getContainer(), topCommentedFilms[i], this._filmCommentedPresenter);
     }
   }
 

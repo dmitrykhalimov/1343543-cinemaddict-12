@@ -11,4 +11,7 @@ export default class ExtraRatedContainer extends AbstractView {
   getTemplate() {
     return createExtraRatedContainer();
   }
+  getContainer() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
 }
