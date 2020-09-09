@@ -48,7 +48,6 @@ export default class Board {
   // инициализация
   init() {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
-
     this._renderBoard();
   }
 

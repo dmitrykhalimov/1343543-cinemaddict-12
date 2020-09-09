@@ -18,8 +18,10 @@ export default class MainNav extends AbstractView {
     super();
     this._filters = filters;
     this._currentFilter = currentFilterType;
+    this._isStatsActive = false;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._statsButtonClickHandler = this._statsButtonClickHandler.bind(this);
   }
 
   getTemplate() {
@@ -29,7 +31,7 @@ export default class MainNav extends AbstractView {
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
 
-    if (evt.target.tagName !== `A`) {
+    if (evt.target.tagName !== `A` || evt.target.className === `main-navigation__additional`) {
       return;
     }
 
@@ -37,9 +39,19 @@ export default class MainNav extends AbstractView {
     this._callback.filterTypeChange(filterName);
   }
 
+  _statsButtonClickHandler(evt) {
+    evt.preventDefault();
+    console.log('Бантик');
+  }
+
   setFilterTypeChangeHandler(callback) {
     this._callback.filterTypeChange = callback;
     this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
+  }
+
+  setStatsButtonClickHandler(callback) {
+    this._callback.statsButton = callback;
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._statsButtonClickHandler);
   }
 }
 

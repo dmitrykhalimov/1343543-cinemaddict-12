@@ -34,7 +34,7 @@ boardPresenter.init();
 
 // блок фильтров
 
-const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel);
+const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, boardPresenter);
 filterPresenter.init();
 
 // блок футера
