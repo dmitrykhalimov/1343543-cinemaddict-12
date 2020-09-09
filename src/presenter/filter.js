@@ -40,6 +40,8 @@ export default class Filter {
 
     replace(this._filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
+
+
   }
 
   _handleModelEvent() {

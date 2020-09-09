@@ -1,5 +1,6 @@
 import UserProfileView from "./view/user-profile.js";
 import FilterPresenter from "./presenter/filter.js";
+import StatisticsPresenter from "./presenter/statistics.js";
 import FooterStatsView from "./view/footer-stats.js";
 
 import {generateFilm} from "./mock/film.js";
@@ -28,14 +29,17 @@ render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 
 const siteMain = document.querySelector(`.main`);
 
+// блок фильтров
+const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel);
+filterPresenter.init();
+
 // блок фильмов и сортировка
+
 const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
 boardPresenter.init();
 
-// блок фильтров
-
-const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, boardPresenter);
-filterPresenter.init();
+const statsPresenter = new StatisticsPresenter(siteMain);
+statsPresenter.init();
 
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
