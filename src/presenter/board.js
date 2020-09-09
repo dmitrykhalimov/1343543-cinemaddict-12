@@ -56,7 +56,7 @@ export default class Board {
   _getFilms() {
     const filterType = this._filterModel.getFilter();
     const films = this._filmsModel.getFilms();
-    const filteredFilms = makeFilters[filterType](films);
+    const filteredFilms = makeFilters(films)[filterType];
 
     switch (this._currentSortType) {
       case SortType.DATE:

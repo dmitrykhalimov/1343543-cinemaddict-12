@@ -1,7 +1,7 @@
 import FilterView from "../view/main-nav.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
-import {countFilters} from "../utils/filter.js";
-import {UpdateType} from "../const.js";
+import {makeFilters} from "../utils/filter.js";
+import {UpdateType, FilterMode} from "../const.js";
 
 export default class Filter {
   constructor(filterContainer, filterModel, filmsModel) {
@@ -53,6 +53,6 @@ export default class Filter {
 
   _getFilters() {
     const films = this._filmsModel.getFilms();
-    return countFilters(films);
+    return makeFilters(films, FilterMode.COUNT);
   }
 }

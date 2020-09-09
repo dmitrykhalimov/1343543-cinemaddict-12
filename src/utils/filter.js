@@ -1,26 +1,34 @@
-import {FilterType} from "../const.js";
+import {FilterType, FilterMode} from "../const.js";
 
-export const countFilters = (films) => {
+export const makeFilters = (films, mode) => {
   const initialValue = {
-    all: 0,
-    watchlist: 0,
-    watched: 0,
-    favorites: 0,
+    [FilterType.ALL]: [],
+    [FilterType.WATCHLIST]: [],
+    [FilterType.HISTORY]: [],
+    [FilterType.FAVORITES]: [],
   };
 
-  return films.reduce((acc, film) => {
-    return {
-      all: acc.all + 1,
-      watchlist: acc.watchlist + film.isInWatchlist,
-      watched: acc.watched + film.isWatched,
-      favorites: acc.favorites + film.isFavorite
-    };
+  const filteredFilms = films.reduce((acc, film) => {
+    acc[FilterType.ALL].push(film);
+    if (film.isInWatchlist) {
+      acc[FilterType.WATCHLIST].push(film);
+    }
+    if (film.isWatched) {
+      acc[FilterType.HISTORY].push(film);
+    }
+    if (film.isFavorite) {
+      acc[FilterType.FAVORITES].push(film);
+    }
+    return acc;
   }, initialValue);
-};
 
-export const makeFilters = {
-  [FilterType.ALL]: (films) => (films),
-  [FilterType.WATCHLIST]: (films) => films.filter((film) => film.isInWatchlist),
-  [FilterType.HISTORY]: (films) => films.filter((film) => film.isWatched),
-  [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite),
+  if (mode === FilterMode.COUNT) {
+    return {
+      [FilterType.ALL]: filteredFilms[FilterType.ALL].length,
+      [FilterType.WATCHLIST]: filteredFilms[FilterType.WATCHLIST].length,
+      [FilterType.HISTORY]: filteredFilms[FilterType.HISTORY].length,
+      [FilterType.FAVORITES]: filteredFilms[FilterType.FAVORITES].length,
+    };
+  }
+  return filteredFilms;
 };

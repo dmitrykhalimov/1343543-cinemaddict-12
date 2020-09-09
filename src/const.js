@@ -33,3 +33,7 @@ export const FilterType = {
   HISTORY: `history`,
   FAVORITES: `favorites`,
 };
+
+export const FilterMode = {
+  COUNT: `count`,
+};
