@@ -108,11 +108,11 @@ export default class Board {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.MAJOR:
-        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
         this._renderBoard();
         break;
       case UpdateType.POPUP:
-        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
         this._renderBoard();
 
         if (this._filmPresenter[data.id]) {
