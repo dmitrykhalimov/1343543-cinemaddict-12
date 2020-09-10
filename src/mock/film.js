@@ -104,7 +104,7 @@ const CommentLimits = {
 const DateLimits = {
   MIN: new Date(1930, 0, 1),
   MAX: new Date(),
-  WATCHED_MIN: new Date(2019, 8, 9),
+  WATCHED_MIN: new Date(2020, 8, 1),
   WATCHED_MAX: new Date(),
 };
 

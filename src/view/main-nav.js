@@ -28,6 +28,16 @@ export default class MainNav extends AbstractView {
     return createMainNav(this._filters, this._currentFilter);
   }
 
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
+  }
+
+  setStatsButtonClickHandler(callback) {
+    this._callback.statsButton = callback;
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._statsButtonClickHandler);
+  }
+
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
 
@@ -45,16 +55,6 @@ export default class MainNav extends AbstractView {
     this.getElement().querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
     this.getElement().querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
     this._callback.statsButton();
-  }
-
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
-  }
-
-  setStatsButtonClickHandler(callback) {
-    this._callback.statsButton = callback;
-    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._statsButtonClickHandler);
   }
 }
 

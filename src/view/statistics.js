@@ -1,6 +1,6 @@
 import {StatsMode} from "../const.js";
 
-import SmartView from "./smart.js";
+import AbstractView from "./abstract.js";
 
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -121,7 +121,7 @@ const createStatisticsTemplate = (filmsStats, currentStat) => {
 </section>`;
 };
 
-export default class Statistics extends SmartView {
+export default class Statistics extends AbstractView {
   constructor(filmsStats, currentStat) {
     super();
 
@@ -137,29 +137,6 @@ export default class Statistics extends SmartView {
     return createStatisticsTemplate(this._filmsStats, this._currentStat);
   }
 
-  restoreHandlers() {
-    this._setCharts();
-  }
-
-  _dateChangeHandler([dateFrom, dateTo]) {
-    if (!dateFrom || !dateTo) {
-      return;
-    }
-
-    this.updateData({
-      dateFrom,
-      dateTo
-    });
-  }
-
-  _statsPeriodClickHandler(evt) {
-    evt.preventDefault();
-    if (evt.target.tagName !== `LABEL`) {
-      return;
-    }
-    this._callback.statsPeriod(evt.target.getAttribute(`data-type`));
-  }
-
   setStatsPeriodClickHandler(callback) {
     this._callback.statsPeriod = callback;
     this.getElement().querySelector(`.statistic__filters`).addEventListener(`click`, this._statsPeriodClickHandler);
@@ -171,5 +148,13 @@ export default class Statistics extends SmartView {
     const genres = this._filmsStats.genres;
     const numbers = this._filmsStats.numbers;
     renderChart(ctx, genres, numbers);
+  }
+
+  _statsPeriodClickHandler(evt) {
+    evt.preventDefault();
+    if (evt.target.tagName !== `LABEL`) {
+      return;
+    }
+    this._callback.statsPeriod(evt.target.getAttribute(`data-type`));
   }
 }

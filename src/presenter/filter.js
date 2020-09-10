@@ -41,14 +41,16 @@ export default class Filter {
 
     replace(this._filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
+  }
 
-
+  _getFilters() {
+    const films = this._filmsModel.getFilms();
+    return makeFilters(films, FilterMode.COUNT);
   }
 
   _handleModelEvent() {
     this.init();
   }
-
 
   _handleFilterTypeChange(filterType) {
     if (this._currentFilter === filterType && !this._isStats === true) {
@@ -62,11 +64,6 @@ export default class Filter {
     }
 
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
-
-  _getFilters() {
-    const films = this._filmsModel.getFilms();
-    return makeFilters(films, FilterMode.COUNT);
   }
 
   _handleOpenStats() {

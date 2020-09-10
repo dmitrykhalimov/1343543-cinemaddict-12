@@ -64,7 +64,7 @@ export const generateStats = (films, mode) => {
     return false;
   });
 
-  // 2. Узнать какие жанры есть и создать объект
+  // 2. Узнать какие жанры есть и создать объект с
   let genresQuantity = {};
 
   for (let genre of genres) {
@@ -76,7 +76,7 @@ export const generateStats = (films, mode) => {
 
   // 3. Отсортировать объект
   genresQuantity = new Map(Object.entries(genresQuantity));
-  genresQuantity = new Map([...genresQuantity.entries()].sort((a, b) => b[1] - a[1]));
+  genresQuantity = new Map([...genresQuantity.entries()].sort((next, prev) => prev[1] - next[1]));
 
   // 4. Подготовить данные в формате 'график коллеги'
 
