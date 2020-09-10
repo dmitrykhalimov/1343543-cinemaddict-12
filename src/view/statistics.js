@@ -4,7 +4,6 @@ import SmartView from "./smart.js";
 
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {generateStats} from "../utils/statistics.js";
 
 // import {getCurrentDate} from "../utils/task.js";
 
@@ -74,7 +73,6 @@ const renderChart = (ctx, genres, numbers) => {
 
 const createStatisticsTemplate = (filmsStats, currentStat) => {
   // const completedTaskCount = 0; // Нужно посчитать количество завершенных задач за период
-  console.log(filmsStats);
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank

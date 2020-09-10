@@ -32,6 +32,7 @@ export const FilterType = {
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`,
+  STATS: `stats`,
 };
 
 export const FilterMode = {

@@ -30,16 +30,19 @@ render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 const siteMain = document.querySelector(`.main`);
 
 // блок фильтров
-const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel);
+const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
+
+const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, statsPresenter, boardPresenter);
 filterPresenter.init();
 
 // блок фильмов и сортировка
 
-const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
+
 boardPresenter.init();
 
-const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
-statsPresenter.init();
+
+// statsPresenter.init();
 
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);

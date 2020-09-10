@@ -53,8 +53,6 @@ export const generateStats = (films, mode) => {
   let genres = [];
   let totalDuration = 0;
 
-  console.log(films);
-
   /* Не самый изящный метод сортировки, но ничего лаконичнее придумать не смог */
   // 1. Отфильтровать фильмы по дате и собрать все жанры подходящих фильмов. Предполагается, что структура данных нормальная, и невозможна ситуация когда isWatched = false, а время просмотра не null;
   filmsStats = filmsStats.filter((film) => {
@@ -68,7 +66,6 @@ export const generateStats = (films, mode) => {
 
   // 2. Узнать какие жанры есть и создать объект
   let genresQuantity = {};
-
 
   for (let genre of genres) {
     if (!genresQuantity[genre]) {

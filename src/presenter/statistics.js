@@ -18,7 +18,6 @@ export default class Statistics {
   }
 
   init() {
-    console.log(this._currentStats);
     const films = this._filmsModel.getFilms();
     const filmsStats = generateStats(films, this._currentStats);
 
@@ -26,7 +25,7 @@ export default class Statistics {
     this._statsComponent = new StatsView(filmsStats, this._currentStats);
 
     this._statsComponent.setStatsPeriodClickHandler(this._handleStatsPeriodChange);
-
+    // console.log(prevStasComponent);
     if (prevStasComponent === null) {
       render(this._statsContainer, this._statsComponent.getElement(), RenderPosition.BEFOREEND);
       return;
@@ -34,6 +33,11 @@ export default class Statistics {
 
     replace(this._statsComponent, prevStasComponent);
     remove(prevStasComponent);
+  }
+
+  destroy() {
+    remove(this._statsComponent);
+    this._statsComponent = null;
   }
 
   _handleStatsPeriodChange(statsMode) {

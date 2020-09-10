@@ -232,7 +232,9 @@ export default class Board {
     render(this._boardComponent, this._noFilmsComponent, RenderPosition.BEFOREEND);
   }
 
-  // метод очистки доски
+  destroy() {
+    this._clearBoard();
+  }
 
   _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
     const filmCount = this._getFilms().length;
