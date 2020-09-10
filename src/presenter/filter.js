@@ -51,9 +51,7 @@ export default class Filter {
 
 
   _handleFilterTypeChange(filterType) {
-    console.log('Открыты фильтры');
     if (this._currentFilter === filterType && !this._isStats === true) {
-      console.log('Даблклик');
       return;
     }
 
@@ -72,7 +70,6 @@ export default class Filter {
   }
 
   _handleOpenStats() {
-    console.log('Открыта статистика');
     this._isStats = true;
     this._boardPresenter.destroy();
     this._statsPresenter.init();

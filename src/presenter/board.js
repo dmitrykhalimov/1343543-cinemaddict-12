@@ -236,7 +236,10 @@ export default class Board {
   destroy() {
     this._clearBoard();
     remove(this._boardComponent);
+
     remove(this._sortComponent);
+    this._currentSortType = SortType.DEFAULT;
+
     this._sortComponent = null;
   }
 
