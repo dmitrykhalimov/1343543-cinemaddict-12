@@ -40,9 +40,6 @@ const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, s
 filterPresenter.init();
 boardPresenter.init();
 
-
-// statsPresenter.init();
-
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
 render(siteFooterStats, new FooterStatsView(films.length).getElement(), RenderPosition.BEFOREEND);

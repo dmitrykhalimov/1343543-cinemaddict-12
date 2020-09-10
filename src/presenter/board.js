@@ -252,7 +252,6 @@ export default class Board {
         if (this._filmCommentedPresenter[data.id]) {
           this._filmCommentedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
         }
-
         break;
     }
   }
