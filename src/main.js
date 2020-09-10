@@ -34,13 +34,12 @@ const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
 const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
 
 const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, statsPresenter, boardPresenter);
-filterPresenter.init();
 
 // блок фильмов и сортировка
 
 
 boardPresenter.init();
-
+filterPresenter.init();
 
 // statsPresenter.init();
 
