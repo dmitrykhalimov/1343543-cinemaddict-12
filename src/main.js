@@ -1,20 +1,25 @@
 import UserProfileView from "./view/user-profile.js";
-import MainNavView from "./view/main-nav.js";
+import FilterPresenter from "./presenter/filter.js";
 import FooterStatsView from "./view/footer-stats.js";
 
 import {generateFilm} from "./mock/film.js";
-import {generateFilter} from "./mock/filter.js";
-import {generateTopRated, generateTopCommented} from "./mock/extras.js";
+
 import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
+import FilmsModel from "./model/films.js";
+import FilterModel from "./model/filter.js";
 
 const FILMS_COUNT = 22;
 
 /* генерация моков */
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
-const filters = generateFilter(films);
-const topRated = generateTopRated(films);
-const topCommented = generateTopCommented(films);
+
+// модель фильма
+const filmsModel = new FilmsModel();
+filmsModel.setFilms(films);
+
+// модель фильтра
+const filterModel = new FilterModel();
 
 /* непосредственно отрисовка */
 // блок профиля пользователя
@@ -24,12 +29,13 @@ render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 const siteMain = document.querySelector(`.main`);
 
 // блок фильмов и сортировка
-// renderBoard(siteMain, films);
-const boardPresenter = new BoardPresenter(siteMain);
-boardPresenter.init(films, topRated, topCommented);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
+boardPresenter.init();
 
-// блок меню
-render(siteMain, new MainNavView(filters), RenderPosition.AFTERBEGIN);
+// блок фильтров
+
+const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel);
+filterPresenter.init();
 
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);

@@ -1,6 +1,8 @@
 import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
+import {UserAction, UpdateType} from "../const.js";
+import {generateId} from "../mock/film.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -19,13 +21,16 @@ export default class Film {
 
     this._siteBody = document.querySelector(`body`);
 
-    this._openFilmPopup = this._openFilmPopup.bind(this);
+    this.openFilmPopup = this.openFilmPopup.bind(this);
     this._closeFilmPopup = this._closeFilmPopup.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
 
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleAddComment = this._handleAddComment.bind(this);
   }
 
   init(film) {
@@ -38,7 +43,7 @@ export default class Film {
     this._filmDetailsComponent = new FilmDetailsView(film);
 
     this._filmDetailsComponent.setPopupClickHandler(this._closeFilmPopup);
-    this._filmComponent.setCardClickHandler(this._openFilmPopup);
+    this._filmComponent.setCardClickHandler(this.openFilmPopup);
 
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchlistClickHandler(this._handleWatchlistClick);
@@ -48,6 +53,8 @@ export default class Film {
     this._filmDetailsComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetailsComponent.setEmojiClickHandler();
+    this._filmDetailsComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._filmDetailsComponent.setAddCommentHandler(this._handleAddComment);
 
 
     if (prevFilmComponent === null || prevFilmDetailsComponent === null) {
@@ -73,7 +80,7 @@ export default class Film {
     }
   }
 
-  _openFilmPopup() {
+  openFilmPopup() {
     this._siteBody.appendChild(this._filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._changeMode();
@@ -95,6 +102,8 @@ export default class Film {
 
   _handleFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
@@ -107,6 +116,8 @@ export default class Film {
 
   _handleWatchlistClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
@@ -119,6 +130,8 @@ export default class Film {
 
   _handleWatchedClick() {
     this._changeData(
+        UserAction.UPDATE_FILM,
+        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
@@ -126,6 +139,51 @@ export default class Film {
               isWatched: !this._film.isWatched
             }
         )
+    );
+  }
+
+  _handleDeleteClick(commentId) {
+    const index = this._film.comments.findIndex((comment) => comment.id === Number(commentId));
+    const updatedComments = [
+      ...this._film.comments.slice(0, index),
+      ...this._film.comments.slice(index + 1)
+    ];
+    const updatedFilm = Object.assign(
+        {},
+        this._film,
+        {
+          comments: updatedComments
+        }
+    );
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.POPUP,
+        updatedFilm
+    );
+  }
+
+  _handleAddComment(newComment, newEmoji) {
+    const updatedComments = this._film.comments.slice();
+    updatedComments.push({
+      id: generateId(),
+      emoji: newEmoji,
+      comment: newComment,
+      nickname: `Fancy troll`, // тут должно генерироваться имя, сделаю в 8 модуле, когда откажусь от моков, и часть функций перенсу в utils
+      dateComment: new Date(),
+    });
+
+    const updatedFilm = Object.assign( // повторяющаяся часть, но мне кажется вынесение в отдельный метод усложнит структуру
+        {},
+        this._film,
+        {
+          comments: updatedComments
+        }
+    );
+
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        UpdateType.POPUP,
+        updatedFilm
     );
   }
 }

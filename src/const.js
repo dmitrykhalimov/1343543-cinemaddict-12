@@ -4,8 +4,36 @@ export const SortType = {
   RATING: `rating`
 };
 
+export const EMOJIS = [
+  `smile`,
+  `sleeping`,
+  `puke`,
+  `angry`,
+];
+
 export const DateFormats = {
-  OnlyYear: `YYYY`,
-  DayMonthYear: `DD MMMM YYYY`,
-  CommentStyle: `YYYY/MM/DD HH:mm`,
+  ONLY_YEAR: `YYYY`,
+  DAY_MONTH_YEAR: `DD MMMM YYYY`,
+  COMMENT_STYLE: `YYYY/MM/DD HH:mm`,
+};
+
+export const UserAction = {
+  UPDATE_FILM: `UPDATE_FILM`,
+};
+
+export const UpdateType = {
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`,
+  POPUP: `POPUP`,
+};
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
+};
+
+export const FilterMode = {
+  COUNT: `count`,
 };

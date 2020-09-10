@@ -1,7 +1,8 @@
 import AbstractView from "./abstract.js";
+import he from "he";
 import {transformDateTime, getDateComment, translateMinutesToText} from "../utils/transform.js";
 import {createElement, replace} from "../utils/render.js";
-import {DateFormats} from "../const.js";
+import {DateFormats, EMOJIS} from "../const.js";
 
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
@@ -17,19 +18,31 @@ const createFilmDetails = (film) => {
   const generateComments = () => {
     let result = ``;
     for (let comment of comments) {
-      result += `<li class="film-details__comment">
+      result += `<li class="film-details__comment" data-comment-id="${comment.id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
       </span>
       <div>
-        <p class="film-details__comment-text">${comment.comment}</p>
+        <p class="film-details__comment-text">${he.encode(comment.comment)}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.nickname}</span>
-          <span class="film-details__comment-day">${getDateComment(comment.dateComment, DateFormats.CommentStyle)}</span>
+          <span class="film-details__comment-day">${getDateComment(comment.dateComment, DateFormats.COMMENT_STYLE)}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
     </li>`;
+    }
+    return result;
+  };
+
+  const generateEmojisList = () => {
+    let result = ``;
+    for (let emoji of EMOJIS) {
+      result += `
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+      <label class="film-details__emoji-label" for="emoji-${emoji}">
+        <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="${emoji}">
+      </label>`;
     }
     return result;
   };
@@ -80,7 +93,7 @@ const createFilmDetails = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${transformDateTime(filmDate, DateFormats.DayMonthYear)}</td>
+              <td class="film-details__cell">${transformDateTime(filmDate, DateFormats.DAY_MONTH_YEAR)}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
@@ -130,25 +143,7 @@ const createFilmDetails = (film) => {
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-            <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-            <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-            <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-            </label>
-
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-            <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-            </label>
+            ${generateEmojisList()}
           </div>
         </div>
       </section>
@@ -167,6 +162,8 @@ export default class FilmDetails extends AbstractView {
     this._watchlistClickHandler = this._watchlistClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
     this._emojiClickHandler = this._emojiClickHandler.bind(this);
+    this._buttonDeleteClickHandler = this._buttonDeleteClickHandler.bind(this);
+    this._addCommentClickHandler = this._addCommentClickHandler.bind(this);
 
     this._currentEmoji = null;
     this._prevEmoji = null;
@@ -203,7 +200,6 @@ export default class FilmDetails extends AbstractView {
 
   _emojiClickHandler(evt) {
     evt.preventDefault();
-    // если навесить обработчик на весь список, то клик происходит либо по нему, либо по картинкам, но не по item. Поэтому переписал логику, чтобы данные брались из картинки
     if (evt.target.tagName !== `IMG`) {
       return;
     }
@@ -219,18 +215,23 @@ export default class FilmDetails extends AbstractView {
     replace(this._currentEmoji, this._prevEmoji);
   }
 
-  /* old _emojiClickHandler(evt) {
+  _buttonDeleteClickHandler(evt) {
     evt.preventDefault();
-    console.log(evt.target);
-    this._prevEmoji = this._currentEmoji;
-    this._currentEmoji = createElement(`<img src="images/emoji/${evt.target.value}.png" width="55" height="55" alt="emoji-${evt.target.value}"></img>`);
 
-    if (!this._prevEmoji) {
-      this.getElement().querySelector(`.film-details__add-emoji-label`).appendChild(this._currentEmoji);
+    if (evt.target.tagName !== `BUTTON`) {
       return;
     }
-    replace(this._currentEmoji, this._prevEmoji);
-  } */
+
+    const commentId = evt.target.closest(`.film-details__comment`).getAttribute(`data-comment-id`);
+    this._callback.deleteComment(commentId);
+  }
+
+  _addCommentClickHandler(evt) {
+    if (evt.key === `Enter` && evt.ctrlKey) {
+      evt.preventDefault();
+      this._callback.addComment(this.getElement().querySelector(`.film-details__comment-input`).value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
+    }
+  }
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
@@ -252,10 +253,15 @@ export default class FilmDetails extends AbstractView {
     emojiButtons.addEventListener(`click`, this._emojiClickHandler);
   }
 
-  /* old setEmojiClickHandler() {
-    const emojiButtons = this.getElement().querySelectorAll(`.film-details__emoji-item`);
-    emojiButtons.forEach((emojiButton) => {
-      emojiButton.addEventListener(`change`, this._emojiClickHandler);
-    });
-  } */
+  setDeleteClickHandler(callback) {
+    this._callback.deleteComment = callback;
+
+    const commentsList = this.getElement().querySelector(`.film-details__comments-list`);
+    commentsList.addEventListener(`click`, this._buttonDeleteClickHandler);
+  }
+
+  setAddCommentHandler(callback) {
+    this._callback.addComment = callback;
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
+  }
 }

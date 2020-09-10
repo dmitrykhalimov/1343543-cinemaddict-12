@@ -11,4 +11,7 @@ export default class ExtraCommentedContainer extends AbstractView {
   getTemplate() {
     return createExtraCommentedContainer();
   }
+  getContainer() {
+    return this.getElement().querySelector(`.films-list__container`);
+  }
 }
