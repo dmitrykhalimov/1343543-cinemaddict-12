@@ -47,7 +47,6 @@ export default class Board {
 
   // инициализация
   init() {
-    render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
     this._renderBoard();
   }
 
@@ -137,11 +136,12 @@ export default class Board {
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
 
     if (prevSortComponent === null) {
-      render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+      render(this._boardContainer, this._sortComponent, RenderPosition.BEFOREEND);
       return;
     }
 
     replace(this._sortComponent, prevSortComponent);
+    remove(prevSortComponent);
   }
 
   // отрисовка поля
@@ -154,11 +154,12 @@ export default class Board {
       this._renderNoFilms();
       return;
     }
+    this._renderSort();
+
+    render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderFilms(films.slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP)));
     this._renderExtras();
-
-    this._renderSort();
 
     if (filmCount > this._renderedFilmsCount) {
       this._renderLoadMoreButton();
@@ -234,6 +235,9 @@ export default class Board {
 
   destroy() {
     this._clearBoard();
+    remove(this._boardComponent);
+    remove(this._sortComponent);
+    this._sortComponent = null;
   }
 
   _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {

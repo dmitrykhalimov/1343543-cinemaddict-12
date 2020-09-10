@@ -58,9 +58,7 @@ export default class Filter {
     }
 
     if (this._isStats === true) {
-      console.log('Destroy statsPresenter')
       this._statsPresenter.destroy();
-      console.log('InitBoardPresenter')
       this._boardPresenter.init();
       this._isStats = false;
     }
@@ -75,9 +73,7 @@ export default class Filter {
 
   _handleOpenStats() {
     this._isStats = true;
-    console.log('Destroy boardPresenter')
     this._boardPresenter.destroy();
-    console.log('Init statsPresenter')
     this._statsPresenter.init();
   }
 }

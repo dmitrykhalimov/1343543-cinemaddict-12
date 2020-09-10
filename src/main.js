@@ -37,9 +37,9 @@ const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, s
 
 // блок фильмов и сортировка
 
-
-boardPresenter.init();
 filterPresenter.init();
+boardPresenter.init();
+
 
 // statsPresenter.init();
 
