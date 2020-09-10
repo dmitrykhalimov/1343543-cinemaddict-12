@@ -36,7 +36,7 @@ const createFilmDetails = (film) => {
   };
 
   const generateEmojisList = () => {
-    let result = ``;
+    const result = ``;
     for (let emoji of EMOJIS) {
       result += `
       <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
