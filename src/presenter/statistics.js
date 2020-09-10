@@ -1,7 +1,6 @@
 
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
-import {makeFilters} from "../utils/filter.js";
-import {UpdateType, StatsMode} from "../const.js";
+import {StatsMode} from "../const.js";
 import StatsView from "../view/statistics.js";
 import {generateStats} from "../utils/statistics.js";
 
@@ -25,7 +24,7 @@ export default class Statistics {
     this._statsComponent = new StatsView(filmsStats, this._currentStats);
 
     this._statsComponent.setStatsPeriodClickHandler(this._handleStatsPeriodChange);
-    // console.log(prevStasComponent);
+
     if (prevStasComponent === null) {
       render(this._statsContainer, this._statsComponent.getElement(), RenderPosition.BEFOREEND);
       return;
@@ -37,6 +36,7 @@ export default class Statistics {
 
   destroy() {
     remove(this._statsComponent);
+    this._currentStats = StatsMode.ALL;
     this._statsComponent = null;
   }
 
