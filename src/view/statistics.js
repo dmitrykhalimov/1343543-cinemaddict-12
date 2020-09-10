@@ -4,12 +4,77 @@ import SmartView from "./smart.js";
 
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import {generateStats} from "../utils/statistics.js";
 
 // import {getCurrentDate} from "../utils/task.js";
 
+const renderChart = (ctx, genres, numbers) => {
+  const BAR_HEIGHT = 50;
+
+  ctx.height = BAR_HEIGHT * genres.length;
+
+  const myChart = new Chart(ctx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels: genres,
+      datasets: [{
+        data: numbers,
+        backgroundColor: `#ffe800`,
+        hoverBackgroundColor: `#ffe800`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 20
+          },
+          color: `#ffffff`,
+          anchor: `start`,
+          align: `start`,
+          offset: 40,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#ffffff`,
+            padding: 100,
+            fontSize: 20
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 24
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
+      }
+    }
+  });
+  return myChart;
+};
+
 const createStatisticsTemplate = (filmsStats, currentStat) => {
   // const completedTaskCount = 0; // Нужно посчитать количество завершенных задач за период
-
+  console.log(filmsStats);
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank
@@ -103,6 +168,10 @@ export default class Statistics extends SmartView {
   }
 
   _setCharts() {
-    // Нужно отрисовать два графика
+    const ctx = this.getElement().querySelector(`.statistic__chart`);
+
+    const genres = this._filmsStats.genres;
+    const numbers = this._filmsStats.numbers;
+    renderChart(ctx, genres, numbers);
   }
 }

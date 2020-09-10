@@ -81,10 +81,23 @@ export const generateStats = (films, mode) => {
   genresQuantity = new Map(Object.entries(genresQuantity));
   genresQuantity = new Map([...genresQuantity.entries()].sort((a, b) => b[1] - a[1]));
 
+  // 4. Подготовить данные в формате 'график коллеги'
+
+  genresQuantity = Array.from(genresQuantity);
+
+  let sortedGenres = [];
+  let sortedNumbers = [];
+
+  genresQuantity.forEach((element) => {
+    sortedGenres.push(element[0]);
+    sortedNumbers.push(element[1]);
+  });
+
   return {
     watched: filmsStats.length,
-    topGenre: Array.from(genresQuantity).length > 0 ? Array.from(genresQuantity)[0][0] : ``,
-    stats: Array.from(genresQuantity),
+    topGenre: genresQuantity.length > 0 ? genresQuantity[0][0] : ``,
+    genres: sortedGenres,
+    numbers: sortedNumbers,
     durationHours: Math.trunc(totalDuration / 60),
     durationMinutes: totalDuration - Math.trunc(totalDuration / 60) * 60,
     rank: getRankName(filmsStats.length),
