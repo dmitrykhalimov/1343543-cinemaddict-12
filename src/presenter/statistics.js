@@ -10,22 +10,34 @@ export default class Statistics {
     this._statsContainer = statsContainer;
     this._filmsModel = filmsModel;
 
+    this._currentStats = StatsMode.ALL;
+    this._prevStatsComponent = null;
+    this._statsComponent = null;
+
     this._handleStatsPeriodChange = this._handleStatsPeriodChange.bind(this);
   }
 
   init() {
+    console.log(this._currentStats);
     const films = this._filmsModel.getFilms();
-    const filmsStats = generateStats(films, StatsMode.ALL);
+    const filmsStats = generateStats(films, this._currentStats);
 
-    console.log(filmsStats);
-
-    this._statsComponent = new StatsView(filmsStats);
-    render(this._statsContainer, this._statsComponent.getElement(), RenderPosition.BEFOREEND);
+    const prevStasComponent = this._statsComponent;
+    this._statsComponent = new StatsView(filmsStats, this._currentStats);
 
     this._statsComponent.setStatsPeriodClickHandler(this._handleStatsPeriodChange);
+
+    if (prevStasComponent === null) {
+      render(this._statsContainer, this._statsComponent.getElement(), RenderPosition.BEFOREEND);
+      return;
+    }
+
+    replace(this._statsComponent, prevStasComponent);
+    remove(prevStasComponent);
   }
 
-  _handleStatsPeriodChange() {
-    alert('Бантик');
+  _handleStatsPeriodChange(statsMode) {
+    this._currentStats = StatsMode[statsMode];
+    this.init();
   }
 }

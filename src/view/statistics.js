@@ -1,3 +1,5 @@
+import {StatsMode} from "../const.js";
+
 import SmartView from "./smart.js";
 
 import Chart from 'chart.js';
@@ -5,34 +7,33 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 // import {getCurrentDate} from "../utils/task.js";
 
-const createStatisticsTemplate = (filmsStats) => {
+const createStatisticsTemplate = (filmsStats, currentStat) => {
   // const completedTaskCount = 0; // Нужно посчитать количество завершенных задач за период
 
-  console.log(filmsStats);
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">Sci-Fighter</span>
+    <span class="statistic__rank-label">${filmsStats.rank}</span>
   </p>
 
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
     <p class="statistic__filters-description">Show stats:</p>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked>
-    <label for="statistic-all-time" class="statistic__filters-label">All time</label>
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" ${(currentStat === StatsMode.ALL) ? `checked` : ``}>
+    <label for="statistic-all-time" class="statistic__filters-label" data-type="ALL">All time</label>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
-    <label for="statistic-today" class="statistic__filters-label">Today</label>
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today" ${(currentStat === StatsMode.TODAY) ? `checked` : ``}>
+    <label for="statistic-today" class="statistic__filters-label" data-type="TODAY">Today</label>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
-    <label for="statistic-week" class="statistic__filters-label">Week</label>
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week" ${(currentStat === StatsMode.WEEK) ? `checked` : ``}>
+    <label for="statistic-week" class="statistic__filters-label" data-type="WEEK">Week</label>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
-    <label for="statistic-month" class="statistic__filters-label">Month</label>
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month" ${(currentStat === StatsMode.MONTH) ? `checked` : ``}>
+    <label for="statistic-month" class="statistic__filters-label" data-type="MONTH">Month</label>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
-    <label for="statistic-year" class="statistic__filters-label">Year</label>
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year" ${(currentStat === StatsMode.YEAR) ? `checked` : ``}>
+    <label for="statistic-year" class="statistic__filters-label" data-type="YEAR">Year</label>
   </form>
 
   <ul class="statistic__text-list">
@@ -58,10 +59,11 @@ const createStatisticsTemplate = (filmsStats) => {
 };
 
 export default class Statistics extends SmartView {
-  constructor(filmsStats) {
+  constructor(filmsStats, currentStat) {
     super();
 
     this._filmsStats = filmsStats;
+    this._currentStat = currentStat;
 
     this._statsPeriodClickHandler = this._statsPeriodClickHandler.bind(this);
 
@@ -69,7 +71,7 @@ export default class Statistics extends SmartView {
   }
 
   getTemplate() {
-    return createStatisticsTemplate(this._filmsStats);
+    return createStatisticsTemplate(this._filmsStats, this._currentStat);
   }
 
   restoreHandlers() {
@@ -92,7 +94,7 @@ export default class Statistics extends SmartView {
     if (evt.target.tagName !== `LABEL`) {
       return;
     }
-    this._callback.statsPeriod();
+    this._callback.statsPeriod(evt.target.getAttribute(`data-type`));
   }
 
   setStatsPeriodClickHandler(callback) {

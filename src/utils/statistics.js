@@ -24,13 +24,39 @@ const DatePatterns = {
   },
 };
 
+const RANKS = [
+  {
+    '': 0
+  },
+  {
+    'Novice': 10
+  },
+  {
+    'Fan': 20
+  },
+  {
+    'Movie buff': Infinity
+  }
+];
+
+export const getRankName = (quantityWatched) => {
+  for (let i = 0; i < RANKS.length; i++) {
+    if (quantityWatched <= Object.values(RANKS[i])) {
+      return Object.keys(RANKS[i])[0];
+    }
+  }
+  return ``;
+};
+
 export const generateStats = (films, mode) => {
   let filmsStats = films.slice();
   let genres = [];
   let totalDuration = 0;
 
+  console.log(films);
+
   /* Не самый изящный метод сортировки, но ничего лаконичнее придумать не смог */
-  // 1. Отфильтровать фильмы по дате и собрать все жанры подходящих фильмов
+  // 1. Отфильтровать фильмы по дате и собрать все жанры подходящих фильмов. Предполагается, что структура данных нормальная, и невозможна ситуация когда isWatched = false, а время просмотра не null;
   filmsStats = filmsStats.filter((film) => {
     if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) {
       genres = genres.concat(Array.from(film.genres));
@@ -57,9 +83,10 @@ export const generateStats = (films, mode) => {
 
   return {
     watched: filmsStats.length,
-    topGenre: Array.from(genresQuantity)[0][0],
+    topGenre: Array.from(genresQuantity).length > 0 ? Array.from(genresQuantity)[0][0] : ``,
     stats: Array.from(genresQuantity),
     durationHours: Math.trunc(totalDuration / 60),
     durationMinutes: totalDuration - Math.trunc(totalDuration / 60) * 60,
+    rank: getRankName(filmsStats.length),
   };
 };
