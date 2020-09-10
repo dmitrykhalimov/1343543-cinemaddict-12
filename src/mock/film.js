@@ -104,6 +104,8 @@ const CommentLimits = {
 const DateLimits = {
   MIN: new Date(1930, 0, 1),
   MAX: new Date(),
+  WATCHED_MIN: new Date(2019, 8, 9),
+  WATCHED_MAX: new Date(),
 };
 
 export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
@@ -205,5 +207,6 @@ export const generateFilm = () => {
     isInWatchlist: getRandomBoolean(),
     isWatched: getRandomBoolean(),
     isFavorite: getRandomBoolean(),
+    watchingDate: generateDate(DateLimits.WATCHED_MIN, DateLimits.WATCHED_MAX)
   };
 };

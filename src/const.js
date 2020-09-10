@@ -32,8 +32,17 @@ export const FilterType = {
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
   FAVORITES: `favorites`,
+  STATS: `stats`,
 };
 
 export const FilterMode = {
   COUNT: `count`,
+};
+
+export const StatsMode = {
+  ALL: `ALL`,
+  TODAY: `TODAY`,
+  WEEK: `WEEK`,
+  MONTH: `MONTH`,
+  YEAR: `YEAR`
 };

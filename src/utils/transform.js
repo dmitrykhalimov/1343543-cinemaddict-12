@@ -20,6 +20,10 @@ export const transformDateTime = (dateTime, transformType) => {
   return moment(dateTime).format(transformType);
 };
 
+export const diffWithCurrentDate = (dateToCompare, mode) => {
+  return moment(Date.now()).diff(moment(dateToCompare), mode, true);
+};
+
 // трансформации длительности фильма
 
 export const translateMinutesToText = (duration) => {
