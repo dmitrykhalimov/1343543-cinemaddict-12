@@ -82,8 +82,8 @@ export const generateStats = (films, mode) => {
 
   genresQuantity = Array.from(genresQuantity);
 
-  let sortedGenres = [];
-  let sortedNumbers = [];
+  const sortedGenres = [];
+  const sortedNumbers = [];
 
   genresQuantity.forEach((element) => {
     sortedGenres.push(element[0]);

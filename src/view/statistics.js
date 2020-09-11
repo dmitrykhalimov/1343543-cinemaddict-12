@@ -5,10 +5,11 @@ import AbstractView from "./abstract.js";
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
+const BAR_HEIGHT = 50;
+
 // import {getCurrentDate} from "../utils/task.js";
 
 const renderChart = (ctx, genres, numbers) => {
-  const BAR_HEIGHT = 50;
 
   ctx.height = BAR_HEIGHT * genres.length;
 

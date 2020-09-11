@@ -1,5 +1,5 @@
 import Observer from "../utils/observer.js";
-import Api from "./api.js";
+// import Api from "./api.js";
 
 export default class Films extends Observer {
   constructor() {
