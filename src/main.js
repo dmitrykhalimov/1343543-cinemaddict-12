@@ -24,17 +24,23 @@ const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
 
 // по-моему какое-то колхозанство, но с за 12 часов ничего умнее я придумать не смог :(
 
-Promise.all([api.getFilms()]).then((films) => {
+api.getFilms().then((films) => {
   const commentPromises = [];
-  films[0].forEach((film) => {
-    console.log('Создаю промис фильма');
+  films.forEach((film) => {
     const promise = api.getComments(film.id);
     commentPromises.push(promise);
   });
-  console.log(commentPromises);
-  Promise.all(commentPromises).then((values) => {
-    console.log(values);
-    console.log(films[0]);
+  Promise.all(commentPromises).then((commentsAll) => {
+    films = films.map((film, index) => {
+      return Object.assign(
+        {},
+        film,
+        {
+         comments: commentsAll[index]
+        }
+      );
+    });
+    console.log(films);
   });
 });
 // console.log('1. Загрузка фильмов')
