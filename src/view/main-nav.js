@@ -9,7 +9,7 @@ const createMainNav = (filters, currentFilterType) => {
         <a href="#history" data-type="history" class="main-navigation__item ${currentFilterType === FilterType.HISTORY ? `main-navigation__item--active` : ``}">History <span class="main-navigation__item-count">${filters[FilterType.HISTORY]}</span></a>
         <a href="#favorites" data-type="favorites" class="main-navigation__item ${currentFilterType === FilterType.FAVORITES ? `main-navigation__item--active` : ``}">Favorites <span class="main-navigation__item-count">${filters[FilterType.FAVORITES]}</span></a>
       </div>
-      <a href="#stats" class="main-navigation__additional">Stats</a>
+      <a href="#stats" id="stats" class="main-navigation__additional">Stats</a>
     </nav>`;
 };
 
@@ -18,18 +18,30 @@ export default class MainNav extends AbstractView {
     super();
     this._filters = filters;
     this._currentFilter = currentFilterType;
+    this._isStatsActive = false;
 
     this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
+    this._statsButtonClickHandler = this._statsButtonClickHandler.bind(this);
   }
 
   getTemplate() {
     return createMainNav(this._filters, this._currentFilter);
   }
 
+  setFilterTypeChangeHandler(callback) {
+    this._callback.filterTypeChange = callback;
+    this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
+  }
+
+  setStatsButtonClickHandler(callback) {
+    this._callback.statsButton = callback;
+    this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._statsButtonClickHandler);
+  }
+
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
 
-    if (evt.target.tagName !== `A`) {
+    if (evt.target.tagName !== `A` || evt.target.id === `stats`) {
       return;
     }
 
@@ -37,9 +49,12 @@ export default class MainNav extends AbstractView {
     this._callback.filterTypeChange(filterName);
   }
 
-  setFilterTypeChangeHandler(callback) {
-    this._callback.filterTypeChange = callback;
-    this.getElement().addEventListener(`click`, this._filterTypeChangeHandler);
+  _statsButtonClickHandler(evt) {
+    evt.preventDefault();
+
+    this.getElement().querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
+    this.getElement().querySelector(`.main-navigation__additional`).classList.add(`main-navigation__item--active`);
+    this._callback.statsButton();
   }
 }
 

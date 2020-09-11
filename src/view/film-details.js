@@ -173,14 +173,41 @@ export default class FilmDetails extends AbstractView {
     return createFilmDetails(this._film);
   }
 
-  _popupClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.popupClick();
-  }
-
   setPopupClickHandler(callback) {
     this._callback.popupClick = callback;
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._popupClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  setWatchlistClickHandler(callback) {
+    this._callback.watchlistClick = callback;
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, this._watchlistClickHandler);
+  }
+
+  setWatchedClickHandler(callback) {
+    this._callback.watchedClick = callback;
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedClickHandler);
+  }
+
+  setEmojiClickHandler() {
+    const emojiButtons = this.getElement().querySelector(`.film-details__emoji-list`);
+    emojiButtons.addEventListener(`click`, this._emojiClickHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteComment = callback;
+
+    const commentsList = this.getElement().querySelector(`.film-details__comments-list`);
+    commentsList.addEventListener(`click`, this._buttonDeleteClickHandler);
+  }
+
+  setAddCommentHandler(callback) {
+    this._callback.addComment = callback;
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
 
   _favoriteClickHandler(evt) {
@@ -233,35 +260,8 @@ export default class FilmDetails extends AbstractView {
     }
   }
 
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`#favorite`).addEventListener(`click`, this._favoriteClickHandler);
-  }
-
-  setWatchlistClickHandler(callback) {
-    this._callback.watchlistClick = callback;
-    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, this._watchlistClickHandler);
-  }
-
-  setWatchedClickHandler(callback) {
-    this._callback.watchedClick = callback;
-    this.getElement().querySelector(`#watched`).addEventListener(`click`, this._watchedClickHandler);
-  }
-
-  setEmojiClickHandler() {
-    const emojiButtons = this.getElement().querySelector(`.film-details__emoji-list`);
-    emojiButtons.addEventListener(`click`, this._emojiClickHandler);
-  }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteComment = callback;
-
-    const commentsList = this.getElement().querySelector(`.film-details__comments-list`);
-    commentsList.addEventListener(`click`, this._buttonDeleteClickHandler);
-  }
-
-  setAddCommentHandler(callback) {
-    this._callback.addComment = callback;
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
+  _popupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.popupClick();
   }
 }

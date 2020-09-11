@@ -20,8 +20,11 @@ export const transformDateTime = (dateTime, transformType) => {
   return moment(dateTime).format(transformType);
 };
 
-// трансформации длительности фильма
+export const diffWithCurrentDate = (dateToCompare, mode) => {
+  return moment(Date.now()).diff(moment(dateToCompare), mode, true);
+};
 
+// трансформации длительности фильма
 export const translateMinutesToText = (duration) => {
   const MS_IN_MIN = 1000;
   const MIN_IN_HOUR = 60;
@@ -43,7 +46,6 @@ export const sortRating = (filmA, filmB) => {
 };
 
 /* сортировка для блоков top */
-
 export const generateTopRated = (films) => {
   return films.slice().sort((a, b) => b.rating - a.rating);
 };

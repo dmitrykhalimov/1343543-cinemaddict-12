@@ -45,13 +45,6 @@ export default class Board {
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  // инициализация
-  init() {
-    render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
-
-    this._renderBoard();
-  }
-
   // метод получения фильмов из модели
   _getFilms() {
     const filterType = this._filterModel.getFilter();
@@ -68,9 +61,142 @@ export default class Board {
     return filteredFilms;
   }
 
-  // *сортировка*
+  // инициализация
+  init() {
+    this._renderBoard();
+  }
 
-  // обработчик сортировки
+  // уничтожение (при отрисовке блока статистики)
+  destroy() {
+    this._clearBoard();
+    remove(this._boardComponent);
+
+    remove(this._sortComponent);
+    this._currentSortType = SortType.DEFAULT;
+
+    this._sortComponent = null;
+  }
+
+  // очистка доски при перерисовке
+  _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
+    const filmCount = this._getFilms().length;
+
+    Object
+      .values(this._filmPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    Object
+      .values(this._filmRatedPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    Object
+      .values(this._filmCommentedPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    this._filmPresenter = {};
+    this._filmRatedPresenter = {};
+    this._filmCommentedPresenter = {};
+
+    remove(this._noFilmsComponent);
+    remove(this._loadMoreButtonComponent);
+    remove(this._extraCommented);
+    remove(this._extraRated);
+
+    this._renderedFilmsCount = (resetRenderedFilmCount) ? FILMS_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmsCount);
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
+  }
+
+  // отрисовка поля с фильмами
+  _renderBoard() {
+    const films = this._getFilms();
+    const filmCount = films.length;
+
+    // если фильмов нет - отрисовать плашку NoFilms
+    if (filmCount === 0) {
+      this._renderNoFilms();
+      return;
+    }
+    this._renderSort();
+
+    render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
+
+    this._renderFilms(films.slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP)));
+    this._renderExtras();
+
+    if (filmCount > this._renderedFilmsCount) {
+      this._renderLoadMoreButton();
+    }
+  }
+
+  // отрисовка сортировки
+  _renderSort() {
+    const prevSortComponent = this._sortComponent;
+    this._sortComponent = new SortView(this._currentSortType);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    if (prevSortComponent === null) {
+      render(this._boardContainer, this._sortComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    replace(this._sortComponent, prevSortComponent);
+    remove(prevSortComponent);
+  }
+
+  // отрисовка списка фильмов
+  _renderFilms(films) {
+    render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
+
+    films.forEach((film) => this._renderFilm(this._filmsListContainer, film, this._filmPresenter));
+  }
+
+  // отрисовка отдельного фильма
+  _renderFilm(container, film, presenterList) {
+    const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleModeChange);
+    filmPresenter.init(film);
+    presenterList[film.id] = filmPresenter;
+  }
+
+  // отрисовка плашки No Films
+  _renderNoFilms() {
+    render(this._boardComponent, this._noFilmsComponent, RenderPosition.BEFOREEND);
+  }
+
+  // отрисовка кнопки Show More
+  _renderLoadMoreButton() {
+    if (this._loadMoreButtonComponent !== null) {
+      this._loadMoreButtonComponent = null;
+    }
+
+    this._loadMoreButtonComponent = new ButtonView();
+
+    render(this._filmsContainerComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
+
+    this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton);
+  }
+
+  // отрисовка блока экстра
+  _renderExtras() {
+    // TODO: не работают интерактивные элементы попапа (!)
+    this._extraRated = new ExtraRatedContainerView();
+    this._extraCommented = new ExtraCommentedContainerView();
+
+    render(this._boardComponent, this._extraRated, RenderPosition.BEFOREEND);
+    render(this._boardComponent, this._extraCommented, RenderPosition.BEFOREEND);
+
+    const topRatedFilms = generateTopRated(this._filmsModel.getFilms().slice());
+    const topCommentedFilms = generateTopCommented(this._filmsModel.getFilms().slice());
+
+    for (let i = 0; i < EXTRAS_COUNT; i++) {
+      this._renderFilm(this._extraRated.getContainer(), topRatedFilms[i], this._filmRatedPresenter);
+      this._renderFilm(this._extraCommented.getContainer(), topCommentedFilms[i], this._filmCommentedPresenter);
+    }
+  }
+
+  // обработчик изменения типа сортировки
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -95,7 +221,7 @@ export default class Board {
       .forEach((presenter) => presenter.resetView());
   }
 
-  // обработчик изменения фильма (можно обойтись без switch и все упростить - но мало ли понадобится DELETE, если нет - удалю
+  // обработчик изменения фильма
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
@@ -126,78 +252,9 @@ export default class Board {
         if (this._filmCommentedPresenter[data.id]) {
           this._filmCommentedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
         }
-
         break;
     }
   }
-
-  // метод сортировки
-  _renderSort() {
-    const prevSortComponent = this._sortComponent;
-    this._sortComponent = new SortView(this._currentSortType);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
-
-    if (prevSortComponent === null) {
-      render(this._boardContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
-      return;
-    }
-
-    replace(this._sortComponent, prevSortComponent);
-  }
-
-  // отрисовка поля
-  _renderBoard() {
-    const films = this._getFilms();
-    const filmCount = films.length;
-
-    // если фильмов нет - отрисовать плашку NoFilms
-    if (filmCount === 0) {
-      this._renderNoFilms();
-      return;
-    }
-
-    this._renderFilms(films.slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP)));
-    this._renderExtras();
-
-    this._renderSort();
-
-    if (filmCount > this._renderedFilmsCount) {
-      this._renderLoadMoreButton();
-    }
-  }
-
-  // отрисовка блока экстра
-  _renderExtras() {
-    // TODO: не работают интерактивные элементы попапа (!)
-    this._extraRated = new ExtraRatedContainerView();
-    this._extraCommented = new ExtraCommentedContainerView();
-
-    render(this._boardComponent, this._extraRated, RenderPosition.BEFOREEND);
-    render(this._boardComponent, this._extraCommented, RenderPosition.BEFOREEND);
-
-    const topRatedFilms = generateTopRated(this._filmsModel.getFilms().slice());
-    const topCommentedFilms = generateTopCommented(this._filmsModel.getFilms().slice());
-
-    for (let i = 0; i < EXTRAS_COUNT; i++) {
-      this._renderFilm(this._extraRated.getContainer(), topRatedFilms[i], this._filmRatedPresenter);
-      this._renderFilm(this._extraCommented.getContainer(), topCommentedFilms[i], this._filmCommentedPresenter);
-    }
-  }
-
-  // отрисовка фильмов
-  _renderFilms(films) {
-    render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
-
-    films.forEach((film) => this._renderFilm(this._filmsListContainer, film, this._filmPresenter));
-  }
-
-  // отрисовка отдельного фильма
-  _renderFilm(container, film, presenterList) {
-    const filmPresenter = new FilmPresenter(container, this._handleViewAction, this._handleModeChange);
-    filmPresenter.init(film);
-    presenterList[film.id] = filmPresenter;
-  }
-
 
   // обработчик нажатия кнопки Show More
   _handleLoadButton() {
@@ -210,59 +267,6 @@ export default class Board {
 
     if (this._renderedFilmsCount >= filmCount) {
       remove(this._loadMoreButtonComponent);
-    }
-  }
-
-
-  // отрисовка кнопки Show More
-  _renderLoadMoreButton() {
-
-    if (this._loadMoreButtonComponent !== null) {
-      this._loadMoreButtonComponent = null;
-    }
-
-    this._loadMoreButtonComponent = new ButtonView();
-
-    render(this._filmsContainerComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
-
-    this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton);
-  }
-
-  // отрисовка плашки No Films
-  _renderNoFilms() {
-    render(this._boardComponent, this._noFilmsComponent, RenderPosition.BEFOREEND);
-  }
-
-  // метод очистки доски
-
-  _clearBoard({resetRenderedFilmCount = false, resetSortType = false} = {}) {
-    const filmCount = this._getFilms().length;
-
-    Object
-      .values(this._filmPresenter)
-      .forEach((presenter) => presenter.destroy());
-
-    Object
-      .values(this._filmRatedPresenter)
-      .forEach((presenter) => presenter.destroy());
-
-    Object
-      .values(this._filmCommentedPresenter)
-      .forEach((presenter) => presenter.destroy());
-
-    this._filmPresenter = {};
-    this._filmRatedPresenter = {};
-    this._filmCommentedPresenter = {};
-
-    remove(this._noFilmsComponent);
-    remove(this._loadMoreButtonComponent);
-    remove(this._extraCommented);
-    remove(this._extraRated);
-
-    this._renderedFilmsCount = (resetRenderedFilmCount) ? FILMS_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmsCount);
-
-    if (resetSortType) {
-      this._currentSortType = SortType.DEFAULT;
     }
   }
 }
