@@ -9,12 +9,25 @@ import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
+import Api from "./api.js";
 
 const FILMS_COUNT = 22;
+const AUTHORIZATION = `Basic yellowbigpineapple`;
+const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getFilms().then((films) => {
+  console.log(films);
+});
+
+api.getComments('11').then((comments) => {
+  console.log(comments);
+});
 
 /* генерация моков */
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 
+console.log(films);
 // модель фильма
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);

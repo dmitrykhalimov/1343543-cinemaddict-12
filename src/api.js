@@ -1,3 +1,5 @@
+import FilmsModel from "./model/films.js";
+
 const Method = {
   GET: `GET`,
   PUT: `PUT`
@@ -14,8 +16,14 @@ export default class Api {
     this._authorization = authorization;
   }
 
-  getTasks() {
-    return this._load({url: `tasks`})
+  getFilms() {
+    return this._load({url: `movies`})
+      .then(Api.toJSON)
+      .then((films) => films.map(FilmsModel.adaptToClient));
+  }
+
+  getComments(filmId) {
+    return this._load({url: `comments/${filmId}/`})
       .then(Api.toJSON);
   }
 
