@@ -237,6 +237,9 @@ export default class Board {
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
         this._renderBoard();
         break;
+      case UpdateType.INIT:
+        this._renderBoard();
+        break;
       case UpdateType.POPUP:
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
         this._renderBoard();

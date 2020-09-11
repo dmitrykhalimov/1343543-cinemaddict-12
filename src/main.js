@@ -8,29 +8,29 @@ import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
 import FooterStatsView from "./view/footer-stats.js";
 
-import {generateFilm} from "./mock/film.js";
-
 import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
-import {ServerParameters} from "./const.js";
+import {ServerParameters, UpdateType} from "./const.js";
 import Api from "./api.js";
 
-const FILMS_COUNT = 22;
-let filmsFromServer = [];
-let commentsFromServer = [];
+// отрисовка хэдера
+const siteHeader = document.querySelector(`.header`);
+render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
+
 const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
+const filmsModel = new FilmsModel();
 
+// загрузить фильмы
 // по-моему какое-то колхозанство, но с за 12 часов ничего умнее я придумать не смог :(
-
-api.getFilms().then((films) => {
+api.getFilms().then((films) => { // собрать все фильмы
   const commentPromises = [];
-  films.forEach((film) => {
+  films.forEach((film) => { // т.к. комменты отдаются сервером по-отдельности, создать промис для каждого комментария
     const promise = api.getComments(film.id);
-    commentPromises.push(promise);
+    commentPromises.push(promise); // собрать единый массив промисов
   });
-  Promise.all(commentPromises).then((commentsAll) => {
+  Promise.all(commentPromises).then((commentsAll) => { // когда все комментарии загрузились
     films = films.map((film, index) => {
       return Object.assign(
         {},
@@ -40,53 +40,12 @@ api.getFilms().then((films) => {
         }
       );
     });
-    console.log(films);
+    filmsModel.setFilms(UpdateType.INIT, films);
   });
 });
-// console.log('1. Загрузка фильмов')
-// api.getFilms()
-//   .then((films) => {
-//     console.log('2. Фильмы загружены для каждого фильма загрузить комментарии');
-//     films.map((film) => {
-//       console.log(downloadComments(film));
-//       return downloadComments(film);
-//     });
-//   })
-//   .then((films) => {
-//     console.log('5. Выводим список в коносль');
-//     console.log(films);
-//   });
-
-// let connectFilm = (film, comment) => {
-//   console.log('3-3. Шлепаем к нему коммент');
-//   film.commentsMax = comment;
-//   return film;
-// };
-
-// let downloadComments = (film) => {
-//   console.log('2. Загружаем комментарий');
-//   api.getComments(film.id)
-//     .then((comment) => {
-//       console.log('3-1. Комментарий загружен, соединяем');
-//       return connectFilm(film, comment);
-//     });
-// };
-
-/* генерация моков */
-const films = new Array(FILMS_COUNT).fill().map(generateFilm);
-
-console.log(films);
-// модель фильма
-const filmsModel = new FilmsModel();
-filmsModel.setFilms(films);
 
 // модель фильтра
 const filterModel = new FilterModel();
-
-/* непосредственно отрисовка */
-// блок профиля пользователя
-const siteHeader = document.querySelector(`.header`);
-render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 
 const siteMain = document.querySelector(`.main`);
 
@@ -103,5 +62,5 @@ boardPresenter.init();
 
 // блок футера
 const siteFooterStats = document.querySelector(`.footer__statistics`);
-render(siteFooterStats, new FooterStatsView(films.length).getElement(), RenderPosition.BEFOREEND);
+render(siteFooterStats, new FooterStatsView(222).getElement(), RenderPosition.BEFOREEND);
 

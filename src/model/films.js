@@ -1,5 +1,4 @@
 import Observer from "../utils/observer.js";
-// import Api from "./api.js";
 
 export default class Films extends Observer {
   constructor() {
@@ -7,8 +6,9 @@ export default class Films extends Observer {
     this._films = [];
   }
 
-  setFilms(films) {
+  setFilms(updateType, films) {
     this._films = films.slice();
+    this._notify(updateType);
   }
 
   getFilms() {
