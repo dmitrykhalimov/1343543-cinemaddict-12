@@ -1,3 +1,8 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable no-console */
+/* eslint-disable quotes */
+/* eslint-disable no-var */
+/* eslint-disable indent */
 import UserProfileView from "./view/user-profile.js";
 import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
@@ -9,20 +14,57 @@ import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
+import {ServerParameters} from "./const.js";
 import Api from "./api.js";
 
 const FILMS_COUNT = 22;
-const AUTHORIZATION = `Basic yellowbigpineapple`;
-const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
-const api = new Api(END_POINT, AUTHORIZATION);
+let filmsFromServer = [];
+let commentsFromServer = [];
+const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
 
-api.getFilms().then((films) => {
-  console.log(films);
-});
+// по-моему какое-то колхозанство, но с за 12 часов ничего умнее я придумать не смог :(
 
-api.getComments('11').then((comments) => {
-  console.log(comments);
+Promise.all([api.getFilms()]).then((films) => {
+  const commentPromises = [];
+  films[0].forEach((film) => {
+    console.log('Создаю промис фильма');
+    const promise = api.getComments(film.id);
+    commentPromises.push(promise);
+  });
+  console.log(commentPromises);
+  Promise.all(commentPromises).then((values) => {
+    console.log(values);
+    console.log(films[0]);
+  });
 });
+// console.log('1. Загрузка фильмов')
+// api.getFilms()
+//   .then((films) => {
+//     console.log('2. Фильмы загружены для каждого фильма загрузить комментарии');
+//     films.map((film) => {
+//       console.log(downloadComments(film));
+//       return downloadComments(film);
+//     });
+//   })
+//   .then((films) => {
+//     console.log('5. Выводим список в коносль');
+//     console.log(films);
+//   });
+
+// let connectFilm = (film, comment) => {
+//   console.log('3-3. Шлепаем к нему коммент');
+//   film.commentsMax = comment;
+//   return film;
+// };
+
+// let downloadComments = (film) => {
+//   console.log('2. Загружаем комментарий');
+//   api.getComments(film.id)
+//     .then((comment) => {
+//       console.log('3-1. Комментарий загружен, соединяем');
+//       return connectFilm(film, comment);
+//     });
+// };
 
 /* генерация моков */
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);

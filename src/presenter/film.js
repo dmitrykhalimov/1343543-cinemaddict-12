@@ -172,7 +172,7 @@ export default class Film {
       dateComment: new Date(),
     });
 
-    const updatedFilm = Object.assign( // повторяющаяся часть, но мне кажется вынесение в отдельный метод усложнит структуру
+    const updatedFilm = Object.assign(
         {},
         this._film,
         {

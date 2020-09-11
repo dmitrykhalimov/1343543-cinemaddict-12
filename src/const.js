@@ -46,3 +46,8 @@ export const StatsMode = {
   MONTH: `MONTH`,
   YEAR: `YEAR`
 };
+
+export const ServerParameters = {
+  AUTHORIZATION: `Basic yellowbigpineapple`,
+  END_POINT: `https://12.ecmascript.pages.academy/cinemaddict`,
+}
