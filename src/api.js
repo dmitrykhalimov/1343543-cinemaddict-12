@@ -19,12 +19,13 @@ export default class Api {
   getFilms() {
     return this._load({url: `movies`})
       .then(Api.toJSON)
-      .then((films) => films.map(FilmsModel.adaptToClient));
+      .then((films) => films.map(FilmsModel.adaptFilmsToClient));
   }
 
   getComments(filmId) {
     return this._load({url: `comments/${filmId}/`})
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then((comments) => comments.map(FilmsModel.adaptCommentsToClient));
   }
 
   updateTask(task) {

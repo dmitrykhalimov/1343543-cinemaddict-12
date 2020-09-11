@@ -31,7 +31,7 @@ export default class Films extends Observer {
     this._notify(updateType, update);
   }
 
-  static adaptToClient(film) {
+  static adaptFilmsToClient(film) {
     const adaptedFilm = Object.assign(
         {},
         film,
@@ -63,5 +63,23 @@ export default class Films extends Observer {
     delete adaptedFilm.user_details;
 
     return adaptedFilm;
+  }
+
+  static adaptCommentsToClient(comment) {
+    const adaptedComment = Object.assign(
+        {},
+        comment,
+        {
+          nickname: comment.author,
+          dateComment: new Date(comment.date),
+          emoji: comment.emotion,
+        }
+    );
+
+    delete adaptedComment.author;
+    delete adaptedComment.date;
+    delete adaptedComment.emotion;
+
+    return adaptedComment;
   }
 }

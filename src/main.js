@@ -7,7 +7,7 @@ import UserProfileView from "./view/user-profile.js";
 import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
 import FooterStatsView from "./view/footer-stats.js";
-
+import {generateFilm} from "./mock/film.js"
 import {render, RenderPosition} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
 import FilmsModel from "./model/films.js";
@@ -15,6 +15,8 @@ import FilterModel from "./model/filter.js";
 import {ServerParameters, UpdateType} from "./const.js";
 import Api from "./api.js";
 
+const films = new Array(22).fill().map(generateFilm);
+console.log(films);
 // отрисовка хэдера
 const siteHeader = document.querySelector(`.header`);
 render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
@@ -40,6 +42,7 @@ api.getFilms().then((films) => { // собрать все фильмы
         }
       );
     });
+    console.log(films);
     filmsModel.setFilms(UpdateType.INIT, films);
   });
 });
