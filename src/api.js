@@ -22,6 +22,7 @@ export default class Api {
       .then((films) => films.map(FilmsModel.adaptFilmsToClient));
   }
 
+  //TOCLEAN
   testFilms() {
     return this._load({url: `movies`})
       .then(Api.toJSON)
@@ -39,7 +40,7 @@ export default class Api {
     return this._load({
       url: `tasks/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(film),
+      body: JSON.stringify(FilmsModel.adaptFilmToServer(film)),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON);

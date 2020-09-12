@@ -130,7 +130,7 @@ export default class Board {
     const films = this._getFilms();
     const filmCount = films.length;
 
-
+    //TOCLEAN
     console.log(films[0]);
     console.log(FilmsModel.adaptFilmToServer(films[0]));
 
