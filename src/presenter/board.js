@@ -11,6 +11,7 @@ import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
 import {makeFilters} from "../utils/filter.js";
 import LoadingView from "../view/loading.js";
+import FilmsModel from "../model/films.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -128,6 +129,12 @@ export default class Board {
 
     const films = this._getFilms();
     const filmCount = films.length;
+
+
+    console.log(films[0]);
+    console.log(FilmsModel.adaptFilmToServer(films[0]));
+
+
 
     // если фильмов нет - отрисовать плашку NoFilms
     if (filmCount === 0) {

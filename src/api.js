@@ -35,11 +35,11 @@ export default class Api {
       .then((comments) => comments.map(FilmsModel.adaptCommentsToClient));
   }
 
-  updateTask(task) {
+  updateFilm(film) {
     return this._load({
-      url: `tasks/${task.id}`,
+      url: `tasks/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(task),
+      body: JSON.stringify(film),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON);

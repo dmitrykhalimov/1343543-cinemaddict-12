@@ -1,3 +1,4 @@
+
 import Observer from "../utils/observer.js";
 
 export default class Films extends Observer {
@@ -55,6 +56,10 @@ export default class Films extends Observer {
           titleOriginal: film.film_info.alternative_title,
           watchingDate: new Date(film.user_details.watching_date),
           writers: film.film_info.writers.join(`, `),
+          datesToReturn: {
+            filmDate: film.film_info.release.date,
+            watchingDate: film.user_details.watching_date,
+          }
         }
     );
 
@@ -81,5 +86,61 @@ export default class Films extends Observer {
     delete adaptedComment.emotion;
 
     return adaptedComment;
+  }
+
+  static adaptFilmToServer(film) {
+    /* eslint-disable camelcase */
+    const adaptedFilm = Object.assign(
+        {},
+        film,
+        {
+          comments: film.commentsId,
+          film_info: {
+            actors: film.cast.split(`, `),
+            age_rating: film.age,
+            alternative_title: film.titleOriginal,
+            description: film.description,
+            director: film.director,
+            genre: Array.from(film.genres),
+            poster: film.poster,
+            release: {
+              date: film.datesToReturn.filmDate,
+              country: film.country,
+            },
+            runtime: film.duration,
+            title: film.title,
+            total_rating: film.rating,
+            writers: film.writers.split(`, `),
+          },
+          user_details: {
+            already_watched: film.isWatched,
+            favorite: film.isFavorite,
+            watching_date: film.datesToReturn.watchingDate,
+            watchlist: film.isInWatchList,
+          }
+        }
+    );
+
+    delete adaptedFilm.age;
+    delete adaptedFilm.cast;
+    delete adaptedFilm.commentsId;
+    delete adaptedFilm.country;
+    delete adaptedFilm.datesToReturn;
+    delete adaptedFilm.description;
+    delete adaptedFilm.director;
+    delete adaptedFilm.duration;
+    delete adaptedFilm.filmDate;
+    delete adaptedFilm.genres;
+    delete adaptedFilm.isFavorite;
+    delete adaptedFilm.isInWatchList;
+    delete adaptedFilm.isWatched;
+    delete adaptedFilm.poster;
+    delete adaptedFilm.rating;
+    delete adaptedFilm.title;
+    delete adaptedFilm.titleOriginal;
+    delete adaptedFilm.watchingDate;
+    delete adaptedFilm.writers;
+
+    return adaptedFilm;
   }
 }
