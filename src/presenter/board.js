@@ -10,6 +10,7 @@ import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../u
 import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
 import {makeFilters} from "../utils/filter.js";
+import LoadingView from "../view/loading.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -23,6 +24,7 @@ export default class Board {
 
     this._loadMoreButtonComponent = null;
     this._sortComponent = null;
+    this._isLoading = true;
 
     this._currentSortType = SortType.DEFAULT;
     this._filmPresenter = {};
@@ -32,6 +34,7 @@ export default class Board {
     this._boardComponent = new BoardView(); // сама доска <section class =films>
     this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
     this._filmsListContainer = this._filmsContainerComponent.getElement().querySelector(`.films-list__container`); // контейнер section class = filmlist__container
+    this._loadingComponent = new LoadingView();
 
     this._noFilmsComponent = new NoFilmsView();
 
@@ -101,6 +104,7 @@ export default class Board {
     remove(this._loadMoreButtonComponent);
     remove(this._extraCommented);
     remove(this._extraRated);
+    remove(this._loadingComponent);
 
     this._renderedFilmsCount = (resetRenderedFilmCount) ? FILMS_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmsCount);
 
@@ -109,8 +113,19 @@ export default class Board {
     }
   }
 
+  _renderLoading() {
+    render(this._boardContainer, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   // отрисовка поля с фильмами
   _renderBoard() {
+    this._renderSort();
+
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getFilms();
     const filmCount = films.length;
 
@@ -119,7 +134,6 @@ export default class Board {
       this._renderNoFilms();
       return;
     }
-    this._renderSort();
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
@@ -162,7 +176,8 @@ export default class Board {
 
   // отрисовка плашки No Films
   _renderNoFilms() {
-    render(this._boardComponent, this._noFilmsComponent, RenderPosition.BEFOREEND);
+    remove(this._boardComponent);
+    render(this._boardContainer, this._noFilmsComponent, RenderPosition.BEFOREEND);
   }
 
   // отрисовка кнопки Show More
@@ -238,6 +253,8 @@ export default class Board {
         this._renderBoard();
         break;
       case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderBoard();
         break;
       case UpdateType.POPUP:
