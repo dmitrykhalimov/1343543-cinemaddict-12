@@ -270,7 +270,12 @@ export default class Board {
           console.log(film);
           this._filmsModel.updateFilm(updateType, film);
         });
-
+        break;
+      case UserAction.DELETE_COMMENT:
+        this._api.deleteComment(update.idToDelete)
+          .then(() => {
+            this._filmsModel.updateFilm(updateType, update.filmWithoutComment);
+          });
     }
   }
 

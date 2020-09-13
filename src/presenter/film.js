@@ -143,14 +143,12 @@ export default class Film {
   }
 
   _handleDeleteClick(commentId) {
-    console.log(commentId);
-    // this._api
-    return
-    const index = this._film.comments.findIndex((comment) => comment.id === Number(commentId));
+    const index = this._film.comments.findIndex((comment) => comment.id === commentId);
     const updatedComments = [
       ...this._film.comments.slice(0, index),
       ...this._film.comments.slice(index + 1)
     ];
+
     const updatedFilm = Object.assign(
         {},
         this._film,
@@ -158,10 +156,16 @@ export default class Film {
           comments: updatedComments
         }
     );
+
+    const objectToUpdate = {
+      idToDelete: commentId,
+      filmWithoutComment: updatedFilm,
+    };
+
     this._changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.DELETE_COMMENT,
         UpdateType.POPUP,
-        updatedFilm
+        objectToUpdate
     );
   }
 
