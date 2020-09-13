@@ -41,9 +41,9 @@ const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, s
 filterPresenter.init();
 boardPresenter.init();
 
-api.testFilms();
 // загрузить фильмы
-// по-моему какое-то колхозанство, но с за 12 часов ничего умнее я придумать не смог :(
+// по-моему как-то колхозно вышло, но за два дня ничего умнее я придумать не смог :(
+
 api.getFilms().then((films) => { // собрать все фильмы
   const commentPromises = [];
   films.forEach((film) => { // т.к. комменты отдаются сервером по-отдельности, создать промис для каждого комментария

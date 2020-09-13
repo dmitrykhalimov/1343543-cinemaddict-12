@@ -130,8 +130,6 @@ export default class Board {
     const films = this._getFilms();
     const filmCount = films.length;
 
-    this._api.updateFilm(films[0]);
-
     // если фильмов нет - отрисовать плашку NoFilms
     if (filmCount === 0) {
       this._renderNoFilms();
