@@ -260,6 +260,14 @@ export default class Board {
             });
         });
         break;
+      case UserAction.ADD_COMMENT:
+        console.log('comment to add');
+        console.log(update);
+        break;
+        this._api.addComment(update).then((response) => {
+          console.log(response);
+        });
+
     }
   }
 

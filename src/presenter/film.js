@@ -162,28 +162,17 @@ export default class Film {
     );
   }
 
-  _handleAddComment(newComment, newEmoji) {
-    const updatedComments = this._film.comments.slice();
-    updatedComments.push({
-      id: generateId(),
-      emoji: newEmoji,
-      comment: newComment,
-      nickname: `Fancy troll`, // тут должно генерироваться имя, сделаю в 8 модуле, когда откажусь от моков, и часть функций перенсу в utils
-      dateComment: new Date(),
-    });
-
-    const updatedFilm = Object.assign(
-        {},
-        this._film,
-        {
-          comments: updatedComments
-        }
-    );
-
+  _handleAddComment(textComment, emojiComment) {
+    console.log(`i am here`);
+    const comment = {
+      "comment": textComment,
+      "date": (new Date()).toISOString(),
+      "emotion": emojiComment,
+    };
     this._changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.ADD_COMMENT,
         UpdateType.POPUP,
-        updatedFilm
+        comment
     );
   }
 }
