@@ -165,6 +165,7 @@ export default class Film {
   _handleAddComment(textComment, emojiComment) {
     console.log(`i am here`);
     const comment = {
+      "filmId": this._film.id,
       "comment": textComment,
       "date": (new Date()).toISOString(),
       "emotion": emojiComment,

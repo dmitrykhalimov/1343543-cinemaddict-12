@@ -256,16 +256,19 @@ export default class Board {
               );
             })
             .then((film) => {
+              console.log(film);
               this._filmsModel.updateFilm(updateType, film);
             });
         });
         break;
       case UserAction.ADD_COMMENT:
-        console.log('comment to add');
-        console.log(update);
-        break;
-        this._api.addComment(update).then((response) => {
-          console.log(response);
+        // console.log('comment to add');
+        // console.log(update);
+        // break;
+        this._api.addComment(update).then((film) => {
+          // console.log('updated film');
+          console.log(film);
+          this._filmsModel.updateFilm(updateType, film);
         });
 
     }

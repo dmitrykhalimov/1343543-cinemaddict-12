@@ -41,6 +41,24 @@ export default class Api {
       .then((filmUpdated) => FilmsModel.adaptFilmsToClient(filmUpdated));
   }
 
+  addComment(comment) {
+    return this._load({
+      url: `comments/${comment.filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON)
+      .then((repsonse) => FilmsModel.adaptNewComment(repsonse));
+  }
+
+  deleteTask(task) {
+    return this._load({
+      url: `tasks/${task.id}`,
+      method: Method.DELETE
+    });
+  }
+
   _load({
     url,
     method = Method.GET,

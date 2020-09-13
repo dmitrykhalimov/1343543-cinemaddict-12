@@ -89,61 +89,14 @@ export default class Films extends Observer {
     return adaptedComment;
   }
 
-  static adaptCommentToServer(comment) {
-    console.log(comment);
-    /* eslint-disable camelcase */
-    const adaptedComment = Object.assign(
-        {},
-        comment,
-        {
-          comments: film.commentsId,
-          film_info: {
-            actors: film.cast.split(`, `),
-            age_rating: film.age,
-            alternative_title: film.titleOriginal,
-            description: film.description,
-            director: film.director,
-            genre: Array.from(film.genres),
-            poster: film.poster,
-            release: {
-              date: film.datesToReturn.filmDate,
-              release_country: film.country,
-            },
-            runtime: film.duration,
-            title: film.title,
-            total_rating: film.rating,
-            writers: film.writers.split(`, `),
-          },
-          user_details: {
-            already_watched: film.isWatched,
-            favorite: film.isFavorite,
-            watching_date: film.datesToReturn.watchingDate,
-            watchlist: film.isInWatchlist,
-          }
-        }
-    );
-
-    delete adaptedFilm.age;
-    delete adaptedFilm.cast;
-    delete adaptedFilm.commentsId;
-    delete adaptedFilm.country;
-    delete adaptedFilm.datesToReturn;
-    delete adaptedFilm.description;
-    delete adaptedFilm.director;
-    delete adaptedFilm.duration;
-    delete adaptedFilm.filmDate;
-    delete adaptedFilm.genres;
-    delete adaptedFilm.isFavorite;
-    delete adaptedFilm.isInWatchList;
-    delete adaptedFilm.isWatched;
-    delete adaptedFilm.poster;
-    delete adaptedFilm.rating;
-    delete adaptedFilm.title;
-    delete adaptedFilm.titleOriginal;
-    delete adaptedFilm.watchingDate;
-    delete adaptedFilm.writers;
-
-    return adaptedFilm;
+  static adaptNewComment(movieAndComment) {
+    const adaptedMovie = this.adaptFilmsToClient(movieAndComment.movie);
+    let adaptedComments = movieAndComment.comments;
+    adaptedComments = adaptedComments.map((comment) => {
+      return this.adaptCommentsToClient(comment);
+    });
+    adaptedMovie[`comments`] = adaptedComments;
+    return adaptedMovie;
   }
 
   static adaptFilmToServer(film) {
