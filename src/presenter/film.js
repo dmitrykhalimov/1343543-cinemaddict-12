@@ -143,6 +143,9 @@ export default class Film {
   }
 
   _handleDeleteClick(commentId) {
+    console.log(commentId);
+    // this._api
+    return
     const index = this._film.comments.findIndex((comment) => comment.id === Number(commentId));
     const updatedComments = [
       ...this._film.comments.slice(0, index),
@@ -163,7 +166,6 @@ export default class Film {
   }
 
   _handleAddComment(textComment, emojiComment) {
-    console.log(`i am here`);
     const comment = {
       "filmId": this._film.id,
       "comment": textComment,
