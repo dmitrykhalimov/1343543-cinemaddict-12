@@ -11,7 +11,6 @@ import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
 import {makeFilters} from "../utils/filter.js";
 import LoadingView from "../view/loading.js";
-import FilmsModel from "../model/films.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
@@ -153,7 +152,10 @@ export default class Board {
   _renderSort() {
     const prevSortComponent = this._sortComponent;
     this._sortComponent = new SortView(this._currentSortType);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    if (!this._isLoading) {
+      this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    }
 
     if (prevSortComponent === null) {
       render(this._boardContainer, this._sortComponent, RenderPosition.BEFOREEND);

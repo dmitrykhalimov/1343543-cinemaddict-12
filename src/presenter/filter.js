@@ -43,6 +43,11 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
+  removeHandlers() {
+    this._filterComponent.removeFilterTypeChangeHandler();
+    this._filterComponent.removeStatsButtonClickHandler();
+  }
+
   _getFilters() {
     const films = this._filmsModel.getFilms();
     return makeFilters(films, FilterMode.COUNT);

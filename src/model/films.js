@@ -67,7 +67,7 @@ export default class Films extends Observer {
     delete adaptedFilm.film_info;
     delete adaptedFilm.user_details;
 
-    console.log(adaptedFilm);
+    // временно для дальнейшей отладки console.log(adaptedFilm);
     return adaptedFilm;
   }
 
