@@ -1,4 +1,5 @@
 import FilmsModel from "./model/films.js";
+import Film from "./presenter/film.js";
 
 const Method = {
   GET: `GET`,
@@ -25,10 +26,8 @@ export default class Api {
   //TOCLEAN
   testFilms() {
     return this._load({url: `movies`})
-      .then(Api.toJSON)
-      .then((films) => console.log(films));
+      .then((films) => (films));
   }
-
 
   getComments(filmId) {
     return this._load({url: `comments/${filmId}/`})
@@ -38,12 +37,13 @@ export default class Api {
 
   updateFilm(film) {
     return this._load({
-      url: `tasks/${film.id}`,
+      url: `movies/${film.id}/`,
       method: Method.PUT,
       body: JSON.stringify(FilmsModel.adaptFilmToServer(film)),
       headers: new Headers({"Content-Type": `application/json`})
     })
-      .then(Api.toJSON);
+      .then((filmUpdated) => Api.toJSON(filmUpdated))
+      .then((filmUpdated) => FilmsModel.adaptFilmsToClient(filmUpdated));
   }
 
   _load({

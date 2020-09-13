@@ -48,7 +48,7 @@ export default class Films extends Observer {
           genres: new Set(film.film_info.genre),
           id: film.id,
           isFavorite: film.user_details.favorite,
-          isInWatchList: film.user_details.watchlist,
+          isInWatchlist: film.user_details.watchlist,
           isWatched: film.user_details.already_watched,
           poster: film.film_info.poster,
           rating: film.film_info.total_rating,
@@ -67,6 +67,7 @@ export default class Films extends Observer {
     delete adaptedFilm.film_info;
     delete adaptedFilm.user_details;
 
+    console.log(adaptedFilm);
     return adaptedFilm;
   }
 
@@ -105,7 +106,7 @@ export default class Films extends Observer {
             poster: film.poster,
             release: {
               date: film.datesToReturn.filmDate,
-              country: film.country,
+              release_country: film.country,
             },
             runtime: film.duration,
             title: film.title,
@@ -116,7 +117,7 @@ export default class Films extends Observer {
             already_watched: film.isWatched,
             favorite: film.isFavorite,
             watching_date: film.datesToReturn.watchingDate,
-            watchlist: film.isInWatchList,
+            watchlist: film.isInWatchlist,
           }
         }
     );

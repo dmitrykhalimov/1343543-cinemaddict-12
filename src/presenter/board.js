@@ -17,11 +17,12 @@ const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
 
 export default class Board {
-  constructor(boardContainer, filmsModel, filterModel) {
+  constructor(boardContainer, filmsModel, filterModel, api) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._boardContainer = boardContainer;
     this._renderedFilmsCount = FILMS_COUNT_PER_STEP;
+    this._api = api;
 
     this._loadMoreButtonComponent = null;
     this._sortComponent = null;
@@ -130,11 +131,7 @@ export default class Board {
     const films = this._getFilms();
     const filmCount = films.length;
 
-    //TOCLEAN
-    console.log(films[0]);
-    console.log(FilmsModel.adaptFilmToServer(films[0]));
-
-
+    this._api.updateFilm(films[0]);
 
     // если фильмов нет - отрисовать плашку NoFilms
     if (filmCount === 0) {
@@ -247,7 +244,21 @@ export default class Board {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this._filmsModel.updateFilm(updateType, update);
+        this._api.updateFilm(update).then((response) => {
+          this._api.getComments(update.id)
+            .then((comment) => {
+              return Object.assign(
+                  {},
+                  response,
+                  {
+                    comments: comment
+                  }
+              );
+            })
+            .then((film) => {
+              this._filmsModel.updateFilm(updateType, film);
+            });
+        });
         break;
     }
   }

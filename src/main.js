@@ -32,7 +32,7 @@ const siteMain = document.querySelector(`.main`);
 
 // блок фильтров
 const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
-const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, api);
 
 const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, statsPresenter, boardPresenter);
 
