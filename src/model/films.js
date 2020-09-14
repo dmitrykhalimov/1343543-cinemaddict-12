@@ -89,6 +89,24 @@ export default class Films extends Observer {
     return adaptedComment;
   }
 
+  static adaptCommentToServer(comment) {
+    const adaptedComment = Object.assign(
+        {},
+        comment,
+        {
+          author: comment.nickname,
+          date: comment.dateComment.toISOString(),
+          emotion: comment.emoji,
+        }
+    );
+
+    delete adaptedComment.nickname;
+    delete adaptedComment.dateComment;
+    delete adaptedComment.emoji;
+
+    return adaptedComment;
+  }
+
   static adaptNewComment(movieAndComment) {
     const adaptedMovie = this.adaptFilmsToClient(movieAndComment.movie);
     let adaptedComments = movieAndComment.comments;
@@ -143,7 +161,7 @@ export default class Films extends Observer {
     delete adaptedFilm.filmDate;
     delete adaptedFilm.genres;
     delete adaptedFilm.isFavorite;
-    delete adaptedFilm.isInWatchList;
+    delete adaptedFilm.isInWatchlist;
     delete adaptedFilm.isWatched;
     delete adaptedFilm.poster;
     delete adaptedFilm.rating;
