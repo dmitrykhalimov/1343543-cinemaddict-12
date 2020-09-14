@@ -15,6 +15,12 @@ import FilterModel from "./model/filter.js";
 
 import {ServerParameters, UpdateType} from "./const.js";
 import Api from "./api/index.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
+
+const STORE_PREFIX = `cinemaaddict-localstorage`;
+const STORE_VER = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 const siteHeader = document.querySelector(`.header`);
 const siteFooterStats = document.querySelector(`.footer__statistics`);
@@ -25,6 +31,8 @@ const userProfileComponent = new UserProfileView();
 render(siteHeader, userProfileComponent, RenderPosition.BEFOREEND);
 
 const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const filmsModel = new FilmsModel();
 
 // модель фильтра
@@ -34,7 +42,7 @@ const siteMain = document.querySelector(`.main`);
 
 // блок фильтров
 const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
-const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, api, userProfileComponent);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, apiWithProvider, userProfileComponent);
 
 const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, statsPresenter, boardPresenter);
 
