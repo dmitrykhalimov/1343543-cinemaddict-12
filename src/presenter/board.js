@@ -246,12 +246,12 @@ export default class Board {
       case UserAction.UPDATE_FILM:
         this._api.updateFilm(update).then((response) => {
           this._api.getComments(update.id)
-            .then((comment) => {
+            .then((updatedComments) => {
               return Object.assign(
                   {},
                   response,
                   {
-                    comments: comment
+                    comments: updatedComments
                   }
               );
             })

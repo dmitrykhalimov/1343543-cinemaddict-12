@@ -16,10 +16,11 @@ import FilterModel from "./model/filter.js";
 import {ServerParameters, UpdateType} from "./const.js";
 import Api from "./api.js";
 
-// const films = new Array(22).fill().map(generateFilm);
-// console.log(films);
-// отрисовка хэдера
+
 const siteHeader = document.querySelector(`.header`);
+const siteFooterStats = document.querySelector(`.footer__statistics`);
+
+// отрисовка хэдера
 render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
 
 const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
@@ -60,12 +61,11 @@ api.getFilms().then((films) => { // собрать все фильмы
         }
       );
     });
-    console.log(films);
     filmsModel.setFilms(UpdateType.INIT, films);
   });
 });
 
 // блок футера
-const siteFooterStats = document.querySelector(`.footer__statistics`);
+
 render(siteFooterStats, new FooterStatsView(222).getElement(), RenderPosition.BEFOREEND);
 
