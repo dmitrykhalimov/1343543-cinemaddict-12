@@ -82,3 +82,14 @@ window.addEventListener(`load`, () => {
       console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
 });
+
+window.addEventListener(`online`, () => {
+  console.log('А я между прочим онлайн');
+  document.title = document.title.replace(` [offline]`, `тест`);
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  console.log('А я между прочим оффлайн');
+  document.title += ` [offline]`;
+});

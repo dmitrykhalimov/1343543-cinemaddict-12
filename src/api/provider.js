@@ -1,6 +1,7 @@
 import FilmsModel from "../model/films.js";
 
 const createStoreStructure = (items) => {
+  console.log(items);
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
       [current.id]: current,
@@ -18,7 +19,6 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getFilms()
         .then((films) => {
-          console.log(films);
           const items = createStoreStructure(films.map(FilmsModel.adaptFilmToServer));
           this._store.setItems(items);
           return films;
@@ -29,14 +29,13 @@ export default class Provider {
   }
 
   getComments(filmId) {
-    console.log('Меня вызали');
     if (Provider.isOnline()) {
       return this._api.getComments(filmId)
         .then((comments) => {
           return comments;
         });
     }
-    console.log('Меня вызали и я оффлайн');
+
     return Promise.resolve([]);
   }
 
@@ -75,10 +74,9 @@ export default class Provider {
   sync() {
     if (Provider.isOnline()) {
       const storeFimls = Object.values(this._store.getItems());
-
       return this._api.sync(storeFimls)
         .then((response) => {
-          const items = createStoreStructure(response);
+          const items = Array.from(createStoreStructure(response.updated));
           this._store.setItems(items);
         });
     }
