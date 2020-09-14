@@ -61,74 +61,79 @@ export const generateStats = (films, mode) => {
     filmsWatched: [],
     genres: [],
     totalDuration: 0,
-    genresQuantity: {}
+    genresQuantity: new Map(),
   };
 
-  const filmStatsNew = films.slice().reduce((acc, film) => {
+  let filmStatsNew = films.slice().reduce((acc, film) => {
     if ((diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) && film.isWatched) {
       acc.filmsWatched.push(film);
       acc.genres = acc.genres.concat(Array.from(film.genres));
       acc.totalDuration += film.duration;
 
       for (const genre of film.genres) {
-        if (!acc.genresQuantity[genre]) {
-          acc.genresQuantity[genre] = 0;
+        if (!acc.genresQuantity.has(genre)) {
+          acc.genresQuantity.set(genre, 0);
         }
-        acc.genresQuantity[genre]++;
+        acc.genresQuantity.set(genre, acc.genresQuantity.get(genre) + 1);
       }
     }
     return acc;
   }, initialValue);
 
-  filmsStats = filmsStats.filter((film) => {
-    if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT && film.isWatched) {
-      genres = genres.concat(Array.from(film.genres));
-      totalDuration += film.duration;
-      return true;
-    }
-    return false;
-  });
+  // filmsStats = filmsStats.filter((film) => {
+  //   if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT && film.isWatched) {
+  //     genres = genres.concat(Array.from(film.genres));
+  //     totalDuration += film.duration;
+  //     return true;
+  //   }
+  //   return false;
+  // });
 
-  console.log('старый метод');
-  console.log(filmsStats);
-  console.log(genres);
-  console.log(totalDuration);
-  console.log('новый метод')
-  console.log(filmStatsNew);
-  // 2. Узнать какие жанры есть и создать объект с
-  let genresQuantity = {};
+  // console.log('старый метод');
+  // console.log(filmsStats);
+  // console.log(genres);
+  // console.log(totalDuration);
+  // console.log('новый метод')
+  // console.log(filmStatsNew);
+  // // 2. Узнать какие жанры есть и создать объект с
+  // let genresQuantity = {};
 
-  for (let genre of genres) {
-    if (!genresQuantity[genre]) {
-      genresQuantity[genre] = 0;
-    }
-    genresQuantity[genre]++;
-  }
+  // for (let genre of genres) {
+  //   if (!genresQuantity[genre]) {
+  //     genresQuantity[genre] = 0;
+  //   }
+  //   genresQuantity[genre]++;
+  // }
 
-  console.log(genresQuantity);
+
   // 3. Отсортировать объект
-  genresQuantity = new Map(Object.entries(genresQuantity));
-  genresQuantity = new Map([...genresQuantity.entries()].sort((next, prev) => prev[1] - next[1]));
+  // genresQuantity = new Map(Object.entries(genresQuantity));
 
+  // genresQuantity = new Map([...genresQuantity.entries()].sort((next, prev) => prev[1] - next[1]));
+  // console.log('старая карта');
+  // console.log(genresQuantity);
+  // console.log(`новая карта`);
+  filmStatsNew.genresQuantity = new Map([...filmStatsNew.genresQuantity].sort((next, prev) => prev[1] - next[1]));
+    // console.log(newmap);
   // 4. Подготовить данные в формате 'график коллеги'
 
-  genresQuantity = Array.from(genresQuantity);
+  filmStatsNew.genresQuantity = Array.from(filmStatsNew.genresQuantity);
 
   const sortedGenres = [];
   const sortedNumbers = [];
 
-  genresQuantity.forEach((element) => {
+  filmStatsNew.genresQuantity.forEach((element) => {
     sortedGenres.push(element[0]);
     sortedNumbers.push(element[1]);
   });
 
   return {
-    watched: filmsStats.length,
-    topGenre: genresQuantity.length > 0 ? genresQuantity[0][0] : ``,
+    watched: filmStatsNew.filmsWatched.length,
+    topGenre: filmStatsNew.genresQuantity.length > 0 ? filmStatsNew.genresQuantity[0][0] : ``,
     genres: sortedGenres,
     numbers: sortedNumbers,
-    durationHours: Math.trunc(totalDuration / 60),
-    durationMinutes: totalDuration - Math.trunc(totalDuration / 60) * 60,
+    durationHours: Math.trunc(filmStatsNew.totalDuration / 60),
+    durationMinutes: filmStatsNew.totalDuration - Math.trunc(filmStatsNew.totalDuration / 60) * 60,
     rank: getRankName(films),
   };
 };
