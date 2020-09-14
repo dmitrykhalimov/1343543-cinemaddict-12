@@ -52,7 +52,7 @@ filterPresenter.init();
 boardPresenter.init();
 
 // загрузить фильмы
-api.getFilms().then((films) => {
+apiWithProvider.getFilms().then((films) => {
   const commentPromises = films.map((film) => {
     return api.getComments(film.id);
   });

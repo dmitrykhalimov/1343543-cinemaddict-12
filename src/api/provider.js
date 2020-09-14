@@ -24,15 +24,20 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getFilms()
         .then((films) => {
-          // const items = createStoreStructure(films.map(FilmsModel.adaptToServer));
-          // this._store.setItems(items);
+          const items = createStoreStructure(films.map(FilmsModel.adaptFilmToServer));
+          this._store.setItems(items);
+          console.log(items);
+          console.log(this._store.getItems());
+          const storeTasks = Object.values(this._store.getItems());
+          console.log(storeTasks);
           return films;
         });
     }
 
-    // const storeTasks = Object.values(this._store.getItems());
-    return null;
-    // return Promise.resolve(storeTasks.map(TasksModel.adaptToClient));
+    console.log(this._store.getItems());
+    const storeTasks = Object.values(this._store.getItems());
+    console.log(storeTasks);
+    return Promise.resolve(storeTasks.map(FilmsModel.adaptFilmsToClient));
   }
 
   getComments(filmId) {
