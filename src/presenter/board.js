@@ -265,7 +265,7 @@ export default class Board {
         // console.log('comment to add');
         // console.log(update);
         // break;
-        this._api.addComment(update).then((film) => {
+        this._api.addComment(update.commentBody).then((film) => {
           // console.log('updated film');
           console.log(film);
           this._filmsModel.updateFilm(updateType, film);

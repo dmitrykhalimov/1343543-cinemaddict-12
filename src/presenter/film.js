@@ -173,11 +173,13 @@ export default class Film {
 
   _handleAddComment(textComment, emojiComment) {
     const comment = {
-      "filmId": this._film.id,
-      "comment": textComment,
-      "date": (new Date()).toISOString(),
-      "emotion": emojiComment,
-    };
+      commentBody: {
+        "filmId": this._film.id,
+        "comment": textComment,
+        "date": (new Date()).toISOString(),
+        "emotion": emojiComment,
+      },
+      filmDetailsComponent: this._filmDetailsComponent}
     this._changeData(
         UserAction.ADD_COMMENT,
         UpdateType.POPUP,
