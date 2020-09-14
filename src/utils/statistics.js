@@ -56,8 +56,32 @@ export const generateStats = (films, mode) => {
 
   /* Не самый изящный метод сортировки, но ничего лаконичнее придумать не смог */
   // 1. Отфильтровать фильмы по дате и собрать все жанры подходящих фильмов. Предполагается, что структура данных нормальная, и невозможна ситуация когда isWatched = false, а время просмотра не null;
+
+  const initialValue = {
+    filmsWatched: [],
+    genres: [],
+    totalDuration: 0,
+    genresQuantity: {}
+  };
+
+  const filmStatsNew = films.slice().reduce((acc, film) => {
+    if ((diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) && film.isWatched) {
+      acc.filmsWatched.push(film);
+      acc.genres = acc.genres.concat(Array.from(film.genres));
+      acc.totalDuration += film.duration;
+
+      for (const genre of film.genres) {
+        if (!acc.genresQuantity[genre]) {
+          acc.genresQuantity[genre] = 0;
+        }
+        acc.genresQuantity[genre]++;
+      }
+    }
+    return acc;
+  }, initialValue);
+
   filmsStats = filmsStats.filter((film) => {
-    if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) {
+    if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT && film.isWatched) {
       genres = genres.concat(Array.from(film.genres));
       totalDuration += film.duration;
       return true;
@@ -65,6 +89,12 @@ export const generateStats = (films, mode) => {
     return false;
   });
 
+  console.log('старый метод');
+  console.log(filmsStats);
+  console.log(genres);
+  console.log(totalDuration);
+  console.log('новый метод')
+  console.log(filmStatsNew);
   // 2. Узнать какие жанры есть и создать объект с
   let genresQuantity = {};
 
@@ -75,6 +105,7 @@ export const generateStats = (films, mode) => {
     genresQuantity[genre]++;
   }
 
+  console.log(genresQuantity);
   // 3. Отсортировать объект
   genresQuantity = new Map(Object.entries(genresQuantity));
   genresQuantity = new Map([...genresQuantity.entries()].sort((next, prev) => prev[1] - next[1]));
