@@ -45,11 +45,13 @@ boardPresenter.init();
 // по-моему как-то колхозно вышло, но за два дня ничего умнее я придумать не смог :(
 
 api.getFilms().then((films) => { // собрать все фильмы
-  const commentPromises = [];
-  films.forEach((film) => { // т.к. комменты отдаются сервером по-отдельности, создать промис для каждого комментария
-    const promise = api.getComments(film.id);
-    commentPromises.push(promise); // собрать единый массив промисов
+  const commentPromises = films.map((film) => {
+    return api.getComments(film.id);
   });
+  // films.forEach((film) => { // т.к. комменты отдаются сервером по-отдельности, создать промис для каждого комментария
+  //   const promise = api.getComments(film.id);
+  //   commentPromises.push(promise); // собрать единый массив промисов
+  // });
   Promise.all(commentPromises)
     .then((commentsAll) => {
       return films.map((film, index) => {
