@@ -16,7 +16,6 @@ import FilterModel from "./model/filter.js";
 import {ServerParameters, UpdateType} from "./const.js";
 import Api from "./api.js";
 
-
 const siteHeader = document.querySelector(`.header`);
 const siteFooterStats = document.querySelector(`.footer__statistics`);
 
@@ -51,21 +50,21 @@ api.getFilms().then((films) => { // собрать все фильмы
     const promise = api.getComments(film.id);
     commentPromises.push(promise); // собрать единый массив промисов
   });
-  Promise.all(commentPromises).then((commentsAll) => { // когда все комментарии загрузились
-    films = films.map((film, index) => { // присоединить к фильму комментарий
-      return Object.assign(
-        {},
-        film,
-        {
-         comments: commentsAll[index]
-        }
-      );
+  Promise.all(commentPromises)
+    .then((commentsAll) => {
+      return films.map((film, index) => {
+        return Object.assign(
+          {},
+          film,
+          {
+            comments: commentsAll[index]
+          }
+        );
+      });
+    })
+    .then((receivedFilms) => {
+      filmsModel.setFilms(UpdateType.INIT, receivedFilms);
+      render(siteFooterStats, new FooterStatsView(receivedFilms.length).getElement(), RenderPosition.BEFOREEND);
     });
-    filmsModel.setFilms(UpdateType.INIT, films);
-  });
 });
-
-// блок футера
-
-render(siteFooterStats, new FooterStatsView(222).getElement(), RenderPosition.BEFOREEND);
 
