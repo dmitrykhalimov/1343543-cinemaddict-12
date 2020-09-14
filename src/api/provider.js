@@ -60,7 +60,8 @@ export default class Provider {
           return response;
         });
     }
-    return null;
+
+    return Promise.reject(new Error(`I am offline`));
   }
 
   deleteComment(commentId) {
@@ -68,7 +69,8 @@ export default class Provider {
       return this._api.deleteComment(commentId)
         .then((response) => response);
     }
-    return null;
+
+    return Promise.reject(new Error(`I am offline`));
   }
 
   sync() {
