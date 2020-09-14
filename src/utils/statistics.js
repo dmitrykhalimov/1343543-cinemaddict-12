@@ -39,7 +39,8 @@ const RANKS = [
   }
 ];
 
-export const getRankName = (quantityWatched) => {
+export const getRankName = (films) => {
+  const quantityWatched = films.filter((film) => film.isWatched).length;
   for (let i = 0; i < RANKS.length; i++) {
     if (quantityWatched <= Object.values(RANKS[i])) {
       return Object.keys(RANKS[i])[0];
@@ -49,54 +50,48 @@ export const getRankName = (quantityWatched) => {
 };
 
 export const generateStats = (films, mode) => {
-  let filmsStats = films.slice();
-  let genres = [];
-  let totalDuration = 0;
+  const initialValue = {
+    filmsWatched: [],
+    genres: [],
+    totalDuration: 0,
+    genresQuantity: new Map(),
+  };
 
-  /* Не самый изящный метод сортировки, но ничего лаконичнее придумать не смог */
-  // 1. Отфильтровать фильмы по дате и собрать все жанры подходящих фильмов. Предполагается, что структура данных нормальная, и невозможна ситуация когда isWatched = false, а время просмотра не null;
-  filmsStats = filmsStats.filter((film) => {
-    if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) {
-      genres = genres.concat(Array.from(film.genres));
-      totalDuration += film.duration;
-      return true;
+  let filmStatsNew = films.slice().reduce((acc, film) => {
+    if ((diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) && film.isWatched) {
+      acc.filmsWatched.push(film);
+      acc.genres = acc.genres.concat(Array.from(film.genres));
+      acc.totalDuration += film.duration;
+
+      for (const genre of film.genres) {
+        if (!acc.genresQuantity.has(genre)) {
+          acc.genresQuantity.set(genre, 0);
+        }
+        acc.genresQuantity.set(genre, acc.genresQuantity.get(genre) + 1);
+      }
     }
-    return false;
-  });
+    return acc;
+  }, initialValue);
 
-  // 2. Узнать какие жанры есть и создать объект с
-  let genresQuantity = {};
-
-  for (let genre of genres) {
-    if (!genresQuantity[genre]) {
-      genresQuantity[genre] = 0;
-    }
-    genresQuantity[genre]++;
-  }
-
-  // 3. Отсортировать объект
-  genresQuantity = new Map(Object.entries(genresQuantity));
-  genresQuantity = new Map([...genresQuantity.entries()].sort((next, prev) => prev[1] - next[1]));
-
-  // 4. Подготовить данные в формате 'график коллеги'
-
-  genresQuantity = Array.from(genresQuantity);
+  // мне по-прежнему не нравится этот кусок, постараюсь чего-нибудь с reduce еще придумать
+  filmStatsNew.genresQuantity = new Map([...filmStatsNew.genresQuantity].sort((next, prev) => prev[1] - next[1]));
+  filmStatsNew.genresQuantity = Array.from(filmStatsNew.genresQuantity);
 
   const sortedGenres = [];
   const sortedNumbers = [];
 
-  genresQuantity.forEach((element) => {
+  filmStatsNew.genresQuantity.forEach((element) => {
     sortedGenres.push(element[0]);
     sortedNumbers.push(element[1]);
   });
 
   return {
-    watched: filmsStats.length,
-    topGenre: genresQuantity.length > 0 ? genresQuantity[0][0] : ``,
+    watched: filmStatsNew.filmsWatched.length,
+    topGenre: filmStatsNew.genresQuantity.length > 0 ? filmStatsNew.genresQuantity[0][0] : ``,
     genres: sortedGenres,
     numbers: sortedNumbers,
-    durationHours: Math.trunc(totalDuration / 60),
-    durationMinutes: totalDuration - Math.trunc(totalDuration / 60) * 60,
-    rank: getRankName(filmsStats.length),
+    durationHours: Math.trunc(filmStatsNew.totalDuration / 60),
+    durationMinutes: filmStatsNew.totalDuration - Math.trunc(filmStatsNew.totalDuration / 60) * 60,
+    rank: getRankName(films),
   };
 };

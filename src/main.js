@@ -16,11 +16,13 @@ import FilterModel from "./model/filter.js";
 import {ServerParameters, UpdateType} from "./const.js";
 import Api from "./api.js";
 
-// const films = new Array(22).fill().map(generateFilm);
-// console.log(films);
-// отрисовка хэдера
 const siteHeader = document.querySelector(`.header`);
-render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
+const siteFooterStats = document.querySelector(`.footer__statistics`);
+
+// отрисовка хэдера
+
+const userProfileComponent = new UserProfileView();
+render(siteHeader, userProfileComponent, RenderPosition.BEFOREEND);
 
 const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
 const filmsModel = new FilmsModel();
@@ -32,7 +34,7 @@ const siteMain = document.querySelector(`.main`);
 
 // блок фильтров
 const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
-const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, api);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, api, userProfileComponent);
 
 const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, statsPresenter, boardPresenter);
 
@@ -42,30 +44,25 @@ filterPresenter.init();
 boardPresenter.init();
 
 // загрузить фильмы
-// по-моему как-то колхозно вышло, но за два дня ничего умнее я придумать не смог :(
-
-api.getFilms().then((films) => { // собрать все фильмы
-  const commentPromises = [];
-  films.forEach((film) => { // т.к. комменты отдаются сервером по-отдельности, создать промис для каждого комментария
-    const promise = api.getComments(film.id);
-    commentPromises.push(promise); // собрать единый массив промисов
+api.getFilms().then((films) => {
+  const commentPromises = films.map((film) => {
+    return api.getComments(film.id);
   });
-  Promise.all(commentPromises).then((commentsAll) => { // когда все комментарии загрузились
-    films = films.map((film, index) => { // присоединить к фильму комментарий
-      return Object.assign(
-        {},
-        film,
-        {
-         comments: commentsAll[index]
-        }
-      );
+  Promise.all(commentPromises)
+    .then((commentsAll) => {
+      return films.map((film, index) => {
+        return Object.assign(
+          {},
+          film,
+          {
+            comments: commentsAll[index]
+          }
+        );
+      });
+    })
+    .then((receivedFilms) => {
+      filmsModel.setFilms(UpdateType.INIT, receivedFilms);
+      render(siteFooterStats, new FooterStatsView(receivedFilms.length).getElement(), RenderPosition.BEFOREEND);
     });
-    console.log(films);
-    filmsModel.setFilms(UpdateType.INIT, films);
-  });
 });
-
-// блок футера
-const siteFooterStats = document.querySelector(`.footer__statistics`);
-render(siteFooterStats, new FooterStatsView(222).getElement(), RenderPosition.BEFOREEND);
 

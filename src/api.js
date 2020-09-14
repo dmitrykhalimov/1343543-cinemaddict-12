@@ -2,7 +2,9 @@ import FilmsModel from "./model/films.js";
 
 const Method = {
   GET: `GET`,
-  PUT: `PUT`
+  PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`
 };
 
 const SuccessHTTPStatusRange = {
@@ -37,6 +39,24 @@ export default class Api {
     })
       .then((filmUpdated) => Api.toJSON(filmUpdated))
       .then((filmUpdated) => FilmsModel.adaptFilmsToClient(filmUpdated));
+  }
+
+  addComment(comment) {
+    return this._load({
+      url: `comments/${comment.filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then(Api.toJSON)
+      .then((repsonse) => FilmsModel.adaptNewComment(repsonse));
+  }
+
+  deleteComment(commentId) {
+    return this._load({
+      url: `comments/${commentId}`,
+      method: Method.DELETE
+    });
   }
 
   _load({
