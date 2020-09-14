@@ -219,15 +219,12 @@ export default class FilmDetails extends AbstractView {
     }, SHAKE_ANIMATION_TIMEOUT);
   }
 
-  onError(commentId) {
-    // console.log(commentId);
+  onDeleteCommentError(commentId) {
     const noDeletedComment = this.getElement().querySelector(`li[data-comment-id="${commentId}"]`);
-    // console.log(noDeletedComment);
     this._shake(noDeletedComment, () => {
       noDeletedComment.style.animation = ``;
       noDeletedComment.querySelector(`button`).textContent = `Delete`;
     });
-    // element.querySelector(`button`).textContent = `Delete`;
   }
 
   onAddCommentError() {
@@ -277,14 +274,9 @@ export default class FilmDetails extends AbstractView {
       return;
     }
 
-    // const clickedComment = evt.target.closest(`.film-details__comment`);
-    // console.log(clickedComment);
     evt.target.textContent = `Deleting...`;
-    // this.shake(evt.target.closest(`.film-details__comment`));
-    // return;
+
     const commentId = evt.target.closest(`.film-details__comment`).getAttribute(`data-comment-id`);
-    console.log(`Получен id к удалению`);
-    console.log(commentId);
     this._callback.deleteComment(commentId);
   }
 

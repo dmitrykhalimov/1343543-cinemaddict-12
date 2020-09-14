@@ -163,7 +163,6 @@ export default class Film {
       filmDetailsComponent: this._filmDetailsComponent
     };
 
-    console.log('Передаю данные на удаление');
     this._changeData(
         UserAction.DELETE_COMMENT,
         UpdateType.POPUP,
@@ -179,7 +178,8 @@ export default class Film {
         "date": (new Date()).toISOString(),
         "emotion": emojiComment,
       },
-      filmDetailsComponent: this._filmDetailsComponent}
+      filmDetailsComponent: this._filmDetailsComponent
+    };
     this._changeData(
         UserAction.ADD_COMMENT,
         UpdateType.POPUP,

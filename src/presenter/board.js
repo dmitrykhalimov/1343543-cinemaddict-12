@@ -256,19 +256,13 @@ export default class Board {
               );
             })
             .then((film) => {
-              console.log(film);
               this._filmsModel.updateFilm(updateType, film);
             });
         });
         break;
       case UserAction.ADD_COMMENT:
-        // console.log('comment to add');
-        // console.log(update);
-        // break;
         this._api.addComment(update.commentBody)
           .then((film) => {
-          // console.log('updated film');
-            console.log(film);
             this._filmsModel.updateFilm(updateType, film);
           })
           .catch(() => {
@@ -281,8 +275,9 @@ export default class Board {
             this._filmsModel.updateFilm(updateType, update.filmWithoutComment);
           })
           .catch(() => {
-            update.filmDetailsComponent.onError(update.idToDelete);
+            update.filmDetailsComponent.onDeleteCommentError(update.idToDelete);
           });
+        break;
     }
   }
 

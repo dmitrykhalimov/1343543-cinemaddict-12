@@ -43,7 +43,7 @@ export default class Api {
 
   addComment(comment) {
     return this._load({
-      url: `commentsdsds2/${comment.filmId}`,
+      url: `comments/${comment.filmId}`,
       method: Method.POST,
       body: JSON.stringify(comment),
       headers: new Headers({"Content-Type": `application/json`})
@@ -54,7 +54,7 @@ export default class Api {
 
   deleteComment(commentId) {
     return this._load({
-      url: `commentsdsds2/${commentId}`,
+      url: `comments/${commentId}`,
       method: Method.DELETE
     });
   }
