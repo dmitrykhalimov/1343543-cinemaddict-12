@@ -37,7 +37,7 @@ const createFilmDetails = (film) => {
 
   const generateEmojisList = () => {
     let result = ``;
-    for (let emoji of EMOJIS) {
+    for (const emoji of EMOJIS) {
       result += `
       <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
       <label class="film-details__emoji-label" for="emoji-${emoji}">
@@ -62,7 +62,7 @@ const createFilmDetails = (film) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+          <img class="film-details__poster-img" src="./${poster}" alt="">
           <p class="film-details__age">${age}</p>
         </div>
 

@@ -25,6 +25,7 @@ export const UpdateType = {
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
   POPUP: `POPUP`,
+  INIT: `INIT`
 };
 
 export const FilterType = {
@@ -45,4 +46,9 @@ export const StatsMode = {
   WEEK: `WEEK`,
   MONTH: `MONTH`,
   YEAR: `YEAR`
+};
+
+export const ServerParameters = {
+  AUTHORIZATION: `Basic yellowbigpineapple`, // Временно в целях отладки используется единый идентификатор. Т.к. при случайном генераторе чисел - отображается другой набор данных, после перезагрузки в итоге не получается отследить изменения на сервере
+  END_POINT: `https://12.ecmascript.pages.academy/cinemaddict`,
 };

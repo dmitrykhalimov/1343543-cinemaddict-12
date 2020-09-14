@@ -10,6 +10,7 @@ export default class Filter {
     this._filmsModel = filmsModel;
 
     this._isStats = false;
+    this._isLoading = true;
     this._currentFilter = null;
     this._filterComponent = null;
     this._boardPresenter = boardPresenter;
@@ -31,8 +32,10 @@ export default class Filter {
 
     this._filterComponent = new FilterView(filters, this._currentFilter);
 
-    this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
-    this._filterComponent.setStatsButtonClickHandler(this._handleOpenStats);
+    if (!this._isLoading) {
+      this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+      this._filterComponent.setStatsButtonClickHandler(this._handleOpenStats);
+    }
 
     if (prevFilterComponent === null) {
       render(this._filterContainer, this._filterComponent, RenderPosition.AFTERBEGIN);
@@ -43,12 +46,18 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
+  removeHandlers() {
+    this._filterComponent.removeFilterTypeChangeHandler();
+    this._filterComponent.removeStatsButtonClickHandler();
+  }
+
   _getFilters() {
     const films = this._filmsModel.getFilms();
     return makeFilters(films, FilterMode.COUNT);
   }
 
   _handleModelEvent() {
+    this._isLoading = false;
     this.init();
   }
 

@@ -38,6 +38,14 @@ export default class MainNav extends AbstractView {
     this.getElement().querySelector(`.main-navigation__additional`).addEventListener(`click`, this._statsButtonClickHandler);
   }
 
+  removeFilterTypeChangeHandler() {
+    this.getElement().removeEventListener(`click`, this._filterTypeChangeHandler);
+  }
+
+  removeStatsButtonClickHandler() {
+    this.getElement().querySelector(`.main-navigation__additional`).removeEventListener(`click`, this._statsButtonClickHandler);
+  }
+
   _filterTypeChangeHandler(evt) {
     evt.preventDefault();
 
