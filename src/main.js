@@ -20,7 +20,9 @@ import Provider from "./api/provider.js";
 
 const STORE_PREFIX = `cinemaaddict-localstorage`;
 const STORE_VER = `v1`;
+const STORE_COMMENTS_VER = `comments-v1`;
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const STORE_COMMENTS_NAME = `${STORE_PREFIX}-${STORE_COMMENTS_VER}`;
 
 const siteHeader = document.querySelector(`.header`);
 const siteFooterStats = document.querySelector(`.footer__statistics`);
@@ -32,7 +34,8 @@ render(siteHeader, userProfileComponent, RenderPosition.BEFOREEND);
 
 const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
+const storeComments = new Store(STORE_COMMENTS_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store, storeComments);
 const filmsModel = new FilmsModel();
 
 // модель фильтра
@@ -84,12 +87,10 @@ window.addEventListener(`load`, () => {
 });
 
 window.addEventListener(`online`, () => {
-  console.log('А я между прочим онлайн');
   document.title = document.title.replace(` [offline]`, `тест`);
   apiWithProvider.sync();
 });
 
 window.addEventListener(`offline`, () => {
-  console.log('А я между прочим оффлайн');
   document.title += ` [offline]`;
 });

@@ -1,7 +1,6 @@
 import FilmsModel from "../model/films.js";
 
 const createStoreStructure = (items) => {
-  console.log(items);
   return items.reduce((acc, current) => {
     return Object.assign({}, acc, {
       [current.id]: current,
@@ -10,9 +9,10 @@ const createStoreStructure = (items) => {
 };
 
 export default class Provider {
-  constructor(api, store) {
+  constructor(api, store, storeComments) {
     this._api = api;
     this._store = store;
+    this._storeComments = storeComments;
   }
 
   getFilms() {
@@ -32,11 +32,14 @@ export default class Provider {
     if (Provider.isOnline()) {
       return this._api.getComments(filmId)
         .then((comments) => {
+          this._storeComments.setItem(filmId, comments.map(FilmsModel.adaptCommentToServer));
           return comments;
         });
     }
 
-    return Promise.resolve([]);
+    const allStoreComments = this._storeComments.getItems();
+    const storeComments = allStoreComments[filmId].map(FilmsModel.adaptCommentsToClient);
+    return Promise.resolve(storeComments);
   }
 
   updateFilm(film) {

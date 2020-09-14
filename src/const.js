@@ -55,7 +55,7 @@ export const StatsMode = {
 };
 
 export const ServerParameters = {
- // AUTHORIZATION: `Basic ${getRandomString(AUTHORIZATION_KEY_LENGTH)}`,
-  AUTHORIZATION: `Basic yellowbigpineapple`, // Временно в целях отладки используется единый идентификатор. Т.к. при случайном генераторе чисел - отображается другой набор данных, после перезагрузки в итоге не получается отследить изменения на сервере
+  AUTHORIZATION: `Basic ${getRandomString(AUTHORIZATION_KEY_LENGTH)}`,
+  // AUTHORIZATION: `Basic yellowbigpineapple`, // Временно в целях отладки используется единый идентификатор. Т.к. при случайном генераторе чисел - отображается другой набор данных, после перезагрузки в итоге не получается отследить изменения на сервере
   END_POINT: `https://12.ecmascript.pages.academy/cinemaddict`,
 };
