@@ -230,6 +230,7 @@ export default class FilmDetails extends AbstractView {
   onAddCommentError() {
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
     this._shake(commentInput, () => {
+      commentInput.style.animation = ``;
       this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
       this.getElement().querySelector(`.film-details__comment-input`).style.color = `black`;
       this.getElement().querySelector(`.film-details__comment-input`).textContent = ``;

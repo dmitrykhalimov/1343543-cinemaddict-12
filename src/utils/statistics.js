@@ -50,13 +50,6 @@ export const getRankName = (films) => {
 };
 
 export const generateStats = (films, mode) => {
-  let filmsStats = films.slice();
-  let genres = [];
-  let totalDuration = 0;
-
-  /* Не самый изящный метод сортировки, но ничего лаконичнее придумать не смог */
-  // 1. Отфильтровать фильмы по дате и собрать все жанры подходящих фильмов. Предполагается, что структура данных нормальная, и невозможна ситуация когда isWatched = false, а время просмотра не null;
-
   const initialValue = {
     filmsWatched: [],
     genres: [],
@@ -80,43 +73,8 @@ export const generateStats = (films, mode) => {
     return acc;
   }, initialValue);
 
-  // filmsStats = filmsStats.filter((film) => {
-  //   if (diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT && film.isWatched) {
-  //     genres = genres.concat(Array.from(film.genres));
-  //     totalDuration += film.duration;
-  //     return true;
-  //   }
-  //   return false;
-  // });
-
-  // console.log('старый метод');
-  // console.log(filmsStats);
-  // console.log(genres);
-  // console.log(totalDuration);
-  // console.log('новый метод')
-  // console.log(filmStatsNew);
-  // // 2. Узнать какие жанры есть и создать объект с
-  // let genresQuantity = {};
-
-  // for (let genre of genres) {
-  //   if (!genresQuantity[genre]) {
-  //     genresQuantity[genre] = 0;
-  //   }
-  //   genresQuantity[genre]++;
-  // }
-
-
-  // 3. Отсортировать объект
-  // genresQuantity = new Map(Object.entries(genresQuantity));
-
-  // genresQuantity = new Map([...genresQuantity.entries()].sort((next, prev) => prev[1] - next[1]));
-  // console.log('старая карта');
-  // console.log(genresQuantity);
-  // console.log(`новая карта`);
+  // мне по-прежнему не нравится этот кусок, постараюсь чего-нибудь с reduce еще придумать
   filmStatsNew.genresQuantity = new Map([...filmStatsNew.genresQuantity].sort((next, prev) => prev[1] - next[1]));
-    // console.log(newmap);
-  // 4. Подготовить данные в формате 'график коллеги'
-
   filmStatsNew.genresQuantity = Array.from(filmStatsNew.genresQuantity);
 
   const sortedGenres = [];
