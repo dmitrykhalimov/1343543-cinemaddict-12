@@ -11,4 +11,8 @@ export default class UserProfile extends AbstractView {
   getTemplate() {
     return createUserProfile();
   }
+
+  updateRank(rank) {
+    this.getElement().querySelector(`.profile__rating`).textContent = rank;
+  }
 }

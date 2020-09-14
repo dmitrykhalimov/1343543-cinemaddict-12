@@ -11,12 +11,13 @@ import {SortType, UpdateType, UserAction} from "../const.js";
 import FilmPresenter from "./film.js";
 import {makeFilters} from "../utils/filter.js";
 import LoadingView from "../view/loading.js";
+import {getRankName} from "../utils/statistics.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
 
 export default class Board {
-  constructor(boardContainer, filmsModel, filterModel, api) {
+  constructor(boardContainer, filmsModel, filterModel, api, userProfileComponent) {
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._boardContainer = boardContainer;
@@ -26,6 +27,7 @@ export default class Board {
     this._loadMoreButtonComponent = null;
     this._sortComponent = null;
     this._isLoading = true;
+    this._filmsWatched = 0;
 
     this._currentSortType = SortType.DEFAULT;
     this._filmPresenter = {};
@@ -36,6 +38,7 @@ export default class Board {
     this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
     this._filmsListContainer = this._filmsContainerComponent.getElement().querySelector(`.films-list__container`); // контейнер section class = filmlist__container
     this._loadingComponent = new LoadingView();
+    this._userProfileComponent = userProfileComponent;
 
     this._noFilmsComponent = new NoFilmsView();
 
@@ -63,6 +66,11 @@ export default class Board {
     }
 
     return filteredFilms;
+  }
+
+  _getWatched() {
+    const films = this._filmsModel.getFilms();
+    return films.filter((film) => film.isWatched).length;
   }
 
   // инициализация
@@ -135,6 +143,8 @@ export default class Board {
       this._renderNoFilms();
       return;
     }
+
+    this._userProfileComponent.updateRank(getRankName(this._getWatched()));
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 

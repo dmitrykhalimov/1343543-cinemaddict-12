@@ -20,7 +20,9 @@ const siteHeader = document.querySelector(`.header`);
 const siteFooterStats = document.querySelector(`.footer__statistics`);
 
 // отрисовка хэдера
-render(siteHeader, new UserProfileView(), RenderPosition.BEFOREEND);
+
+const userProfileComponent = new UserProfileView();
+render(siteHeader, userProfileComponent, RenderPosition.BEFOREEND);
 
 const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
 const filmsModel = new FilmsModel();
@@ -32,7 +34,7 @@ const siteMain = document.querySelector(`.main`);
 
 // блок фильтров
 const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
-const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, api);
+const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, api, userProfileComponent);
 
 const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, statsPresenter, boardPresenter);
 
@@ -42,16 +44,10 @@ filterPresenter.init();
 boardPresenter.init();
 
 // загрузить фильмы
-// по-моему как-то колхозно вышло, но за два дня ничего умнее я придумать не смог :(
-
-api.getFilms().then((films) => { // собрать все фильмы
+api.getFilms().then((films) => {
   const commentPromises = films.map((film) => {
     return api.getComments(film.id);
   });
-  // films.forEach((film) => { // т.к. комменты отдаются сервером по-отдельности, создать промис для каждого комментария
-  //   const promise = api.getComments(film.id);
-  //   commentPromises.push(promise); // собрать единый массив промисов
-  // });
   Promise.all(commentPromises)
     .then((commentsAll) => {
       return films.map((film, index) => {
