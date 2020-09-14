@@ -2,7 +2,6 @@ import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
-import {generateId} from "../mock/film.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
