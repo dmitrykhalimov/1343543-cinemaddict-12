@@ -65,7 +65,7 @@ const createFilmDetails = (film) => {
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
           <img class="film-details__poster-img" src="./${poster}" alt="">
-          <p class="film-details__age">${age}</p>
+          <p class="film-details__age">${age}+</p>
         </div>
 
         <div class="film-details__info">
@@ -106,7 +106,7 @@ const createFilmDetails = (film) => {
               <td class="film-details__cell">${country}</td>
             </tr>
             <tr class="film-details__row">
-              <td class="film-details__term">${genres.size === 1 ? `Genre` : `Genres`}</td>
+              <td class="film-details__term">${genres.size > 1 ? `Genres` : `Genre`}</td>
               <td class="film-details__cell">
                 ${generateGenres()}
               </td>
@@ -232,6 +232,7 @@ export default class FilmDetails extends AbstractView {
     this._shake(commentInput, () => {
       this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
       this.getElement().querySelector(`.film-details__comment-input`).style.color = `black`;
+      this.getElement().querySelector(`.film-details__comment-input`).textContent = ``;
     });
   }
 
