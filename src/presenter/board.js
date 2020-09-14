@@ -252,6 +252,7 @@ export default class Board {
         this._api.updateFilm(update).then((response) => {
           this._api.getComments(update.id)
             .then((updatedComments) => {
+              console.log(updatedComments);
               return Object.assign(
                   {},
                   response,

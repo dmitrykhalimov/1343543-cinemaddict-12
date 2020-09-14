@@ -37,7 +37,7 @@ export default class Provider {
 
   getComments(filmId) {
     if (Provider.isOnline()) {
-      return this._api.getFilms(filmId)
+      return this._api.getComments(filmId)
         .then((comments) => {
           // const items = createStoreStructure(films.map(FilmsModel.adaptToServer));
           // this._store.setItems(items);
@@ -52,7 +52,7 @@ export default class Provider {
 
   updateFilm(film) {
     if (Provider.isOnline()) {
-      return this._api.updateTask(film)
+      return this._api.updateFilm(film)
         .then((filmUpdated) => {
           // this._store.setItem(updatedTask.id, TasksModel.adaptToServer(updatedTask));
           return filmUpdated;
