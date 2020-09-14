@@ -89,6 +89,16 @@ export default class Films extends Observer {
     return adaptedComment;
   }
 
+  static adaptNewComment(movieAndComment) {
+    const adaptedMovie = this.adaptFilmsToClient(movieAndComment.movie);
+    let adaptedComments = movieAndComment.comments;
+    adaptedComments = adaptedComments.map((comment) => {
+      return this.adaptCommentsToClient(comment);
+    });
+    adaptedMovie[`comments`] = adaptedComments;
+    return adaptedMovie;
+  }
+
   static adaptFilmToServer(film) {
     /* eslint-disable camelcase */
     const adaptedFilm = Object.assign(

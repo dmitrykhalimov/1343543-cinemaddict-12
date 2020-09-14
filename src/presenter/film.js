@@ -143,11 +143,12 @@ export default class Film {
   }
 
   _handleDeleteClick(commentId) {
-    const index = this._film.comments.findIndex((comment) => comment.id === Number(commentId));
+    const index = this._film.comments.findIndex((comment) => comment.id === commentId);
     const updatedComments = [
       ...this._film.comments.slice(0, index),
       ...this._film.comments.slice(index + 1)
     ];
+
     const updatedFilm = Object.assign(
         {},
         this._film,
@@ -155,35 +156,34 @@ export default class Film {
           comments: updatedComments
         }
     );
+
+    const objectToUpdate = {
+      idToDelete: commentId,
+      filmWithoutComment: updatedFilm,
+      filmDetailsComponent: this._filmDetailsComponent
+    };
+
     this._changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.DELETE_COMMENT,
         UpdateType.POPUP,
-        updatedFilm
+        objectToUpdate
     );
   }
 
-  _handleAddComment(newComment, newEmoji) {
-    const updatedComments = this._film.comments.slice();
-    updatedComments.push({
-      id: generateId(),
-      emoji: newEmoji,
-      comment: newComment,
-      nickname: `Fancy troll`, // тут должно генерироваться имя, сделаю в 8 модуле, когда откажусь от моков, и часть функций перенсу в utils
-      dateComment: new Date(),
-    });
-
-    const updatedFilm = Object.assign(
-        {},
-        this._film,
-        {
-          comments: updatedComments
-        }
-    );
-
+  _handleAddComment(textComment, emojiComment) {
+    const comment = {
+      commentBody: {
+        "filmId": this._film.id,
+        "comment": textComment,
+        "date": (new Date()).toISOString(),
+        "emotion": emojiComment,
+      },
+      filmDetailsComponent: this._filmDetailsComponent
+    };
     this._changeData(
-        UserAction.UPDATE_FILM,
+        UserAction.ADD_COMMENT,
         UpdateType.POPUP,
-        updatedFilm
+        comment
     );
   }
 }

@@ -4,6 +4,8 @@ import {transformDateTime, getDateComment, translateMinutesToText} from "../util
 import {createElement, replace} from "../utils/render.js";
 import {DateFormats, EMOJIS} from "../const.js";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
 
@@ -210,6 +212,29 @@ export default class FilmDetails extends AbstractView {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
 
+  _shake(elementToShake, afterShake) {
+    elementToShake.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      afterShake();
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  onDeleteCommentError(commentId) {
+    const noDeletedComment = this.getElement().querySelector(`li[data-comment-id="${commentId}"]`);
+    this._shake(noDeletedComment, () => {
+      noDeletedComment.style.animation = ``;
+      noDeletedComment.querySelector(`button`).textContent = `Delete`;
+    });
+  }
+
+  onAddCommentError() {
+    const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
+    this._shake(commentInput, () => {
+      this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
+      this.getElement().querySelector(`.film-details__comment-input`).style.color = `black`;
+    });
+  }
+
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
@@ -249,6 +274,8 @@ export default class FilmDetails extends AbstractView {
       return;
     }
 
+    evt.target.textContent = `Deleting...`;
+
     const commentId = evt.target.closest(`.film-details__comment`).getAttribute(`data-comment-id`);
     this._callback.deleteComment(commentId);
   }
@@ -256,6 +283,8 @@ export default class FilmDetails extends AbstractView {
   _addCommentClickHandler(evt) {
     if (evt.key === `Enter` && evt.ctrlKey) {
       evt.preventDefault();
+      this.getElement().querySelector(`.film-details__comment-input`).disabled = true;
+      this.getElement().querySelector(`.film-details__comment-input`).style.color = `#878787`;
       this._callback.addComment(this.getElement().querySelector(`.film-details__comment-input`).value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
     }
   }

@@ -260,6 +260,24 @@ export default class Board {
             });
         });
         break;
+      case UserAction.ADD_COMMENT:
+        this._api.addComment(update.commentBody)
+          .then((film) => {
+            this._filmsModel.updateFilm(updateType, film);
+          })
+          .catch(() => {
+            update.filmDetailsComponent.onAddCommentError();
+          });
+        break;
+      case UserAction.DELETE_COMMENT:
+        this._api.deleteComment(update.idToDelete)
+          .then(() => {
+            this._filmsModel.updateFilm(updateType, update.filmWithoutComment);
+          })
+          .catch(() => {
+            update.filmDetailsComponent.onDeleteCommentError(update.idToDelete);
+          });
+        break;
     }
   }
 
