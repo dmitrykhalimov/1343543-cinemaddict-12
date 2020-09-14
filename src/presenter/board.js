@@ -68,11 +68,6 @@ export default class Board {
     return filteredFilms;
   }
 
-  _getWatched() {
-    const films = this._filmsModel.getFilms();
-    return films.filter((film) => film.isWatched).length;
-  }
-
   // инициализация
   init() {
     this._renderBoard();
@@ -144,7 +139,7 @@ export default class Board {
       return;
     }
 
-    this._userProfileComponent.updateRank(getRankName(this._getWatched()));
+    this._userProfileComponent.updateRank(getRankName(films));
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 

@@ -39,7 +39,8 @@ const RANKS = [
   }
 ];
 
-export const getRankName = (quantityWatched) => {
+export const getRankName = (films) => {
+  const quantityWatched = films.filter((film) => film.isWatched).length;
   for (let i = 0; i < RANKS.length; i++) {
     if (quantityWatched <= Object.values(RANKS[i])) {
       return Object.keys(RANKS[i])[0];
@@ -97,6 +98,6 @@ export const generateStats = (films, mode) => {
     numbers: sortedNumbers,
     durationHours: Math.trunc(totalDuration / 60),
     durationMinutes: totalDuration - Math.trunc(totalDuration / 60) * 60,
-    rank: getRankName(filmsStats.length),
+    rank: getRankName(films),
   };
 };
