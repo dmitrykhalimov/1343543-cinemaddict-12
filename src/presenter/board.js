@@ -250,6 +250,9 @@ export default class Board {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
         this._api.updateFilm(update).then((response) => {
+          console.log(update.id);
+          console.log(this._api);
+          console.log(this._api.getComments);
           this._api.getComments(update.id)
             .then((updatedComments) => {
               console.log(updatedComments);

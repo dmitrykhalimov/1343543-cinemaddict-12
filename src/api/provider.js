@@ -24,35 +24,34 @@ export default class Provider {
           return films;
         });
     }
-    console.log(`РАБОТАЙ БЛЕАТЬ!`)
     const storeFilms = Object.values(this._store.getItems());
     return Promise.resolve(storeFilms.map(FilmsModel.adaptFilmsToClient));
   }
 
   getComments(filmId) {
+    console.log('Меня вызали');
     if (Provider.isOnline()) {
       return this._api.getComments(filmId)
         .then((comments) => {
           return comments;
         });
     }
-
-    return [];
+    console.log('Меня вызали и я оффлайн');
+    return Promise.resolve([]);
   }
 
   updateFilm(film) {
     if (Provider.isOnline()) {
       return this._api.updateFilm(film)
         .then((filmUpdated) => {
-          this._store.setItem(filmUpdated.id, FilmsModel.adaptToServer(filmUpdated));
+          this._store.setItem(filmUpdated.id, FilmsModel.adaptFilmToServer(filmUpdated));
           return filmUpdated;
         });
     }
 
-    // this._store.setItem(task.id, TasksModel.adaptToServer(Object.assign({}, task)));
+    this._store.setItem(film.id, FilmsModel.adaptFilmToServer(film));
 
-    return null;
-    //return Promise.resolve(task);
+    return Promise.resolve(film);
   }
 
   addComment(comment) {
