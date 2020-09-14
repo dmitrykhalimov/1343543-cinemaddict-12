@@ -54,7 +54,7 @@ boardPresenter.init();
 // загрузить фильмы
 apiWithProvider.getFilms().then((films) => {
   const commentPromises = films.map((film) => {
-    return api.getComments(film.id);
+    return apiWithProvider.getComments(film.id);
   });
   Promise.all(commentPromises)
     .then((commentsAll) => {

@@ -33,7 +33,6 @@ export default class Films extends Observer {
   }
 
   static adaptFilmsToClient(film) {
-    console.log(film);
     const adaptedFilm = Object.assign(
         {},
         film,
