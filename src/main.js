@@ -14,7 +14,7 @@ import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
 import {ServerParameters, UpdateType} from "./const.js";
-import Api from "./api.js";
+import Api from "./api/index.js";
 
 const siteHeader = document.querySelector(`.header`);
 const siteFooterStats = document.querySelector(`.footer__statistics`);
