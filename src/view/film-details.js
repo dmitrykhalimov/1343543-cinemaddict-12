@@ -4,6 +4,8 @@ import {transformDateTime, getDateComment, translateMinutesToText} from "../util
 import {createElement, replace} from "../utils/render.js";
 import {DateFormats, EMOJIS} from "../const.js";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 const createFilmDetails = (film) => {
   const {title, age, director, cast, country, writers, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = film;
 
@@ -210,6 +212,22 @@ export default class FilmDetails extends AbstractView {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
 
+  _shake(elementToShake) {
+    elementToShake.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      elementToShake.style.animation = ``;
+      elementToShake.querySelector(`button`).textContent = `Delete`;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  onError(commentId) {
+    // console.log(commentId);
+    const noDeletedComment = this.getElement().querySelector(`li[data-comment-id="${commentId}"]`);
+    // console.log(noDeletedComment);
+    this._shake(noDeletedComment);
+    //element.querySelector(`button`).textContent = `Delete`;
+  }
+
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
@@ -249,7 +267,14 @@ export default class FilmDetails extends AbstractView {
       return;
     }
 
+    // const clickedComment = evt.target.closest(`.film-details__comment`);
+    // console.log(clickedComment);
+    evt.target.textContent = `Deleting...`;
+    // this.shake(evt.target.closest(`.film-details__comment`));
+    // return;
     const commentId = evt.target.closest(`.film-details__comment`).getAttribute(`data-comment-id`);
+    console.log('Получен id к удалению')
+    console.log(commentId);
     this._callback.deleteComment(commentId);
   }
 

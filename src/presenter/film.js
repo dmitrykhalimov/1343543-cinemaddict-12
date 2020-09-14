@@ -160,8 +160,10 @@ export default class Film {
     const objectToUpdate = {
       idToDelete: commentId,
       filmWithoutComment: updatedFilm,
+      filmDetailsComponent: this._filmDetailsComponent
     };
 
+    console.log('Передаю данные на удаление');
     this._changeData(
         UserAction.DELETE_COMMENT,
         UpdateType.POPUP,

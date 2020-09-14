@@ -275,6 +275,9 @@ export default class Board {
         this._api.deleteComment(update.idToDelete)
           .then(() => {
             this._filmsModel.updateFilm(updateType, update.filmWithoutComment);
+          })
+          .catch(() => {
+            update.filmDetailsComponent.onError(update.idToDelete);
           });
     }
   }
