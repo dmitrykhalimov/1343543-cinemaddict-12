@@ -45,7 +45,6 @@ export default class Film {
     this._filmDetailsComponent.setPopupClickHandler(this._handleFilmPopupClose);
     this._filmComponent.setCardClickHandler(this.handleFilmPopupOpen);
 
-
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmComponent.setWatchedClickHandler(this._handleWatchedClick);
@@ -56,7 +55,6 @@ export default class Film {
     this._filmDetailsComponent.setEmojiClickHandler();
     this._filmDetailsComponent.setDeleteClickHandler(this._handleDeleteComment);
     this._filmDetailsComponent.setAddCommentHandler(this._handleAddComment);
-
 
     if (prevFilmComponent === null || prevFilmDetailsComponent === null) {
       render(this._filmsListContainer, this._filmComponent, RenderPosition.BEFOREEND);
@@ -102,7 +100,6 @@ export default class Film {
       this._handleFilmPopupClose();
     }
   }
-
 
   _handleFavoriteClick() {
     document.removeEventListener(`keydown`, this._handleEscKeyDown);

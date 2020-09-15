@@ -1,6 +1,6 @@
-import {getRandomString} from "./utils/common.js";
+// import {getRandomString} from "./utils/common.js";
 
-const AUTHORIZATION_KEY_LENGTH = 10;
+// const AUTHORIZATION_KEY_LENGTH = 10;
 
 export const SortType = {
   DEFAULT: `default`,

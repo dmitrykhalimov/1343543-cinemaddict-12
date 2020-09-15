@@ -34,9 +34,9 @@ export default class Board {
     this._filmRatedPresenter = {};
     this._filmCommentedPresenter = {};
 
-    this._boardComponent = new BoardView(); // сама доска <section class =films>
-    this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
-    this._filmsListContainer = this._filmsContainerComponent.getElement().querySelector(`.films-list__container`); // контейнер section class = filmlist__container
+    this._boardComponent = new BoardView();
+    this._filmsContainerComponent = new FilmsContainerView();
+    this._filmsListContainer = this._filmsContainerComponent.getContainer();
     this._loadingComponent = new LoadingView();
     this._userProfileComponent = userProfileComponent;
 
