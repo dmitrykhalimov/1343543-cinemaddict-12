@@ -56,10 +56,6 @@ export default class Films extends Observer {
           titleOriginal: film.film_info.alternative_title,
           watchingDate: new Date(film.user_details.watching_date),
           writers: film.film_info.writers.join(`, `),
-          datesToReturn: {
-            filmDate: film.film_info.release.date,
-            watchingDate: film.user_details.watching_date,
-          }
         }
     );
 
@@ -132,7 +128,7 @@ export default class Films extends Observer {
             genre: Array.from(film.genres),
             poster: film.poster,
             release: {
-              date: film.datesToReturn.filmDate,
+              date: film.filmDate.toISOString(),
               release_country: film.country,
             },
             runtime: film.duration,
@@ -143,7 +139,7 @@ export default class Films extends Observer {
           user_details: {
             already_watched: film.isWatched,
             favorite: film.isFavorite,
-            watching_date: film.datesToReturn.watchingDate,
+            watching_date: (film.watchingDate === null) ? null : film.watchingDate.toISOString(),
             watchlist: film.isInWatchlist,
           }
         }

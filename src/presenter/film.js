@@ -141,7 +141,8 @@ export default class Film {
             {},
             this._film,
             {
-              isWatched: !this._film.isWatched
+              isWatched: !this._film.isWatched,
+              watchingDate: (this._film.isWatched) ? null : new Date()
             }
         )
     );
