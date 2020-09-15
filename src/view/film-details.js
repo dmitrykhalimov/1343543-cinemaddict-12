@@ -214,9 +214,9 @@ export default class FilmDetails extends AbstractView {
 
   _shake(elementToShake, afterShake) {
     elementToShake.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    setTimeout(() => {
+    elementToShake.onanimationend = () => {
       afterShake();
-    }, SHAKE_ANIMATION_TIMEOUT);
+    };
   }
 
   onDeleteCommentError(commentId) {
