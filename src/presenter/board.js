@@ -278,7 +278,7 @@ export default class Board {
             this._filmsModel.updateFilm(updateType, film);
           })
           .catch(() => {
-            update.filmDetailsComponent.onAddCommentError();
+            update.filmDetailsComponent.handleAddCommentError();
           });
         break;
       case UserAction.DELETE_COMMENT:
@@ -287,7 +287,7 @@ export default class Board {
             this._filmsModel.updateFilm(updateType, update.filmWithoutComment);
           })
           .catch(() => {
-            update.filmDetailsComponent.onDeleteCommentError(update.idToDelete);
+            update.filmDetailsComponent.handleDeleteCommentError(update.idToDelete);
           });
         break;
     }
@@ -314,15 +314,15 @@ export default class Board {
         this._renderBoard();
 
         if (this._filmPresenter[data.id]) {
-          this._filmPresenter[data.id].openFilmPopup();
+          this._filmPresenter[data.id].handleFilmPopupOpen();
         }
 
         if (this._filmRatedPresenter[data.id]) {
-          this._filmRatedPresenter[data.id].openFilmPopup();
+          this._filmRatedPresenter[data.id].handleFilmPopupOpen();
         }
 
         if (this._filmCommentedPresenter[data.id]) {
-          this._filmCommentedPresenter[data.id].openFilmPopup();
+          this._filmCommentedPresenter[data.id].handleFilmPopupOpen();
         }
         break;
     }

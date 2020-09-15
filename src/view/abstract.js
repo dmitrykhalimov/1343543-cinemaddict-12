@@ -15,10 +15,6 @@ export default class Abstract {
   }
 
   getElement() {
-    /* if (new.target === Abstract) {
-      throw new Error(`You're trying to instantiate an Abstract class, Mario. Princess in the concrete one.`);
-    } */
-
     if (!this._element) {
       this._element = createElement(this.getTemplate());
     }

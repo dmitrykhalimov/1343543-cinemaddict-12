@@ -11,7 +11,7 @@ const PathToServer = {
   MOVIES: `movies`,
   COMMENTS: `comments`,
   SYNC: `movies/sync`
-}
+};
 
 const SuccessHTTPStatusRange = {
   MIN: 200,

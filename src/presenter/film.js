@@ -20,15 +20,16 @@ export default class Film {
 
     this._siteBody = document.querySelector(`body`);
 
-    this.openFilmPopup = this.openFilmPopup.bind(this);
-    this._closeFilmPopup = this._closeFilmPopup.bind(this);
-    this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this.handleFilmPopupOpen = this.handleFilmPopupOpen.bind(this);
+    this._handleFilmPopupClose = this._handleFilmPopupClose.bind(this);
+
+    this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
 
     this._handleWatchlistClick = this._handleWatchlistClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
 
-    this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._handleDeleteComment = this._handleDeleteComment.bind(this);
     this._handleAddComment = this._handleAddComment.bind(this);
   }
 
@@ -41,8 +42,9 @@ export default class Film {
     this._filmComponent = new FilmCardView(film);
     this._filmDetailsComponent = new FilmDetailsView(film);
 
-    this._filmDetailsComponent.setPopupClickHandler(this._closeFilmPopup);
-    this._filmComponent.setCardClickHandler(this.openFilmPopup);
+    this._filmDetailsComponent.setPopupClickHandler(this._handleFilmPopupClose);
+    this._filmComponent.setCardClickHandler(this.handleFilmPopupOpen);
+
 
     this._filmComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmComponent.setWatchlistClickHandler(this._handleWatchlistClick);
@@ -52,7 +54,7 @@ export default class Film {
     this._filmDetailsComponent.setWatchlistClickHandler(this._handleWatchlistClick);
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetailsComponent.setEmojiClickHandler();
-    this._filmDetailsComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._filmDetailsComponent.setDeleteClickHandler(this._handleDeleteComment);
     this._filmDetailsComponent.setAddCommentHandler(this._handleAddComment);
 
 
@@ -75,31 +77,35 @@ export default class Film {
 
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
-      this._closeFilmPopup();
+      this._handleFilmPopupClose();
     }
   }
 
-  openFilmPopup() {
+
+  handleFilmPopupOpen() {
     this._siteBody.appendChild(this._filmDetailsComponent.getElement());
-    document.addEventListener(`keydown`, this._onEscKeyDown);
+    document.addEventListener(`keydown`, this._handleEscKeyDown);
     this._changeMode();
     this._mode = Mode.POPUP;
   }
 
-  _closeFilmPopup() {
+  _handleFilmPopupClose() {
     this._siteBody.removeChild(this._filmDetailsComponent.getElement());
-    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
+
     this._mode = Mode.DEFAULT;
   }
 
-  _onEscKeyDown(evt) {
+  _handleEscKeyDown(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      this._closeFilmPopup();
+      this._handleFilmPopupClose();
     }
   }
 
+
   _handleFavoriteClick() {
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     this._changeData(
         UserAction.UPDATE_FILM,
         this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
@@ -114,6 +120,7 @@ export default class Film {
   }
 
   _handleWatchlistClick() {
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     this._changeData(
         UserAction.UPDATE_FILM,
         this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
@@ -128,6 +135,7 @@ export default class Film {
   }
 
   _handleWatchedClick() {
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     this._changeData(
         UserAction.UPDATE_FILM,
         this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
@@ -141,7 +149,7 @@ export default class Film {
     );
   }
 
-  _handleDeleteClick(commentId) {
+  _handleDeleteComment(commentId) {
     const index = this._film.comments.findIndex((comment) => comment.id === commentId);
     const updatedComments = [
       ...this._film.comments.slice(0, index),

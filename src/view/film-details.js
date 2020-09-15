@@ -212,14 +212,7 @@ export default class FilmDetails extends AbstractView {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
 
-  _shake(elementToShake, afterShake) {
-    elementToShake.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    elementToShake.onanimationend = () => {
-      afterShake();
-    };
-  }
-
-  onDeleteCommentError(commentId) {
+  handleDeleteCommentError(commentId) {
     const noDeletedComment = this.getElement().querySelector(`li[data-comment-id="${commentId}"]`);
     this._shake(noDeletedComment, () => {
       noDeletedComment.style.animation = ``;
@@ -227,7 +220,7 @@ export default class FilmDetails extends AbstractView {
     });
   }
 
-  onAddCommentError() {
+  handleAddCommentError() {
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
     this._shake(commentInput, () => {
       commentInput.style.animation = ``;
@@ -235,6 +228,13 @@ export default class FilmDetails extends AbstractView {
       this.getElement().querySelector(`.film-details__comment-input`).style.color = `black`;
       this.getElement().querySelector(`.film-details__comment-input`).textContent = ``;
     });
+  }
+
+  _shake(elementToShake, afterShake) {
+    elementToShake.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    elementToShake.onanimationend = () => {
+      afterShake();
+    };
   }
 
   _favoriteClickHandler(evt) {
