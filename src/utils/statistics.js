@@ -41,9 +41,9 @@ const RANKS = [
 
 export const getRankName = (films) => {
   const quantityWatched = films.filter((film) => film.isWatched).length;
-  for (let i = 0; i < RANKS.length; i++) {
-    if (quantityWatched <= Object.values(RANKS[i])) {
-      return Object.keys(RANKS[i])[0];
+  for (const rank of RANKS) {
+    if (quantityWatched <= Object.values(rank)) {
+      return Object.keys(rank)[0];
     }
   }
   return ``;
