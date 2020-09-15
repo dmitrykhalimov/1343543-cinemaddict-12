@@ -79,6 +79,10 @@ export default class Film {
     }
   }
 
+  removeEventListener() {
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
+  }
+
 
   handleFilmPopupOpen() {
     this._siteBody.appendChild(this._filmDetailsComponent.getElement());
@@ -102,7 +106,6 @@ export default class Film {
   }
 
   _handleFavoriteClick() {
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     this._changeData(
         UserAction.UPDATE_FILM,
         this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
@@ -117,7 +120,6 @@ export default class Film {
   }
 
   _handleWatchlistClick() {
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     this._changeData(
         UserAction.UPDATE_FILM,
         this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
@@ -132,7 +134,6 @@ export default class Film {
   }
 
   _handleWatchedClick() {
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     this._changeData(
         UserAction.UPDATE_FILM,
         this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
@@ -147,7 +148,6 @@ export default class Film {
   }
 
   _handleDeleteComment(commentId) {
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     const index = this._film.comments.findIndex((comment) => comment.id === commentId);
     const updatedComments = [
       ...this._film.comments.slice(0, index),
@@ -176,7 +176,6 @@ export default class Film {
   }
 
   _handleAddComment(textComment, emojiComment) {
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     const comment = {
       commentBody: {
         "filmId": this._film.id,

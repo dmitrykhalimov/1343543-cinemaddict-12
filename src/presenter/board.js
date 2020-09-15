@@ -15,6 +15,10 @@ import {getRankName} from "../utils/statistics.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
+const PopupCallback = {
+  OPEN: `handleFilmPopupOpen`,
+  REMOVE_LISTENERS: `removeEventListener`
+};
 
 export default class Board {
   constructor(boardContainer, filmsModel, filterModel, api, userProfileComponent) {
@@ -291,6 +295,18 @@ export default class Board {
     }
   }
 
+  _updateFilmPresentersPopup(id, callback) {
+    if (this._filmPresenter[id]) {
+      this._filmPresenter[id][callback]();
+    }
+    if (this._filmRatedPresenter[id]) {
+      this._filmRatedPresenter[id][callback]();
+    }
+    if (this._filmCommentedPresenter[id]) {
+      this._filmCommentedPresenter[id][callback]();
+    }
+  }
+
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
     switch (updateType) {
@@ -308,20 +324,13 @@ export default class Board {
         this._renderBoard();
         break;
       case UpdateType.POPUP: // при установке флагов для фильмов в попапе
+        this._updateFilmPresentersPopup(data.id, PopupCallback.REMOVE_LISTENERS);
+
         this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();
 
-        if (this._filmPresenter[data.id]) {
-          this._filmPresenter[data.id].handleFilmPopupOpen();
-        }
+        this._updateFilmPresentersPopup(data.id, PopupCallback.OPEN);
 
-        if (this._filmRatedPresenter[data.id]) {
-          this._filmRatedPresenter[data.id].handleFilmPopupOpen();
-        }
-
-        if (this._filmCommentedPresenter[data.id]) {
-          this._filmCommentedPresenter[data.id].handleFilmPopupOpen();
-        }
         break;
     }
   }
