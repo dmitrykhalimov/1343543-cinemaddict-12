@@ -102,7 +102,7 @@ export default class Film {
   _handleFavoriteClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
+        this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
@@ -116,7 +116,7 @@ export default class Film {
   _handleWatchlistClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
+        this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,
@@ -130,7 +130,7 @@ export default class Film {
   _handleWatchedClick() {
     this._changeData(
         UserAction.UPDATE_FILM,
-        this._mode === Mode.DEFAULT ? UpdateType.MAJOR : UpdateType.POPUP,
+        this._mode === Mode.DEFAULT ? UpdateType.MINOR : UpdateType.POPUP,
         Object.assign(
             {},
             this._film,

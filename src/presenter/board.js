@@ -110,7 +110,9 @@ export default class Board {
     remove(this._extraRated);
     remove(this._loadingComponent);
 
-    this._renderedFilmsCount = (resetRenderedFilmCount) ? FILMS_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmsCount);
+    if (resetRenderedFilmCount) {
+      this._renderedFilmsCount = (resetRenderedFilmCount) ? FILMS_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmsCount);
+    }
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
@@ -143,7 +145,7 @@ export default class Board {
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
-    this._renderFilms(films.slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP)));
+    this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmsCount)));
     this._renderExtras();
 
     if (filmCount > this._renderedFilmsCount) {
@@ -289,17 +291,21 @@ export default class Board {
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
     switch (updateType) {
+      case UpdateType.MINOR: // при установке флагов для фильмов на доске
+        this._clearBoard({resetRenderedFilmCount: false, resetSortType: true});
+        this._renderBoard();
+        break;
       case UpdateType.MAJOR: // переключение фильтров
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
         break;
-      case UpdateType.INIT:
+      case UpdateType.INIT: // при инициализации
         this._isLoading = false;
         remove(this._loadingComponent);
         this._renderBoard();
         break;
-      case UpdateType.POPUP:
-        this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
+      case UpdateType.POPUP: // при установке флагов для фильмов в попапе
+        this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();
 
         if (this._filmPresenter[data.id]) {
