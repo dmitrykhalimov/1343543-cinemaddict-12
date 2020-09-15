@@ -110,9 +110,7 @@ export default class Board {
     remove(this._extraRated);
     remove(this._loadingComponent);
 
-    if (resetRenderedFilmCount) {
-      this._renderedFilmsCount = (resetRenderedFilmCount) ? FILMS_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmsCount);
-    }
+    this._renderedFilmsCount = (resetRenderedFilmCount) ? FILMS_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmsCount);
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
@@ -235,7 +233,7 @@ export default class Board {
 
     this._currentSortType = sortType;
 
-    this._clearBoard({resetRenderedTaskCount: true});
+    this._clearBoard({resetRenderedFilmCount: true});
     this._renderBoard();
   }
 
@@ -297,7 +295,7 @@ export default class Board {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.MINOR: // при установке флагов для фильмов на доске
-        this._clearBoard({resetRenderedFilmCount: false, resetSortType: true});
+        this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();
         break;
       case UpdateType.MAJOR: // при переключении фильтров

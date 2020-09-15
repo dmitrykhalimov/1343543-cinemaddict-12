@@ -1,17 +1,19 @@
 import UserProfileView from "./view/user-profile.js";
-import FilterPresenter from "./presenter/filter.js";
-import StatisticsPresenter from "./presenter/statistics.js";
 import FooterStatsView from "./view/footer-stats.js";
 
-import {render, RenderPosition} from "./utils/render.js";
-import BoardPresenter from "./presenter/board.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
-import {ServerParameters, UpdateType} from "./const.js";
+import FilterPresenter from "./presenter/filter.js";
+import StatisticsPresenter from "./presenter/statistics.js";
+import BoardPresenter from "./presenter/board.js";
+
 import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
+
+import {render, RenderPosition} from "./utils/render.js";
+import {ServerParameters, UpdateType} from "./const.js";
 
 const StoreKeys = {
   STORE_PREFIX: `cinemaaddict-localstorage`,
