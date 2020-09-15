@@ -37,19 +37,19 @@ export const translateMinutesToText = (duration) => {
 
 /* функции сортировки */
 
-export const sortDate = (filmA, filmB) => {
-  return filmB.filmDate.getTime() - filmA.filmDate.getTime();
+export const sortDate = (prevFilm, nextFilm) => {
+  return nextFilm.filmDate.getTime() - prevFilm.filmDate.getTime();
 };
 
-export const sortRating = (filmA, filmB) => {
-  return filmB.rating - filmA.rating;
+export const sortRating = (prevFilm, nextFilm) => {
+  return nextFilm.rating - prevFilm.rating;
 };
 
 /* сортировка для блоков top */
 export const generateTopRated = (films) => {
   return films.slice()
     .filter((film) => Number(film.rating) > 0)
-    .sort((prevFilm, nextFilm) => nextFilm.rating - prevFilm.rating);
+    .sort(sortRating);
 };
 
 export const generateTopCommented = (films) => {
