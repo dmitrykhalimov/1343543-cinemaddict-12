@@ -7,6 +7,12 @@ const Method = {
   DELETE: `DELETE`
 };
 
+const PathToServer = {
+  MOVIES: `movies`,
+  COMMENTS: `comments`,
+  SYNC: `movies/sync`
+}
+
 const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299
@@ -19,20 +25,20 @@ export default class Api {
   }
 
   getFilms() {
-    return this._load({url: `movies`})
+    return this._load({url: `${PathToServer.MOVIES}`})
       .then(Api.toJSON)
       .then((films) => films.map(FilmsModel.adaptFilmsToClient));
   }
 
   getComments(filmId) {
-    return this._load({url: `comments/${filmId}/`})
+    return this._load({url: `${PathToServer.COMMENTS}/${filmId}`})
       .then(Api.toJSON)
       .then((comments) => comments.map(FilmsModel.adaptCommentsToClient));
   }
 
   updateFilm(film) {
     return this._load({
-      url: `movies/${film.id}/`,
+      url: `${PathToServer.MOVIES}/${film.id}`,
       method: Method.PUT,
       body: JSON.stringify(FilmsModel.adaptFilmToServer(film)),
       headers: new Headers({"Content-Type": `application/json`})
@@ -43,7 +49,7 @@ export default class Api {
 
   addComment(comment) {
     return this._load({
-      url: `comments/${comment.filmId}`,
+      url: `${PathToServer.COMMENTS}/${comment.filmId}`,
       method: Method.POST,
       body: JSON.stringify(comment),
       headers: new Headers({"Content-Type": `application/json`})
@@ -54,14 +60,14 @@ export default class Api {
 
   deleteComment(commentId) {
     return this._load({
-      url: `comments/${commentId}`,
+      url: `${PathToServer.COMMENTS}/${commentId}`,
       method: Method.DELETE
     });
   }
 
   sync(films) {
     return this._load({
-      url: `movies/sync`,
+      url: `${PathToServer.SYNC}`,
       method: Method.POST,
       body: JSON.stringify(films),
       headers: new Headers({"Content-Type": `application/json`})
