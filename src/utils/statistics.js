@@ -73,23 +73,23 @@ export const generateStats = (films, mode) => {
     return acc;
   }, initialValue);
 
-  // мне по-прежнему не нравится этот кусок, постараюсь чего-нибудь с reduce еще придумать
   filmStatsNew.genresQuantity = new Map([...filmStatsNew.genresQuantity].sort((next, prev) => prev[1] - next[1]));
   filmStatsNew.genresQuantity = Array.from(filmStatsNew.genresQuantity);
 
-  const sortedGenres = [];
-  const sortedNumbers = [];
-
-  filmStatsNew.genresQuantity.forEach((element) => {
-    sortedGenres.push(element[0]);
-    sortedNumbers.push(element[1]);
+  const sortedForStats = filmStatsNew.genresQuantity.reduce((acc, genre) => {
+    acc.sortedGenres.push(genre[0]);
+    acc.sortedNumbers.push(genre[1]);
+    return acc;
+  }, {
+    sortedGenres: [],
+    sortedNumbers: [],
   });
 
   return {
     watched: filmStatsNew.filmsWatched.length,
     topGenre: filmStatsNew.genresQuantity.length > 0 ? filmStatsNew.genresQuantity[0][0] : ``,
-    genres: sortedGenres,
-    numbers: sortedNumbers,
+    genres: sortedForStats.sortedGenres,
+    numbers: sortedForStats.sortedNumbers,
     durationHours: Math.trunc(filmStatsNew.totalDuration / 60),
     durationMinutes: filmStatsNew.totalDuration - Math.trunc(filmStatsNew.totalDuration / 60) * 60,
     rank: getRankName(films),

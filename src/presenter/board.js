@@ -300,7 +300,7 @@ export default class Board {
         this._clearBoard({resetRenderedFilmCount: false, resetSortType: true});
         this._renderBoard();
         break;
-      case UpdateType.MAJOR: // переключение фильтров
+      case UpdateType.MAJOR: // при переключении фильтров
         this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
         break;
@@ -314,15 +314,15 @@ export default class Board {
         this._renderBoard();
 
         if (this._filmPresenter[data.id]) {
-          this._filmPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
+          this._filmPresenter[data.id].openFilmPopup();
         }
 
         if (this._filmRatedPresenter[data.id]) {
-          this._filmRatedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
+          this._filmRatedPresenter[data.id].openFilmPopup();
         }
 
         if (this._filmCommentedPresenter[data.id]) {
-          this._filmCommentedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
+          this._filmCommentedPresenter[data.id].openFilmPopup();
         }
         break;
     }

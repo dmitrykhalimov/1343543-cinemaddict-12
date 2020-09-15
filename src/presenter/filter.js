@@ -76,6 +76,9 @@ export default class Filter {
   }
 
   _handleOpenStats() {
+    if (this._isStats) {
+      return;
+    }
     this._isStats = true;
     this._boardPresenter.destroy();
     this._statsPresenter.init();

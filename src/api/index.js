@@ -59,11 +59,11 @@ export default class Api {
     });
   }
 
-  sync(data) {
+  sync(films) {
     return this._load({
       url: `movies/sync`,
       method: Method.POST,
-      body: JSON.stringify(data),
+      body: JSON.stringify(films),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON);
