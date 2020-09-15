@@ -57,6 +57,6 @@ export const StatsMode = {
 export const ServerParameters = {
   // AUTHORIZATION: `Basic ${getRandomString(AUTHORIZATION_KEY_LENGTH)}`,
   // код авторизации - 19 фильмов без комментариев AUTHORIZATION: `Basic yellowbigpineapple1`
-  AUTHORIZATION: `Basic yellowbigpineapple1`,
+  AUTHORIZATION: `Basic yellowbigpineapple2`,
   END_POINT: `https://12.ecmascript.pages.academy/cinemaddict`,
 };

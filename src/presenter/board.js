@@ -216,8 +216,6 @@ export default class Board {
   _renderExtra(component, generateTopList, presenter) {
     const topFilms = generateTopList(this._filmsModel.getFilms().slice());
 
-    console.log(topFilms.length);
-
     if (topFilms.length === 0) {
       return; // если у всех фильмов рейтинг = 0 или нет комментариев не отображть
     }

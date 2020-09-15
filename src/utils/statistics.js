@@ -57,7 +57,7 @@ export const generateStats = (films, mode) => {
     genresQuantity: new Map(),
   };
 
-  let filmStatsNew = films.slice().reduce((acc, film) => {
+  const filmStatsNew = films.reduce((acc, film) => {
     if ((diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) && film.isWatched) {
       acc.filmsWatched.push(film);
       acc.genres = acc.genres.concat(Array.from(film.genres));

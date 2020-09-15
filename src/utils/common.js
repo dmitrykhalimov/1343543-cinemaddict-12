@@ -15,7 +15,7 @@ export const getRandomFromElements = (elements) => {
   return elements[getRandomInteger(0, elements.length - 1)];
 };
 
-export const getRandomString = (length) => {
+export const randomString = (length) => {
   let rnd = ``;
   while (rnd.length < length) {
     rnd += Math.random().toString(36).substring(2);
