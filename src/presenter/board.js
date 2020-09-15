@@ -141,7 +141,7 @@ export default class Board {
       return;
     }
 
-    this._userProfileComponent.updateRank(getRankName(films));
+    this._userProfileComponent.updateRank(getRankName(this._filmsModel.getFilms()));
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
@@ -204,21 +204,22 @@ export default class Board {
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton);
   }
 
-  // отрисовка блока экстра
+  // отрисовка блоков экстра
   _renderExtras() {
-    // TODO: не работают интерактивные элементы попапа (!)
     this._extraRated = new ExtraRatedContainerView();
     this._extraCommented = new ExtraCommentedContainerView();
 
-    render(this._boardComponent, this._extraRated, RenderPosition.BEFOREEND);
-    render(this._boardComponent, this._extraCommented, RenderPosition.BEFOREEND);
+    this._renderExtra(this._extraRated, generateTopRated, this._filmRatedPresenter);
+    this._renderExtra(this._extraCommented, generateTopCommented, this._filmCommentedPresenter);
+  }
 
-    const topRatedFilms = generateTopRated(this._filmsModel.getFilms().slice());
-    const topCommentedFilms = generateTopCommented(this._filmsModel.getFilms().slice());
+  _renderExtra(component, generateTopList, presenter) {
+    const topFilms = generateTopList(this._filmsModel.getFilms().slice());
+
+    render(this._boardComponent, component, RenderPosition.BEFOREEND);
 
     for (let i = 0; i < EXTRAS_COUNT; i++) {
-      this._renderFilm(this._extraRated.getContainer(), topRatedFilms[i], this._filmRatedPresenter);
-      this._renderFilm(this._extraCommented.getContainer(), topCommentedFilms[i], this._filmCommentedPresenter);
+      this._renderFilm(component.getContainer(), topFilms[i], presenter);
     }
   }
 
