@@ -19,7 +19,7 @@ const createFilmDetails = (film) => {
 
   const generateComments = () => {
     let result = ``;
-    for (let comment of comments) {
+    for (const comment of comments) {
       result += `<li class="film-details__comment" data-comment-id="${comment.id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
