@@ -1,7 +1,7 @@
-export const randomString = (length) => {
-  let rnd = ``;
-  while (rnd.length < length) {
-    rnd += Math.random().toString(36).substring(2);
+export const getRandomString = (length) => {
+  let randomString = ``;
+  while (randomString.length < length) {
+    randomString += Math.random().toString(36).substring(2);
   }
-  return rnd.substring(0, length);
+  return randomString.substring(0, length);
 };
