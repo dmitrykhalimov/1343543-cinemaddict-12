@@ -102,7 +102,13 @@ export default class Films extends Observer {
     return adaptedComment;
   }
 
-  static adaptNewComment(movieAndComment) {
+  static adaptNewCommentToServer(comment) {
+    const adaptedComment = comment;
+    delete adaptedComment.filmId;
+    return adaptedComment;
+  }
+
+  static adaptNewCommentToClient(movieAndComment) {
     const adaptedMovie = this.adaptFilmsToClient(movieAndComment.movie);
     let adaptedComments = movieAndComment.comments;
     adaptedComments = adaptedComments.map((comment) => {

@@ -51,11 +51,11 @@ export default class Api {
     return this._load({
       url: `${PathToServer.COMMENTS}/${comment.filmId}`,
       method: Method.POST,
-      body: JSON.stringify(comment),
+      body: JSON.stringify(FilmsModel.adaptNewCommentToServer(comment)),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then(Api.toJSON)
-      .then((repsonse) => FilmsModel.adaptNewComment(repsonse));
+      .then((repsonse) => FilmsModel.adaptNewCommentToClient(repsonse));
   }
 
   deleteComment(commentId) {
