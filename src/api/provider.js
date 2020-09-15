@@ -58,8 +58,10 @@ export default class Provider {
 
   addComment(comment) {
     if (Provider.isOnline()) {
+      const filmId = comment.filmId;
       return this._api.addComment(comment)
         .then((response) => {
+          this._storeComments.setItem(filmId, FilmsModel.adaptNewCommentToServer(comment));
           return response;
         });
     }
