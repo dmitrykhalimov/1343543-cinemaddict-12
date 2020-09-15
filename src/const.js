@@ -1,6 +1,9 @@
-// import {getRandomString} from "./utils/common.js";
+import {randomString} from "./utils/common.js";
 
-// const AUTHORIZATION_KEY_LENGTH = 10;
+const Authorization = {
+  PREFIX: `Basic`,
+  KEY_LENGTH: 10,
+};
 
 export const SortType = {
   DEFAULT: `default`,
@@ -55,8 +58,6 @@ export const StatsMode = {
 };
 
 export const ServerParameters = {
-  // AUTHORIZATION: `Basic ${getRandomString(AUTHORIZATION_KEY_LENGTH)}`,
-  // код авторизации - 19 фильмов без комментариев AUTHORIZATION: `Basic yellowbigpineapple1`
-  AUTHORIZATION: `Basic yellowbigpineapple2`,
+  AUTHORIZATION: `${Authorization.PREFIX} ${randomString(Authorization.KEY_LENGTH)}`, // 19 фильмов без комментариев AUTHORIZATION: `Basic yellowbigpineapple1`
   END_POINT: `https://12.ecmascript.pages.academy/cinemaddict`,
 };
