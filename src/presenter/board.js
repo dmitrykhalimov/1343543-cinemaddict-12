@@ -148,7 +148,7 @@ export default class Board {
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
 
     this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmsCount)));
-    this._renderExtras();
+    this._renderExtras(films);
 
     if (filmCount > this._renderedFilmsCount) {
       this._renderLoadMoreButton();
@@ -207,7 +207,11 @@ export default class Board {
   }
 
   // отрисовка блоков экстра
-  _renderExtras() {
+  _renderExtras(films) {
+    if (films.length === 0) {
+      return;
+    }
+
     this._extraRated = new ExtraRatedContainerView();
     this._extraCommented = new ExtraCommentedContainerView();
 
