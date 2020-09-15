@@ -150,6 +150,7 @@ export default class Film {
   }
 
   _handleDeleteComment(commentId) {
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     const index = this._film.comments.findIndex((comment) => comment.id === commentId);
     const updatedComments = [
       ...this._film.comments.slice(0, index),
@@ -178,6 +179,7 @@ export default class Film {
   }
 
   _handleAddComment(textComment, emojiComment) {
+    document.removeEventListener(`keydown`, this._handleEscKeyDown);
     const comment = {
       commentBody: {
         "filmId": this._film.id,
