@@ -156,7 +156,7 @@ export default class Film {
         }
     );
 
-    const objectToUpdate = {
+    const filmToUpdate = {
       idToDelete: commentId,
       filmWithoutComment: updatedFilm,
       filmDetailsComponent: this._filmDetailsComponent
@@ -165,7 +165,7 @@ export default class Film {
     this._changeData(
         UserAction.DELETE_COMMENT,
         UpdateType.POPUP,
-        objectToUpdate
+        filmToUpdate
     );
   }
 

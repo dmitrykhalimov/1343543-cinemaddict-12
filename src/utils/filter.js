@@ -1,7 +1,7 @@
 import {FilterType, FilterMode} from "../const.js";
 
 export const makeFilters = (films, mode) => {
-  const initialValue = {
+  const initialFilters = {
     [FilterType.ALL]: [],
     [FilterType.WATCHLIST]: [],
     [FilterType.HISTORY]: [],
@@ -20,7 +20,7 @@ export const makeFilters = (films, mode) => {
       acc[FilterType.FAVORITES].push(film);
     }
     return acc;
-  }, initialValue);
+  }, initialFilters);
 
   if (mode === FilterMode.COUNT) {
     return {

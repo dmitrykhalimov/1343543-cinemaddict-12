@@ -20,7 +20,7 @@ export const transformDateTime = (dateTime, transformType) => {
   return moment(dateTime).format(transformType);
 };
 
-export const diffWithCurrentDate = (dateToCompare, mode) => {
+export const getDifferenceWithCurrentDate = (dateToCompare, mode) => {
   return moment(Date.now()).diff(moment(dateToCompare), mode, true);
 };
 
