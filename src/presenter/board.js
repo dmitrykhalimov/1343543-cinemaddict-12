@@ -216,9 +216,15 @@ export default class Board {
   _renderExtra(component, generateTopList, presenter) {
     const topFilms = generateTopList(this._filmsModel.getFilms().slice());
 
+    console.log(topFilms.length);
+
+    if (topFilms.length === 0) {
+      return; // если у всех фильмов рейтинг = 0 или нет комментариев не отображть
+    }
+
     render(this._boardComponent, component, RenderPosition.BEFOREEND);
 
-    for (let i = 0; i < EXTRAS_COUNT; i++) {
+    for (let i = 0; i < Math.min(topFilms.length, EXTRAS_COUNT); i++) {
       this._renderFilm(component.getContainer(), topFilms[i], presenter);
     }
   }

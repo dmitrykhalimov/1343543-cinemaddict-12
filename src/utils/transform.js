@@ -47,10 +47,14 @@ export const sortRating = (filmA, filmB) => {
 
 /* сортировка для блоков top */
 export const generateTopRated = (films) => {
-  return films.slice().sort((a, b) => b.rating - a.rating);
+  return films.slice()
+    .filter((film) => Number(film.rating) > 0)
+    .sort((prevFilm, nextFilm) => nextFilm.rating - prevFilm.rating);
 };
 
 export const generateTopCommented = (films) => {
-  return films.slice().sort((a, b) => b.comments.length - a.comments.length);
+  return films.slice()
+    .filter((film) => film.comments.length > 0)
+    .sort((prevFilm, nextFilm) => nextFilm.comments.length - prevFilm.comments.length);
 };
 

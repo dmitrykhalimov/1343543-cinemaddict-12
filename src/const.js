@@ -56,6 +56,7 @@ export const StatsMode = {
 
 export const ServerParameters = {
   // AUTHORIZATION: `Basic ${getRandomString(AUTHORIZATION_KEY_LENGTH)}`,
-  AUTHORIZATION: `Basic yellowbigpineapple`, // Временно в целях отладки используется единый идентификатор. Т.к. при случайном генераторе чисел - отображается другой набор данных, после перезагрузки в итоге не получается отследить изменения на сервере
+  // код авторизации - 19 фильмов без комментариев AUTHORIZATION: `Basic yellowbigpineapple1`
+  AUTHORIZATION: `Basic yellowbigpineapple1`,
   END_POINT: `https://12.ecmascript.pages.academy/cinemaddict`,
 };
