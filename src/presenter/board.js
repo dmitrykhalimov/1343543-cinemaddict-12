@@ -289,8 +289,8 @@ export default class Board {
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
     switch (updateType) {
-      case UpdateType.MAJOR:
-        this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
+      case UpdateType.MAJOR: // переключение фильтров
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
         this._renderBoard();
         break;
       case UpdateType.INIT:
