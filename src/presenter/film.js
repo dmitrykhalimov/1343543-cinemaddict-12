@@ -80,7 +80,7 @@ export default class Film {
   }
 
   removeEventListener() {
-    document.removeEventListener(`keydown`, this._handleEscKeyDown);
+    this._filmDetailsComponent.removePopupEventListener(this._handleEscKeyDown);
   }
 
 

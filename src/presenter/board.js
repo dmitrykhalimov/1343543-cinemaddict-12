@@ -15,10 +15,6 @@ import {getRankName} from "../utils/statistics.js";
 
 const FILMS_COUNT_PER_STEP = 5;
 const EXTRAS_COUNT = 2;
-const PopupCallback = {
-  OPEN: `handleFilmPopupOpen`,
-  REMOVE_LISTENERS: `removeEventListener`
-};
 
 export default class Board {
   constructor(boardContainer, filmsModel, filterModel, api, userProfileComponent) {
@@ -299,15 +295,15 @@ export default class Board {
     }
   }
 
-  _updateFilmPresentersPopup(id, callback) {
+  _handlePopupRedraw(id) {
     if (this._filmPresenter[id]) {
-      this._filmPresenter[id][callback]();
+      this._filmPresenter[id].removeEventListener();
     }
     if (this._filmRatedPresenter[id]) {
-      this._filmRatedPresenter[id][callback]();
+      this._filmRatedPresenter[id].removeEventListener();
     }
     if (this._filmCommentedPresenter[id]) {
-      this._filmCommentedPresenter[id][callback]();
+      this._filmCommentedPresenter[id].removeEventListener();
     }
   }
 
@@ -328,7 +324,7 @@ export default class Board {
         this._renderBoard();
         break;
       case UpdateType.POPUP: // при установке флагов для фильмов в попапе
-        this._updateFilmPresentersPopup(data.id, PopupCallback.REMOVE_LISTENERS);
+        this._rePresentersPopup(data.id, this._filmPresenter[data.id].removeEventListener);
 
         this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();

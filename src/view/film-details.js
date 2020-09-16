@@ -212,6 +212,10 @@ export default class FilmDetails extends AbstractView {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
 
+  removePopupEventListener(callback) {
+    document.removeEventListener(`keydown`, callback);
+  }
+
   handleDeleteCommentError(commentId) {
     const noDeletedComment = this.getElement().querySelector(`li[data-comment-id="${commentId}"]`);
     this._shake(noDeletedComment, () => {
