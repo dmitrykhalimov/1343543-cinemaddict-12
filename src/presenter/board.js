@@ -295,7 +295,7 @@ export default class Board {
     }
   }
 
-  _handlePopupRedraw(id) {
+  _handlePopupWillBeRerendered(id) {
     if (this._filmPresenter[id]) {
       this._filmPresenter[id].removeEventListener();
     }
@@ -306,6 +306,19 @@ export default class Board {
       this._filmCommentedPresenter[id].removeEventListener();
     }
   }
+
+  _handleOpenedPopupRerendered(id) {
+    if (this._filmPresenter[id]) {
+      this._filmPresenter[id].removeEventListener();
+    }
+    if (this._filmRatedPresenter[id]) {
+      this._filmRatedPresenter[id].removeEventListener();
+    }
+    if (this._filmCommentedPresenter[id]) {
+      this._filmCommentedPresenter[id].removeEventListener();
+    }
+  }
+
 
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
@@ -324,12 +337,12 @@ export default class Board {
         this._renderBoard();
         break;
       case UpdateType.POPUP: // при установке флагов для фильмов в попапе
-        this._rePresentersPopup(data.id, this._filmPresenter[data.id].removeEventListener);
+        this._handlePopupWillBeRerendered(data.id);
 
         this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();
 
-        this._updateFilmPresentersPopup(data.id, PopupCallback.OPEN);
+        this._handlePopupWillBeRerendered(data.id, PopupCallback.OPEN);
 
         break;
     }
