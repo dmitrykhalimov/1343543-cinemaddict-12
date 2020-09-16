@@ -72,7 +72,10 @@ export default class Provider {
   deleteComment(commentId) {
     if (Provider.isOnline()) {
       return this._api.deleteComment(commentId)
-        .then((response) => response);
+        .then((response) => {
+          // this._storeComments.removeItem(commen
+          return response;
+        });
     }
 
     return Promise.reject(new Error(`I am offline`));

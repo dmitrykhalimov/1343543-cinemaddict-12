@@ -35,12 +35,17 @@ export default class Store {
   pushItem(filmId, comment) {
     const store = this.getItems();
     store[filmId].push(comment);
-    console.log(store);
     this._storage.setItem(
         this._storeKey,
         JSON.stringify(
             Object.assign({}, store)
         )
     );
+  }
+
+  removeItem(commentId) {
+    const store = this.getItems();
+    console.log(store);
+    console.log(commentId);
   }
 }
