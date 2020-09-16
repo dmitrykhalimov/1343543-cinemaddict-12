@@ -61,7 +61,7 @@ export default class Provider {
       const filmId = comment.filmId;
       return this._api.addComment(comment)
         .then((response) => {
-          this._storeComments.setItem(filmId, FilmsModel.adaptNewCommentToServer(comment));
+          this._storeComments.pushItem(filmId, response.comments[response.comments.length - 1]);
           return response;
         });
     }
