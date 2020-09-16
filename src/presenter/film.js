@@ -20,7 +20,7 @@ export default class Film {
 
     this._siteBody = document.querySelector(`body`);
 
-    this.handleFilmPopupOpen = this.handleFilmPopupOpen.bind(this);
+    this.handleFilmPopupOpen = this.openFilmPopup.bind(this);
     this._handleFilmPopupClose = this._handleFilmPopupClose.bind(this);
 
     this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
@@ -84,7 +84,7 @@ export default class Film {
   }
 
 
-  handleFilmPopupOpen() {
+  openFilmPopup() {
     this._siteBody.appendChild(this._filmDetailsComponent.getElement());
     document.addEventListener(`keydown`, this._handleEscKeyDown);
     this._changeMode();

@@ -309,16 +309,15 @@ export default class Board {
 
   _handleOpenedPopupRerendered(id) {
     if (this._filmPresenter[id]) {
-      this._filmPresenter[id].removeEventListener();
+      this._filmPresenter[id].openFilmPopup();
     }
     if (this._filmRatedPresenter[id]) {
-      this._filmRatedPresenter[id].removeEventListener();
+      this._filmRatedPresenter[id].openFilmPopup();
     }
     if (this._filmCommentedPresenter[id]) {
-      this._filmCommentedPresenter[id].removeEventListener();
+      this._filmCommentedPresenter[id].openFilmPopup();
     }
   }
-
 
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
@@ -342,7 +341,7 @@ export default class Board {
         this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();
 
-        this._handlePopupWillBeRerendered(data.id, PopupCallback.OPEN);
+        this._handleOpenedPopupRerendered(data.id);
 
         break;
     }
