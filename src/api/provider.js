@@ -58,8 +58,10 @@ export default class Provider {
 
   addComment(comment) {
     if (Provider.isOnline()) {
+      const filmId = comment.filmId;
       return this._api.addComment(comment)
         .then((response) => {
+          this._storeComments.pushItem(filmId, response.comments);
           return response;
         });
     }
@@ -67,10 +69,13 @@ export default class Provider {
     return Promise.reject(new Error(`I am offline`));
   }
 
-  deleteComment(commentId) {
+  deleteComment(filmId, commentId) {
     if (Provider.isOnline()) {
       return this._api.deleteComment(commentId)
-        .then((response) => response);
+        .then((response) => {
+          this._storeComments.removeItem(filmId, commentId);
+          return response;
+        });
     }
 
     return Promise.reject(new Error(`I am offline`));
