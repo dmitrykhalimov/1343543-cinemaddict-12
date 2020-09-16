@@ -166,6 +166,7 @@ export default class Film {
     const filmToUpdate = {
       idToDelete: commentId,
       filmWithoutComment: updatedFilm,
+      filmId: updatedFilm.id,
       filmDetailsComponent: this._filmDetailsComponent
     };
 

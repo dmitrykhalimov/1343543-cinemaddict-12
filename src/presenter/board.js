@@ -288,7 +288,7 @@ export default class Board {
           });
         break;
       case UserAction.DELETE_COMMENT:
-        this._api.deleteComment(update.idToDelete)
+        this._api.deleteComment(update.filmId, update.idToDelete)
           .then(() => {
             this._filmsModel.updateFilm(updateType, update.filmWithoutComment);
           })

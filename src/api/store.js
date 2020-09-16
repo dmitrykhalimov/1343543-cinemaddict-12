@@ -32,9 +32,9 @@ export default class Store {
     );
   }
 
-  pushItem(filmId, comment) {
+  pushItem(key, value) {
     const store = this.getItems();
-    store[filmId].push(comment);
+    store[key] = value;
     this._storage.setItem(
         this._storeKey,
         JSON.stringify(
@@ -43,9 +43,14 @@ export default class Store {
     );
   }
 
-  removeItem(commentId) {
+  removeItem(key, keyToRemove) {
     const store = this.getItems();
-    console.log(store);
-    console.log(commentId);
+    store[key] = store[key].filter((item) => item.id !== keyToRemove);
+    this._storage.setItem(
+        this._storeKey,
+        JSON.stringify(
+            Object.assign({}, store)
+        )
+    );
   }
 }
