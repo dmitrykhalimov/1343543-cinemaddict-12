@@ -31,6 +31,7 @@ self.addEventListener(`install`, (evt) => {
             `./images/posters/santa-claus-conquers-the-martians.jpg`,
             `./images/posters/the-dance-of-life.jpg`,
             `./images/posters/the-great-flamarion.jpg`,
+            `./images/posters/the-man-with-the-golden-arm.jpg`,
             `./images/background.png`,
             `./images/bitmap.png`,
             `./images/bitmap@2x.png`,
