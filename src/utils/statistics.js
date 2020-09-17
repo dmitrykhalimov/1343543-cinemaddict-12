@@ -1,4 +1,4 @@
-import {diffWithCurrentDate} from "../utils/transform.js";
+import {getDifferenceWithCurrentDate} from "../utils/transform.js";
 
 
 const DatePatterns = {
@@ -41,24 +41,24 @@ const RANKS = [
 
 export const getRankName = (films) => {
   const quantityWatched = films.filter((film) => film.isWatched).length;
-  for (let i = 0; i < RANKS.length; i++) {
-    if (quantityWatched <= Object.values(RANKS[i])) {
-      return Object.keys(RANKS[i])[0];
+  for (const rank of RANKS) {
+    if (quantityWatched <= Object.values(rank)) {
+      return Object.keys(rank)[0];
     }
   }
   return ``;
 };
 
 export const generateStats = (films, mode) => {
-  const initialValue = {
+  const initialStats = {
     filmsWatched: [],
     genres: [],
     totalDuration: 0,
     genresQuantity: new Map(),
   };
 
-  let filmStatsNew = films.slice().reduce((acc, film) => {
-    if ((diffWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) && film.isWatched) {
+  const filmStats = films.reduce((acc, film) => {
+    if ((getDifferenceWithCurrentDate(film.watchingDate, DatePatterns[mode].MODE) < DatePatterns[mode].MAX_LIMIT) && film.isWatched) {
       acc.filmsWatched.push(film);
       acc.genres = acc.genres.concat(Array.from(film.genres));
       acc.totalDuration += film.duration;
@@ -71,27 +71,27 @@ export const generateStats = (films, mode) => {
       }
     }
     return acc;
-  }, initialValue);
+  }, initialStats);
 
-  // мне по-прежнему не нравится этот кусок, постараюсь чего-нибудь с reduce еще придумать
-  filmStatsNew.genresQuantity = new Map([...filmStatsNew.genresQuantity].sort((next, prev) => prev[1] - next[1]));
-  filmStatsNew.genresQuantity = Array.from(filmStatsNew.genresQuantity);
+  filmStats.genresQuantity = new Map([...filmStats.genresQuantity].sort((next, prev) => prev[1] - next[1]));
+  filmStats.genresQuantity = Array.from(filmStats.genresQuantity);
 
-  const sortedGenres = [];
-  const sortedNumbers = [];
-
-  filmStatsNew.genresQuantity.forEach((element) => {
-    sortedGenres.push(element[0]);
-    sortedNumbers.push(element[1]);
+  const sortedForStats = filmStats.genresQuantity.reduce((acc, genre) => {
+    acc.sortedGenres.push(genre[0]);
+    acc.sortedNumbers.push(genre[1]);
+    return acc;
+  }, {
+    sortedGenres: [],
+    sortedNumbers: [],
   });
 
   return {
-    watched: filmStatsNew.filmsWatched.length,
-    topGenre: filmStatsNew.genresQuantity.length > 0 ? filmStatsNew.genresQuantity[0][0] : ``,
-    genres: sortedGenres,
-    numbers: sortedNumbers,
-    durationHours: Math.trunc(filmStatsNew.totalDuration / 60),
-    durationMinutes: filmStatsNew.totalDuration - Math.trunc(filmStatsNew.totalDuration / 60) * 60,
+    watched: filmStats.filmsWatched.length,
+    topGenre: filmStats.genresQuantity.length > 0 ? filmStats.genresQuantity[0][0] : ``,
+    genres: sortedForStats.sortedGenres,
+    numbers: sortedForStats.sortedNumbers,
+    durationHours: Math.trunc(filmStats.totalDuration / 60),
+    durationMinutes: filmStats.totalDuration - Math.trunc(filmStats.totalDuration / 60) * 60,
     rank: getRankName(films),
   };
 };

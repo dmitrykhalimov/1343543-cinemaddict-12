@@ -34,9 +34,8 @@ export default class Board {
     this._filmRatedPresenter = {};
     this._filmCommentedPresenter = {};
 
-    this._boardComponent = new BoardView(); // сама доска <section class =films>
-    this._filmsContainerComponent = new FilmsContainerView(); // контейнер <section class = filmslist>
-    this._filmsListContainer = this._filmsContainerComponent.getElement().querySelector(`.films-list__container`); // контейнер section class = filmlist__container
+    this._boardComponent = new BoardView();
+    this._filmsContainerComponent = new FilmsContainerView();
     this._loadingComponent = new LoadingView();
     this._userProfileComponent = userProfileComponent;
 
@@ -133,18 +132,19 @@ export default class Board {
     const films = this._getFilms();
     const filmCount = films.length;
 
+    this._userProfileComponent.updateRank(getRankName(this._filmsModel.getFilms()));
+
+    render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
+
+    this._renderExtras(films);
+
     // если фильмов нет - отрисовать плашку NoFilms
     if (filmCount === 0) {
       this._renderNoFilms();
       return;
     }
 
-    this._userProfileComponent.updateRank(getRankName(films));
-
-    render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
-
-    this._renderFilms(films.slice(0, Math.min(filmCount, FILMS_COUNT_PER_STEP)));
-    this._renderExtras();
+    this._renderFilms(films.slice(0, Math.min(filmCount, this._renderedFilmsCount)));
 
     if (filmCount > this._renderedFilmsCount) {
       this._renderLoadMoreButton();
@@ -173,7 +173,7 @@ export default class Board {
   _renderFilms(films) {
     render(this._boardComponent, this._filmsContainerComponent, RenderPosition.AFTERBEGIN);
 
-    films.forEach((film) => this._renderFilm(this._filmsListContainer, film, this._filmPresenter));
+    films.forEach((film) => this._renderFilm(this._filmsContainerComponent.getContainer(), film, this._filmPresenter));
   }
 
   // отрисовка отдельного фильма
@@ -185,8 +185,8 @@ export default class Board {
 
   // отрисовка плашки No Films
   _renderNoFilms() {
-    remove(this._boardComponent);
-    render(this._boardContainer, this._noFilmsComponent, RenderPosition.BEFOREEND);
+    remove(this._filmsContainerComponent);
+    render(this._boardComponent, this._noFilmsComponent, RenderPosition.AFTERBEGIN);
   }
 
   // отрисовка кнопки Show More
@@ -202,21 +202,26 @@ export default class Board {
     this._loadMoreButtonComponent.setClickHandler(this._handleLoadButton);
   }
 
-  // отрисовка блока экстра
+  // отрисовка блоков экстра
   _renderExtras() {
-    // TODO: не работают интерактивные элементы попапа (!)
     this._extraRated = new ExtraRatedContainerView();
     this._extraCommented = new ExtraCommentedContainerView();
 
-    render(this._boardComponent, this._extraRated, RenderPosition.BEFOREEND);
-    render(this._boardComponent, this._extraCommented, RenderPosition.BEFOREEND);
+    this._renderExtra(this._extraRated, generateTopRated, this._filmRatedPresenter);
+    this._renderExtra(this._extraCommented, generateTopCommented, this._filmCommentedPresenter);
+  }
 
-    const topRatedFilms = generateTopRated(this._filmsModel.getFilms().slice());
-    const topCommentedFilms = generateTopCommented(this._filmsModel.getFilms().slice());
+  _renderExtra(component, generateTopList, presenter) {
+    const topFilms = generateTopList(this._filmsModel.getFilms().slice());
 
-    for (let i = 0; i < EXTRAS_COUNT; i++) {
-      this._renderFilm(this._extraRated.getContainer(), topRatedFilms[i], this._filmRatedPresenter);
-      this._renderFilm(this._extraCommented.getContainer(), topCommentedFilms[i], this._filmCommentedPresenter);
+    if (topFilms.length === 0) {
+      return; // если у всех фильмов рейтинг = 0 или нет комментариев не отображть
+    }
+
+    render(this._boardComponent, component, RenderPosition.BEFOREEND);
+
+    for (let i = 0; i < Math.min(topFilms.length, EXTRAS_COUNT); i++) {
+      this._renderFilm(component.getContainer(), topFilms[i], presenter);
     }
   }
 
@@ -228,7 +233,7 @@ export default class Board {
 
     this._currentSortType = sortType;
 
-    this._clearBoard({resetRenderedTaskCount: true});
+    this._clearBoard({resetRenderedFilmCount: true});
     this._renderBoard();
   }
 
@@ -271,48 +276,69 @@ export default class Board {
             this._filmsModel.updateFilm(updateType, film);
           })
           .catch(() => {
-            update.filmDetailsComponent.onAddCommentError();
+            update.filmDetailsComponent.handleAddCommentError();
           });
         break;
       case UserAction.DELETE_COMMENT:
-        this._api.deleteComment(update.idToDelete)
+        this._api.deleteComment(update.filmId, update.idToDelete)
           .then(() => {
             this._filmsModel.updateFilm(updateType, update.filmWithoutComment);
           })
           .catch(() => {
-            update.filmDetailsComponent.onDeleteCommentError(update.idToDelete);
+            update.filmDetailsComponent.handleDeleteCommentError(update.idToDelete);
           });
         break;
+    }
+  }
+
+  _handlePopupRerendered(id) {
+    if (this._filmPresenter[id]) {
+      this._filmPresenter[id].removeEventListener();
+    }
+    if (this._filmRatedPresenter[id]) {
+      this._filmRatedPresenter[id].removeEventListener();
+    }
+    if (this._filmCommentedPresenter[id]) {
+      this._filmCommentedPresenter[id].removeEventListener();
+    }
+  }
+
+  _handleOpenRerendedPopup(id) {
+    if (this._filmPresenter[id]) {
+      this._filmPresenter[id].openFilmPopup();
+    }
+    if (this._filmRatedPresenter[id]) {
+      this._filmRatedPresenter[id].openFilmPopup();
+    }
+    if (this._filmCommentedPresenter[id]) {
+      this._filmCommentedPresenter[id].openFilmPopup();
     }
   }
 
   // коллбэк для наблюдателя
   _handleModelEvent(updateType, data) {
     switch (updateType) {
-      case UpdateType.MAJOR:
-        this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
+      case UpdateType.MINOR: // при установке флагов для фильмов на доске
+        this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();
         break;
-      case UpdateType.INIT:
+      case UpdateType.MAJOR: // при переключении фильтров
+        this._clearBoard({resetRenderedFilmCount: true, resetSortType: true});
+        this._renderBoard();
+        break;
+      case UpdateType.INIT: // при инициализации
         this._isLoading = false;
         remove(this._loadingComponent);
         this._renderBoard();
         break;
-      case UpdateType.POPUP:
-        this._clearBoard({resetRenderedFilmCount: true, resetSortType: false});
+      case UpdateType.POPUP: // при установке флагов для фильмов в попапе
+        this._handlePopupRerendered(data.id);
+
+        this._clearBoard({resetRenderedFilmCount: false, resetSortType: false});
         this._renderBoard();
 
-        if (this._filmPresenter[data.id]) {
-          this._filmPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
-        }
+        this._handleOpenRerendedPopup(data.id);
 
-        if (this._filmRatedPresenter[data.id]) {
-          this._filmRatedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
-        }
-
-        if (this._filmCommentedPresenter[data.id]) {
-          this._filmCommentedPresenter[data.id].openFilmPopup(); // если изменения сделаны из попапа после перерисовки открыть попап назад
-        }
         break;
     }
   }

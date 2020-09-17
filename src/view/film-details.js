@@ -19,7 +19,7 @@ const createFilmDetails = (film) => {
 
   const generateComments = () => {
     let result = ``;
-    for (let comment of comments) {
+    for (const comment of comments) {
       result += `<li class="film-details__comment" data-comment-id="${comment.id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
@@ -212,14 +212,11 @@ export default class FilmDetails extends AbstractView {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`keydown`, this._addCommentClickHandler);
   }
 
-  _shake(elementToShake, afterShake) {
-    elementToShake.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    setTimeout(() => {
-      afterShake();
-    }, SHAKE_ANIMATION_TIMEOUT);
+  removePopupEventListener(callback) {
+    document.removeEventListener(`keydown`, callback);
   }
 
-  onDeleteCommentError(commentId) {
+  handleDeleteCommentError(commentId) {
     const noDeletedComment = this.getElement().querySelector(`li[data-comment-id="${commentId}"]`);
     this._shake(noDeletedComment, () => {
       noDeletedComment.style.animation = ``;
@@ -227,7 +224,7 @@ export default class FilmDetails extends AbstractView {
     });
   }
 
-  onAddCommentError() {
+  handleAddCommentError() {
     const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
     this._shake(commentInput, () => {
       commentInput.style.animation = ``;
@@ -235,6 +232,13 @@ export default class FilmDetails extends AbstractView {
       this.getElement().querySelector(`.film-details__comment-input`).style.color = `black`;
       this.getElement().querySelector(`.film-details__comment-input`).textContent = ``;
     });
+  }
+
+  _shake(elementToShake, afterShake) {
+    elementToShake.style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    elementToShake.onanimationend = () => {
+      afterShake();
+    };
   }
 
   _favoriteClickHandler(evt) {

@@ -1,6 +1,9 @@
 import {getRandomString} from "./utils/common.js";
 
-const AUTHORIZATION_KEY_LENGTH = 10;
+const Authorization = {
+  PREFIX: `Basic`,
+  KEY_LENGTH: 10,
+};
 
 export const SortType = {
   DEFAULT: `default`,
@@ -55,7 +58,6 @@ export const StatsMode = {
 };
 
 export const ServerParameters = {
-  AUTHORIZATION: `Basic ${getRandomString(AUTHORIZATION_KEY_LENGTH)}`,
-  // AUTHORIZATION: `Basic yellowbigpineapple`, // Временно в целях отладки используется единый идентификатор. Т.к. при случайном генераторе чисел - отображается другой набор данных, после перезагрузки в итоге не получается отследить изменения на сервере
+  AUTHORIZATION: `${Authorization.PREFIX} ${getRandomString(Authorization.KEY_LENGTH)}`, // 19 фильмов без комментариев AUTHORIZATION: `Basic yellowbigpineapple1`
   END_POINT: `https://12.ecmascript.pages.academy/cinemaddict`,
 };

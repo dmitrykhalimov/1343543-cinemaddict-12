@@ -1,10 +1,10 @@
-// Функции обработки представления данных
+/* Функции обработки представления данных */
+
 import moment from "moment";
 
 const MIN_DAYS_TO_DATE = 10;
 
 /* функции работы с датой и временем */
-
 // трансформация даты комментария
 export const getDateComment = (date, transformType) => {
 
@@ -20,11 +20,11 @@ export const transformDateTime = (dateTime, transformType) => {
   return moment(dateTime).format(transformType);
 };
 
-export const diffWithCurrentDate = (dateToCompare, mode) => {
+export const getDifferenceWithCurrentDate = (dateToCompare, mode) => {
   return moment(Date.now()).diff(moment(dateToCompare), mode, true);
 };
 
-// трансформации длительности фильма
+/* трансформация длительности фильма */
 export const translateMinutesToText = (duration) => {
   const MS_IN_MIN = 1000;
   const MIN_IN_HOUR = 60;
@@ -36,21 +36,24 @@ export const translateMinutesToText = (duration) => {
 };
 
 /* функции сортировки */
-
-export const sortDate = (filmA, filmB) => {
-  return filmB.filmDate.getTime() - filmA.filmDate.getTime();
+export const sortDate = (prevFilm, nextFilm) => {
+  return nextFilm.filmDate.getTime() - prevFilm.filmDate.getTime();
 };
 
-export const sortRating = (filmA, filmB) => {
-  return filmB.rating - filmA.rating;
+export const sortRating = (prevFilm, nextFilm) => {
+  return nextFilm.rating - prevFilm.rating;
 };
 
-/* сортировка для блоков top */
+/* генерация для блоков top */
 export const generateTopRated = (films) => {
-  return films.slice().sort((a, b) => b.rating - a.rating);
+  return films.slice()
+    .filter((film) => Number(film.rating) > 0)
+    .sort(sortRating);
 };
 
 export const generateTopCommented = (films) => {
-  return films.slice().sort((a, b) => b.comments.length - a.comments.length);
+  return films.slice()
+    .filter((film) => film.comments.length > 0)
+    .sort((prevFilm, nextFilm) => nextFilm.comments.length - prevFilm.comments.length);
 };
 

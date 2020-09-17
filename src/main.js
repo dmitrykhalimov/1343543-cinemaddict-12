@@ -1,56 +1,54 @@
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable no-console */
-/* eslint-disable quotes */
-/* eslint-disable no-var */
-/* eslint-disable indent */
 import UserProfileView from "./view/user-profile.js";
-import FilterPresenter from "./presenter/filter.js";
-import StatisticsPresenter from "./presenter/statistics.js";
 import FooterStatsView from "./view/footer-stats.js";
 
-import {render, RenderPosition} from "./utils/render.js";
-import BoardPresenter from "./presenter/board.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 
-import {ServerParameters, UpdateType} from "./const.js";
+import FilterPresenter from "./presenter/filter.js";
+import StatisticsPresenter from "./presenter/statistics.js";
+import BoardPresenter from "./presenter/board.js";
+
 import Api from "./api/index.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
-const STORE_PREFIX = `cinemaaddict-localstorage`;
-const STORE_VER = `v1`;
-const STORE_COMMENTS_VER = `comments-v1`;
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
-const STORE_COMMENTS_NAME = `${STORE_PREFIX}-${STORE_COMMENTS_VER}`;
+import {render, RenderPosition} from "./utils/render.js";
+import {ServerParameters, UpdateType} from "./const.js";
 
+const StoreKeys = {
+  STORE_PREFIX: `cinemaaddict-localstorage`,
+  STORE_FILMS_VER: `v1`,
+  STORE_COMMENTS_VER: `comments-v1`
+};
+
+const STORE_FILMS_NAME = `${StoreKeys.STORE_PREFIX}-${StoreKeys.STORE_FILMS_VER}`;
+const STORE_COMMENTS_NAME = `${StoreKeys.STORE_PREFIX}-${StoreKeys.STORE_COMMENTS_VER}`;
+
+// элементы из шаблона
+const siteMain = document.querySelector(`.main`);
 const siteHeader = document.querySelector(`.header`);
 const siteFooterStats = document.querySelector(`.footer__statistics`);
 
-// отрисовка хэдера
-
-const userProfileComponent = new UserProfileView();
-render(siteHeader, userProfileComponent, RenderPosition.BEFOREEND);
-
-const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
-const store = new Store(STORE_NAME, window.localStorage);
-const storeComments = new Store(STORE_COMMENTS_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store, storeComments);
+// модели
 const filmsModel = new FilmsModel();
-
-// модель фильтра
 const filterModel = new FilterModel();
 
-const siteMain = document.querySelector(`.main`);
+// компоненты
+const userProfileComponent = new UserProfileView();
 
-// блок фильтров
+// работа с сервером и хранилищем
+const api = new Api(ServerParameters.END_POINT, ServerParameters.AUTHORIZATION);
+const storeFilms = new Store(STORE_FILMS_NAME, window.localStorage);
+const storeComments = new Store(STORE_COMMENTS_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, storeFilms, storeComments);
+
+// презентеры
 const statsPresenter = new StatisticsPresenter(siteMain, filmsModel);
 const boardPresenter = new BoardPresenter(siteMain, filmsModel, filterModel, apiWithProvider, userProfileComponent);
-
 const filterPresenter = new FilterPresenter(siteMain, filterModel, filmsModel, statsPresenter, boardPresenter);
 
-// блок фильмов и сортировка
-
+// отрисовка
+render(siteHeader, userProfileComponent, RenderPosition.BEFOREEND);
 filterPresenter.init();
 boardPresenter.init();
 
@@ -63,11 +61,11 @@ apiWithProvider.getFilms().then((films) => {
     .then((commentsAll) => {
       return films.map((film, index) => {
         return Object.assign(
-          {},
-          film,
-          {
-            comments: commentsAll[index]
-          }
+            {},
+            film,
+            {
+              comments: commentsAll[index]
+            }
         );
       });
     })
@@ -77,8 +75,9 @@ apiWithProvider.getFilms().then((films) => {
     });
 });
 
+// serviceWorker
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
+  navigator.serviceWorker.register(`./sw.js`)
     .then(() => {
       console.log(`ServiceWorker available`); // eslint-disable-line
     }).catch(() => {
@@ -86,6 +85,7 @@ window.addEventListener(`load`, () => {
     });
 });
 
+// status listeners
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, `тест`);
   apiWithProvider.sync();

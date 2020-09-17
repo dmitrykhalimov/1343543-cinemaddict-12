@@ -2,6 +2,8 @@ import AbstractView from "./abstract.js";
 import {translateMinutesToText, transformDateTime} from "../utils/transform.js";
 import {DateFormats} from "../const.js";
 
+const MAX_DESCRIPTION_LENGTH = 140;
+
 export const createFilmCard = (task) => {
   const {title, rating, filmDate, duration, genres, poster, description, isInWatchlist, isWatched, isFavorite, comments} = task;
   const returnActive = (item) => {
@@ -11,16 +13,20 @@ export const createFilmCard = (task) => {
     return resultClass;
   };
 
+  const shortenDescription = (descriptionToShorten) => {
+    return descriptionToShorten.slice(0, MAX_DESCRIPTION_LENGTH - 1) + `...`;
+  };
+
   return `<article class="film-card">
     <h3 class="film-card__title">${title}</h3>
     <p class="film-card__rating">${rating}</p>
     <p class="film-card__info">
       <span class="film-card__year">${transformDateTime(filmDate, DateFormats.ONLY_YEAR)}</span>
       <span class="film-card__duration">${translateMinutesToText(duration)}</span>
-      <span class="film-card__genre">${genres.values().next().value}</span>
+      <span class="film-card__genre">${genres.size > 0 ? genres.values().next().value : ``}</span>
     </p>
     <img src="./${poster}" alt="" class="film-card__poster">
-    <p class="film-card__description">${description}</p>
+    <p class="film-card__description">${description.length <= MAX_DESCRIPTION_LENGTH ? description : shortenDescription(description)}</p>
     <a class="film-card__comments">${comments.length} comments</a>
     <form class="film-card__controls">
       <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${returnActive(isInWatchlist)}">Add to watchlist</button>

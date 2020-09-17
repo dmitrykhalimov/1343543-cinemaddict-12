@@ -7,8 +7,6 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const BAR_HEIGHT = 50;
 
-// import {getCurrentDate} from "../utils/task.js";
-
 const renderChart = (ctx, genres, numbers) => {
 
   ctx.height = BAR_HEIGHT * genres.length;
@@ -73,7 +71,6 @@ const renderChart = (ctx, genres, numbers) => {
 };
 
 const createStatisticsTemplate = (filmsStats, currentStat) => {
-  // const completedTaskCount = 0; // Нужно посчитать количество завершенных задач за период
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank

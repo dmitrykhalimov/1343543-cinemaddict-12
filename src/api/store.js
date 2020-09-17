@@ -32,14 +32,25 @@ export default class Store {
     );
   }
 
-  removeItem(key) {
+  pushItem(key, value) {
     const store = this.getItems();
-
-    delete store[key];
-
+    store[key] = value;
     this._storage.setItem(
         this._storeKey,
-        JSON.stringify(store)
+        JSON.stringify(
+            Object.assign({}, store)
+        )
+    );
+  }
+
+  removeItem(key, keyToRemove) {
+    const store = this.getItems();
+    store[key] = store[key].filter((item) => item.id !== keyToRemove);
+    this._storage.setItem(
+        this._storeKey,
+        JSON.stringify(
+            Object.assign({}, store)
+        )
     );
   }
 }
