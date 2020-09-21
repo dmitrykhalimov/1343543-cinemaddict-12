@@ -1,6 +1,30 @@
 
 import Observer from "../utils/observer.js";
 
+const ServerNames = {
+  FILM_INFO: `film_info`,
+  AGE_RATING: `age_rating`,
+  COMMENTS: `comments`,
+  ALTERNATIVE_TITLE: `alternative_title`,
+  RELEASE_COUNTRY: `release_country`,
+  TOTAL_RATING: `total_rating`,
+  USER_DETAILS: `user_details`,
+  ALREADY_WATCHED: `already_watched`,
+  WATCHING_DATE: `watching_date`,
+  FAVORITE: `favorite`,
+  WATCHLIST: `watchlist`,
+  ACTORS: `actors`,
+  DESCRIPTION: `description`,
+  DIRECTOR: `director`,
+  GENRE: `genre`,
+  POSTER: `poster`,
+  RELEASE: `release`,
+  DATE: `date`,
+  RUNTIME: `runtime`,
+  TITLE: `title`,
+  WRITERS: `writers`,
+};
+
 export default class Films extends Observer {
   constructor() {
     super();
@@ -119,34 +143,33 @@ export default class Films extends Observer {
   }
 
   static adaptFilmToServer(film) {
-    /* eslint-disable camelcase */
     const adaptedFilm = Object.assign(
         {},
         film,
         {
-          comments: film.commentsId,
-          film_info: {
-            actors: film.cast.split(`, `),
-            age_rating: film.age,
-            alternative_title: film.titleOriginal,
-            description: film.description,
-            director: film.director,
-            genre: Array.from(film.genres),
-            poster: film.poster,
-            release: {
-              date: film.filmDate.toISOString(),
-              release_country: film.country,
+          [ServerNames.COMMENTS]: film.commentsId,
+          [ServerNames.FILM_INFO]: {
+            [ServerNames.ACTORS]: film.cast.split(`, `),
+            [ServerNames.AGE_RATING]: film.age,
+            [ServerNames.ALTERNATIVE_TITLE]: film.titleOriginal,
+            [ServerNames.DESCRIPTION]: film.description,
+            [ServerNames.DIRECTOR]: film.director,
+            [ServerNames.GENRE]: Array.from(film.genres),
+            [ServerNames.POSTER]: film.poster,
+            [ServerNames.RELEASE]: {
+              [ServerNames.DATE]: film.filmDate.toISOString(),
+              [ServerNames.RELEASE_COUNTRY]: film.country,
             },
-            runtime: film.duration,
-            title: film.title,
-            total_rating: film.rating,
-            writers: film.writers.split(`, `),
+            [ServerNames.RUNTIME]: film.duration,
+            [ServerNames.TITLE]: film.title,
+            [ServerNames.TOTAL_RATING]: film.rating,
+            [ServerNames.WRITERS]: film.writers.split(`, `),
           },
-          user_details: {
-            already_watched: film.isWatched,
-            favorite: film.isFavorite,
-            watching_date: (film.watchingDate === null) ? null : film.watchingDate.toISOString(),
-            watchlist: film.isInWatchlist,
+          [ServerNames.USER_DETAILS]: {
+            [ServerNames.ALREADY_WATCHED]: film.isWatched,
+            [ServerNames.FAVORITE]: film.isFavorite,
+            [ServerNames.WATCHING_DATE]: (film.watchingDate === null) ? null : film.watchingDate.toISOString(),
+            [ServerNames.WATCHLIST]: film.isInWatchlist,
           }
         }
     );
