@@ -3,7 +3,7 @@ import NoFilmsView from "../view/no-films.js";
 import ButtonView from "../view/button.js";
 import SortView from "../view/sort.js";
 import ExtraRatedContainerView from "../view/container-rated.js";
-import ExtraCommentedContainerView from "../view/container-connected.js";
+import ExtraCommentedContainerView from "../view/container-commented.js";
 import FilmsContainerView from "../view/films-container.js";
 import {render, RenderPosition, remove, replace} from "../utils/render.js";
 import {sortDate, sortRating, generateTopRated, generateTopCommented} from "../utils/transform.js";

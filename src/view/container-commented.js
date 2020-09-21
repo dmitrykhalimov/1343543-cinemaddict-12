@@ -7,7 +7,7 @@ const createExtraCommentedContainer = () => {
     </section>`;
 };
 
-export default class ExtraCommentedContainer extends AbstractView {
+export default class ContainerCommented extends AbstractView {
   getTemplate() {
     return createExtraCommentedContainer();
   }

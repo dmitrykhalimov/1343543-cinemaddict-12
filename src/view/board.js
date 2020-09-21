@@ -5,7 +5,7 @@ const createBoard = () => {
 };
 
 
-export default class FilmsContainer extends AbstractView {
+export default class Board extends AbstractView {
   getTemplate() {
     return createBoard();
   }

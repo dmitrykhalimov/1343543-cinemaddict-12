@@ -7,7 +7,7 @@ const createExtraRatedContainer = () => {
     </section>`;
 };
 
-export default class ExtraRatedContainer extends AbstractView {
+export default class ContainerRated extends AbstractView {
   getTemplate() {
     return createExtraRatedContainer();
   }

@@ -8,7 +8,7 @@ import FilterPresenter from "./presenter/filter.js";
 import StatisticsPresenter from "./presenter/statistics.js";
 import BoardPresenter from "./presenter/board.js";
 
-import Api from "./api/index.js";
+import Api from "./api/api.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 
