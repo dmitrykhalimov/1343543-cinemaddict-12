@@ -76,9 +76,9 @@ apiWithProvider.getFilms().then((films) => {
 });
 
 // serviceWorker
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`./sw.js`);
-// });
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`./sw.js`);
+});
 
 // status listeners
 window.addEventListener(`online`, () => {

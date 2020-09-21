@@ -3,7 +3,6 @@ import he from "he";
 import {transformDateTime, getDateComment, translateMinutesToText} from "../utils/transform.js";
 import {createElement, replace} from "../utils/render.js";
 import {DateFormats, EMOJIS} from "../const.js";
-import { relativeTimeThreshold } from "moment";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -287,7 +286,6 @@ export default class FilmDetails extends AbstractView {
     if (evt.target.tagName !== `BUTTON`) {
       return;
     }
-
 
     if (evt.target.disabled === true) {
       return;
