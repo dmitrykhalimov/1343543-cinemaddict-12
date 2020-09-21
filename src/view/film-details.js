@@ -3,6 +3,7 @@ import he from "he";
 import {transformDateTime, getDateComment, translateMinutesToText} from "../utils/transform.js";
 import {createElement, replace} from "../utils/render.js";
 import {DateFormats, EMOJIS} from "../const.js";
+import { relativeTimeThreshold } from "moment";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -217,7 +218,9 @@ export default class FilmDetails extends AbstractView {
     const noDeletedComment = this.getElement().querySelector(`li[data-comment-id="${commentId}"]`);
     this._shake(noDeletedComment, () => {
       noDeletedComment.style.animation = ``;
-      noDeletedComment.querySelector(`button`).textContent = `Delete`;
+      const deleteButton = noDeletedComment.querySelector(`button`);
+      deleteButton.textContent = `Delete`;
+      deleteButton.removeAttribute(`data-comment-deleting`);
     });
   }
 
@@ -285,6 +288,12 @@ export default class FilmDetails extends AbstractView {
       return;
     }
 
+    if (evt.target.hasAttribute(`data-comment-deleting`)) {
+      return;
+    }
+
+    console.log(`deleting`);
+    evt.target.setAttribute(`data-comment-deleting`, true);
     evt.target.textContent = `Deleting...`;
 
     const commentId = evt.target.closest(`.film-details__comment`).getAttribute(`data-comment-id`);
