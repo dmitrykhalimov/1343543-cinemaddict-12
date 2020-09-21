@@ -238,6 +238,14 @@ export default class FilmDetails extends AbstractView {
     };
   }
 
+  _warnUserNotFilled(element) {
+    element.style.outline = `2px solid red`;
+    this._shake(element, () => {
+      element.style.outline = `none`;
+      element.style.animation = ``;
+    });
+  }
+
   _favoriteClickHandler(evt) {
     evt.preventDefault();
     this._callback.favoriteClick();
@@ -287,9 +295,22 @@ export default class FilmDetails extends AbstractView {
     if (evt.key === `Enter` && evt.ctrlKey) {
       evt.preventDefault();
       const commentField = this.getElement().querySelector(`.film-details__comment-input`);
+
+      if (!this._currentEmoji) {
+        const emojiField = this.getElement().querySelector(`.film-details__add-emoji-label`);
+        this._warnUserNotFilled(emojiField);
+        return;
+      }
+
+      if (!commentField.value) {
+        this._warnUserNotFilled(commentField);
+        return;
+      }
+
       commentField.disabled = true;
       commentField.style.color = `#878787`;
-      this._callback.addComment(commentField.value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
+
+      this._callback.addComment(commentField.value, this._currentEmoji.alt);
     }
   }
 
