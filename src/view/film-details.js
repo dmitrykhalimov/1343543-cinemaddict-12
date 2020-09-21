@@ -18,9 +18,8 @@ const createFilmDetails = (film) => {
   };
 
   const generateComments = () => {
-    let result = ``;
-    for (const comment of comments) {
-      result += `<li class="film-details__comment" data-comment-id="${comment.id}">
+    return comments.reduce((acc, comment) => {
+      acc += `<li class="film-details__comment" data-comment-id="${comment.id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${comment.emoji}.png" width="55" height="55" alt="emoji-${comment.emoji}">
       </span>
@@ -32,21 +31,19 @@ const createFilmDetails = (film) => {
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
-    </li>`;
-    }
-    return result;
+      </li>`;
+      return acc;
+    }, ``);
   };
 
   const generateEmojisList = () => {
-    let result = ``;
-    for (const emoji of EMOJIS) {
-      result += `
-      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
+    return EMOJIS.reduce((acc, emoji) => {
+      acc += `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji}" value="${emoji}">
       <label class="film-details__emoji-label" for="emoji-${emoji}">
         <img src="./images/emoji/${emoji}.png" width="30" height="30" alt="${emoji}">
       </label>`;
-    }
-    return result;
+      return acc;
+    }, ``);
   };
 
   const returnActive = (item) => {
