@@ -6,26 +6,26 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const BAR_HEIGHT = 50;
-const StatsDecor = {
-  Data: {
-    TYPE: `horizontalBar`,
-    BACKGROUND_COLOR: `#ffe800`,
-    HOVER_BACKGROUND_COLOR: `#ffe800`,
-    ANCHOR: `start`
-  },
-  Options: {
-    SIZE: 20,
-    COLOR: `#ffffff`,
-    ANCHOR: `start`,
-    ALIGN: `start`,
-    OFFSET: 40,
-  },
-  Scales: {
-    X_SIZE: 20,
-    X_COLOR: `#ffffff`,
-    X_PADDING: 100,
-    X_THICKNESS: 24,
-  }
+const StatsDecorData = {
+  TYPE: `horizontalBar`,
+  BACKGROUND_COLOR: `#ffe800`,
+  HOVER_BACKGROUND_COLOR: `#ffe800`,
+  ANCHOR: `start`,
+};
+
+const StatsDecorOptions = {
+  SIZE: 20,
+  COLOR: `#ffffff`,
+  ANCHOR: `start`,
+  ALIGN: `start`,
+  OFFSET: 40,
+};
+
+const StatsDecorY = {
+  SIZE: 20,
+  COLOR: `#ffffff`,
+  PADDING: 100,
+  THICKNESS: 24,
 };
 
 const renderChart = (ctx, genres, numbers) => {
@@ -34,57 +34,57 @@ const renderChart = (ctx, genres, numbers) => {
 
   const myChart = new Chart(ctx, {
     plugins: [ChartDataLabels],
-    type: StatsDecor.Data.TYPE,
+    type: StatsDecorData.TYPE,
     data: {
       labels: genres,
       datasets: [{
         data: numbers,
-        backgroundColor: StatsDecor.Data.BACKGROUND_COLOR,
-        hoverBackgroundColor: StatsDecor.Data.HOVER_BACKGROUND_COLOR,
-        anchor: StatsDecor.Data.ANCHOR
+        backgroundColor: StatsDecorData.BACKGROUND_COLOR,
+        hoverBackgroundColor: StatsDecorData.HOVER_BACKGROUND_COLOR,
+        anchor: StatsDecorData.ANCHOR,
       }]
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: StatsDecor.Options.SIZE
+            size: StatsDecorOptions.SIZE
           },
-          color: StatsDecor.Options.COLOR,
-          anchor: StatsDecor.Options.ANCHOR,
-          align: StatsDecor.Options.ALIGN,
-          offset: StatsDecor.Options.OFFSET,
+          color: StatsDecorOptions.COLOR,
+          anchor: StatsDecorOptions.ANCHOR,
+          align: StatsDecorOptions.ALIGN,
+          offset: StatsDecorOptions.OFFSET,
         }
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: StatsDecor.Scales.X_COLOR,
-            padding: StatsDecor.Scales.X_PADDING,
-            fontSize: StatsDecor.Scales.X_SIZE,
+            fontColor: StatsDecorY.COLOR,
+            padding: StatsDecorY.PADDING,
+            fontSize: StatsDecorY.SIZE,
           },
           gridLines: {
             display: false,
-            drawBorder: false
+            drawBorder: false,
           },
-          barThickness: StatsDecor.Scales.X_THICKNESS
+          barThickness: StatsDecorY.THICKNESS,
         }],
         xAxes: [{
           ticks: {
             display: false,
-            beginAtZero: true
+            beginAtZero: true,
           },
           gridLines: {
             display: false,
-            drawBorder: false
+            drawBorder: false,
           },
         }],
       },
       legend: {
-        display: false
+        display: false,
       },
       tooltips: {
-        enabled: false
+        enabled: false,
       }
     }
   });
