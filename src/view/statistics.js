@@ -6,6 +6,27 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const BAR_HEIGHT = 50;
+const StatsDecor = {
+  Data: {
+    TYPE: `horizontalBar`,
+    BACKGROUND_COLOR: `#ffe800`,
+    HOVER_BACKGROUND_COLOR: `#ffe800`,
+    ANCHOR: `start`
+  },
+  Options: {
+    SIZE: 20,
+    COLOR: `#ffffff`,
+    ANCHOR: `start`,
+    ALIGN: `start`,
+    OFFSET: 40,
+  },
+  Scales: {
+    X_SIZE: 20,
+    X_COLOR: `#ffffff`,
+    X_PADDING: 100,
+    X_THICKNESS: 24,
+  }
+};
 
 const renderChart = (ctx, genres, numbers) => {
 
@@ -13,40 +34,40 @@ const renderChart = (ctx, genres, numbers) => {
 
   const myChart = new Chart(ctx, {
     plugins: [ChartDataLabels],
-    type: `horizontalBar`,
+    type: StatsDecor.Data.TYPE,
     data: {
       labels: genres,
       datasets: [{
         data: numbers,
-        backgroundColor: `#ffe800`,
-        hoverBackgroundColor: `#ffe800`,
-        anchor: `start`
+        backgroundColor: StatsDecor.Data.BACKGROUND_COLOR,
+        hoverBackgroundColor: StatsDecor.Data.HOVER_BACKGROUND_COLOR,
+        anchor: StatsDecor.Data.ANCHOR
       }]
     },
     options: {
       plugins: {
         datalabels: {
           font: {
-            size: 20
+            size: StatsDecor.Options.SIZE
           },
-          color: `#ffffff`,
-          anchor: `start`,
-          align: `start`,
-          offset: 40,
+          color: StatsDecor.Options.COLOR,
+          anchor: StatsDecor.Options.ANCHOR,
+          align: StatsDecor.Options.ALIGN,
+          offset: StatsDecor.Options.OFFSET,
         }
       },
       scales: {
         yAxes: [{
           ticks: {
-            fontColor: `#ffffff`,
-            padding: 100,
-            fontSize: 20
+            fontColor: StatsDecor.Scales.X_COLOR,
+            padding: StatsDecor.Scales.X_PADDING,
+            fontSize: StatsDecor.Scales.X_SIZE,
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 24
+          barThickness: StatsDecor.Scales.X_THICKNESS
         }],
         xAxes: [{
           ticks: {
