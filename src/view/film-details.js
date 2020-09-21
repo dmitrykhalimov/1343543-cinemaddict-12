@@ -220,7 +220,7 @@ export default class FilmDetails extends AbstractView {
       noDeletedComment.style.animation = ``;
       const deleteButton = noDeletedComment.querySelector(`button`);
       deleteButton.textContent = `Delete`;
-      deleteButton.removeAttribute(`data-comment-deleting`);
+      deleteButton.disabled = false;
     });
   }
 
@@ -288,12 +288,12 @@ export default class FilmDetails extends AbstractView {
       return;
     }
 
-    if (evt.target.hasAttribute(`data-comment-deleting`)) {
+
+    if (evt.target.disabled === true) {
       return;
     }
 
-    console.log(`deleting`);
-    evt.target.setAttribute(`data-comment-deleting`, true);
+    evt.target.disabled = true;
     evt.target.textContent = `Deleting...`;
 
     const commentId = evt.target.closest(`.film-details__comment`).getAttribute(`data-comment-id`);
