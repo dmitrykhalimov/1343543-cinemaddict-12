@@ -222,12 +222,12 @@ export default class FilmDetails extends AbstractView {
   }
 
   handleAddCommentError() {
-    const commentInput = this.getElement().querySelector(`.film-details__comment-input`);
-    this._shake(commentInput, () => {
-      commentInput.style.animation = ``;
-      this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
-      this.getElement().querySelector(`.film-details__comment-input`).style.color = `black`;
-      this.getElement().querySelector(`.film-details__comment-input`).textContent = ``;
+    const commentField = this.getElement().querySelector(`.film-details__comment-input`);
+    this._shake(commentField, () => {
+      commentField.style.animation = ``;
+      commentField.disabled = false;
+      commentField.style.color = `black`;
+      commentField.textContent = ``;
     });
   }
 
@@ -286,9 +286,10 @@ export default class FilmDetails extends AbstractView {
   _addCommentClickHandler(evt) {
     if (evt.key === `Enter` && evt.ctrlKey) {
       evt.preventDefault();
-      this.getElement().querySelector(`.film-details__comment-input`).disabled = true;
-      this.getElement().querySelector(`.film-details__comment-input`).style.color = `#878787`;
-      this._callback.addComment(this.getElement().querySelector(`.film-details__comment-input`).value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
+      const commentField = this.getElement().querySelector(`.film-details__comment-input`);
+      commentField.disabled = true;
+      commentField.style.color = `#878787`;
+      this._callback.addComment(commentField.value, this._currentEmoji ? this._currentEmoji.alt : `smile`);
     }
   }
 
