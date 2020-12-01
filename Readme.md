@@ -14,4 +14,4 @@ _`SPA`, `ES2015+`, `MVP`, `Fetch API`, `Service Worker`, `Webpack`._
 * Установка - `npm i`
 * Запуск локального сервера - `npm run start`
 * Сборка проекта без запуска локального сервера - `npm run build`
-* Запуск тестирования - `npm run stylelint`
+* Запуск тестирования - `npm run test`
